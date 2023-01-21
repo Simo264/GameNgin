@@ -7,10 +7,11 @@
 
 #include "logger.h"
 #include "window.h"
+#include "globals.h"
 
 #include "shader.h"
-#include "vertex_buffer.h"
-#include "vertex_array.h"
+
+#include "geometry/triangle.h"
 
 
 // Window config
@@ -52,33 +53,9 @@ int main()
   glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
   Shader shader("../shaders/vertex.shader", "../shaders/fragment.shader");
+  logger::trace("Shaders loaded successfully");
 
-  float positions[] = {
-    -1, -1,
-    +1, -1,
-     0, +1
-  };
-  u_char colors[] = {
-    255, 255, 255,
-    255, 255, 255,
-    255, 255, 255
-  };
-
-
-  VertexArray vaOBJ;
-
-  VertexBuffer vbOBJ(sizeof(positions) + sizeof(colors));
-  vbOBJ.namedBufferSubData(0, sizeof(positions), positions);
-  vbOBJ.namedBufferSubData(sizeof(positions), sizeof(colors), colors);
-
-  vaOBJ.enableAttribute(0);
-  vaOBJ.enableAttribute(1);
-  vaOBJ.setAttribFormat(0, 2, GL_FLOAT, false, 0);
-  vaOBJ.setAttribFormat(1, 3, GL_UNSIGNED_BYTE, true, sizeof(positions));
-  vaOBJ.setAttribBinding(0, 0);
-  vaOBJ.setAttribBinding(1, 1);
-  vaOBJ.bindVertexBuffer(0, &vbOBJ, 0, sizeof(float)*2);
-  vaOBJ.bindVertexBuffer(1, &vbOBJ, 0, sizeof(u_char)*3);
+  Triangle triangle;
 
 
   // deltaTime variables
@@ -105,9 +82,7 @@ int main()
     // render
     // ------
     window.render(0.7f, 0.1f, 0.2);
-    shader.use();
-    vaOBJ.bind();
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    triangle.render(&shader);
 
     // Swap front and back buffers 
     window.swapBuffers();

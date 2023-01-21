@@ -12,7 +12,11 @@ private:
   uint32_t m_usage;
 
 public:
-  VertexBuffer(uint32_t size, const void* data = nullptr, uint32_t usage = GL_STATIC_DRAW);
+  VertexBuffer(
+    uint32_t    size, 
+    const void* data = nullptr, 
+    uint32_t    usage = GL_STATIC_DRAW);
+  
   ~VertexBuffer()     { glDeleteBuffers(1, &m_bufferOBJ); }
 
   void namedBufferData(uint32_t size, const void* data)

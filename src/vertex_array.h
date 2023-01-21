@@ -3,7 +3,7 @@
 
 #include <GL/glew.h>
 
-class VertexBuffer;
+#include "vertex_buffer.h"
 
 // Window class
 // -----------------------------------------------------------

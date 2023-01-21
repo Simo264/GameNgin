@@ -2,7 +2,9 @@
 
 #include <GLFW/glfw3.h>
 #include <cstdlib>
+
 #include "logger.h"
+#include "globals.h"
 
 Window::Window(
   uint16_t      width, 
@@ -20,6 +22,9 @@ Window::Window(
   }
   glfwMakeContextCurrent(m_window);
   glfwSetFramebufferSizeCallback(m_window, framebuffer_size_callback);
+  
+  globals::window_width = width;
+  globals::window_height= height;
 }
 
 void Window::framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -27,6 +32,8 @@ void Window::framebuffer_size_callback(GLFWwindow* window, int width, int height
   // make sure the viewport matches the new window dimensions; note that width and 
   // height will be significantly larger than specified on retina displays.
   glViewport(0, 0, width, height);
+  globals::window_width = width;
+  globals::window_height= height;
 }
 
 void Window::render(float r, float g, float b, uint32_t mask)

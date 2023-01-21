@@ -1,5 +1,4 @@
 #include "vertex_array.h"
-#include "vertex_buffer.h"
 
 #include <GL/glew.h>
 

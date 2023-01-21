@@ -25,8 +25,8 @@ $(TARGET): $(OBJ_FILES)
 
 clean:
 # remove all object files excluding the imgui/ dir
-	rm -rf  *.o $(TARGET)
+	rm -v  *.o geometry/*.o $(TARGET)
 
 clean-all:
 #remove all
-	rm -rf $(OBJ_FILES) $(TARGET)
+	rm -v $(OBJ_FILES) $(TARGET)

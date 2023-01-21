@@ -28,19 +28,15 @@ Shader::Shader(const char* vsFilename, const char* fsFilename, const char* gsFil
 	{
 		std::stringstream vShaderStream, fShaderStream, gShaderStream;
 
-		//	1.open file
-		// 	2.read file's buffer contents into streams
-		// 	3.close file handler
-		// 	4.convert stream into string 
 		vShaderFile.open(vsFilename);
-		vShaderStream << vShaderFile.rdbuf();
+		vShaderStream << vShaderFile.rdbuf();	// read file's buffer contents into streams
 		vShaderFile.close();
-		vsSource = vShaderStream.str();
+		vsSource = vShaderStream.str();	// convert stream into string 
 
 		fShaderFile.open(fsFilename);
-		fShaderStream << fShaderFile.rdbuf();
+		fShaderStream << fShaderFile.rdbuf(); // read file's buffer contents into streams
 		fShaderFile.close();
-		fsSource = fShaderStream.str();
+		fsSource = fShaderStream.str();	// convert stream into string 
 		
 		if(gsFilename)
 		{
@@ -112,25 +108,13 @@ void Shader::setInteger(const char* name, int value)
 {
   glUniform1i(glGetUniformLocation(m_shaderOBJ, name), value);
 }
-void Shader::setVector2f(const char* name, float x, float y)
-{
-  glUniform2f(glGetUniformLocation(m_shaderOBJ, name), x, y);
-}
 void Shader::setVector2f(const char* name, const glm::vec2& value)
 {
   glUniform2f(glGetUniformLocation(m_shaderOBJ, name), value.x, value.y);
 }
-void Shader::setVector3f(const char* name, float x, float y, float z)
-{
-  glUniform3f(glGetUniformLocation(m_shaderOBJ, name), x, y, z);
-}
 void Shader::setVector3f(const char* name, const glm::vec3& value)
 {
   glUniform3f(glGetUniformLocation(m_shaderOBJ, name), value.x, value.y, value.z);
-}
-void Shader::setVector4f(const char* name, float x, float y, float z, float w)
-{
-  glUniform4f(glGetUniformLocation(m_shaderOBJ, name), x, y, z, w);
 }
 void Shader::setVector4f(const char* name, const glm::vec4& value)
 {
@@ -140,7 +124,6 @@ void Shader::setMatrix4(const char* name, const glm::mat4& matrix)
 {
   glUniformMatrix4fv(glGetUniformLocation(m_shaderOBJ, name), 1, false, glm::value_ptr(matrix));
 }
-
 
 void Shader::checkCompileErrors(uint32_t object, const std::string& type)
 {

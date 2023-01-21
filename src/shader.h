@@ -33,16 +33,13 @@ public:
   void use();
 
   // compiles the shader from given source code
-  void compile(const char *vertexSource, const char *fragmentSource, const char *geometrySource = nullptr);
+  void compile(const char* vertexSource, const char* fragmentSource, const char* geometrySource = nullptr);
   
   // utility functions
   void setFloat    (const char*name, float value);
   void setInteger  (const char*name, int value);
-  void setVector2f (const char*name, float x, float y);
   void setVector2f (const char*name, const glm::vec2& value);
-  void setVector3f (const char*name, float x, float y, float z);
   void setVector3f (const char*name, const glm::vec3& value);
-  void setVector4f (const char*name, float x, float y, float z, float w);
   void setVector4f (const char*name, const glm::vec4& value);
   void setMatrix4  (const char*name, const glm::mat4& matrix);
 };
