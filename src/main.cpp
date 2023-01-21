@@ -70,6 +70,8 @@ int main()
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
 
+    globals::current_time = currentFrame;
+
     // input
     // ------
     process_input(&window);
@@ -77,7 +79,9 @@ int main()
 
     // update state
     // ------
-
+    triangle.rotate(currentFrame*2);
+    triangle.translate(sin(currentFrame), 0);
+    triangle.scale(0.5, 0.5);
     
     // render
     // ------

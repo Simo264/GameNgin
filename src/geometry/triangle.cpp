@@ -1,6 +1,10 @@
 #include "triangle.h"
 #include "../shader.h"
+#include "../globals.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
+static const glm::mat4 identity_matrix = glm::mat4(1.f);
 
 Triangle::Triangle()
 {
@@ -24,14 +28,6 @@ Triangle::Triangle(std::array<position_t, 3> localspace, std::array<color8_t, 3>
   init();
 }
 
-void Triangle::render(Shader* shader)
-{
-  shader->use();
-  m_vaOBJ.get()->bind();
-  glDrawArrays(GL_TRIANGLES, 0, 3);
-}
-
-
 void Triangle::init()
 {
   m_vaOBJ = std::unique_ptr<VertexArray>(new VertexArray);
@@ -50,3 +46,43 @@ void Triangle::init()
   m_vaOBJ.get()->bindVertexBuffer(0, m_vbOBJ.get(), 0, sizeof(position_t));
   m_vaOBJ.get()->bindVertexBuffer(1, m_vbOBJ.get(), 0, sizeof(color8_t));
 }
+
+void Triangle::scale(float x, float y)
+{
+  m_scalemat = glm::scale(identity_matrix, glm::vec3(x, y, 0.f));
+}
+
+void Triangle::rotate(float angle)
+{
+  m_rotatemat = glm::rotate(identity_matrix, glm::radians(angle), glm::vec3(0.f, 0.f, 1.f));
+}
+
+void Triangle::translate(float x, float y)
+{
+  m_transmat = glm::translate(identity_matrix, glm::vec3(x, y, 0.f));
+}
+
+void Triangle::render(Shader* shader)
+{
+  m_vaOBJ.get()->bind();
+  shader->use();
+
+  const glm::mat4 model       = m_transmat * m_rotatemat * m_scalemat;
+  const glm::mat4 view        = glm::translate(identity_matrix, glm::vec3(0.f, 0.f, 0.f)); 
+  const glm::mat4 projection  = glm::ortho(-1.f, 1.f, -1.f, 1.f, -1.f, 1.f);
+  
+  // const glm::mat4 projection  = glm::perspective(
+  //   glm::radians(45.0f), 
+  //   (float)globals::window_width/(float)globals::window_height, 
+  //   0.1f, 
+  //   100.0f);
+
+
+  shader->setMatrix4("model", model);
+  shader->setMatrix4("view", view);
+  shader->setMatrix4("projection", projection);
+
+  glDrawArrays(GL_TRIANGLES, 0, 3);
+}
+
+
