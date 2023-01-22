@@ -3,7 +3,7 @@
 
 #include <GL/glew.h>
 
-#include "vertex_buffer.h"
+#include "buffer.h"
 
 // Window class
 // -----------------------------------------------------------
@@ -34,10 +34,10 @@ public:
   // bind a buffer to a vertex buffer bind point
   // -------------------------------------------
   void bindVertexBuffer(
- 	  uint32_t      bindingindex,
- 	  VertexBuffer* buffer,
- 	  uint32_t      offset,
- 	  uint32_t      stride);
+ 	  uint32_t  bindingindex,
+ 	  Buffer<GL_ARRAY_BUFFER>* buffer,
+ 	  uint32_t  offset,
+ 	  uint32_t  stride);
 
   // Enable or disable a generic vertex attribute array
   // -------------------------------------------------- 

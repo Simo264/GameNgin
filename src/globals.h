@@ -8,7 +8,7 @@ namespace globals
   extern uint16_t window_width;
   extern uint16_t window_height;
 
-  extern double current_time;
+  extern double   world_time;
 };
 
 #endif

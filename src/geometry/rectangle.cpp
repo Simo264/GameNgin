@@ -1,40 +1,53 @@
-#include "triangle.h"
+#include "rectangle.h"
 #include "../shader.h"
 #include "../globals.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
-const std::array<position_t, 3> Triangle::m_localspace = std::array<position_t, 3>{
-  position_t{ -1, -1 },
-  position_t{ +1, -1 },
-  position_t{  0, +1 }
+const std::array<position_t, 4> Rectangle::m_localspace = std::array<position_t, 4> {
+  position_t{ -1, -1 }, // bottom left
+  position_t{ +1, -1 }, // bottom right
+  position_t{ -1, +1 }, // top left
+  position_t{ +1, +1 }  // top right
+};
+const std::array<uint8_t, 6> Rectangle::m_indices = std::array<uint8_t, 6>{
+  0,1,3,  0,2,3
 };
 
 static const glm::mat4 identity_matrix = glm::mat4(1.f);
 
-
-Triangle::Triangle()
+Rectangle::Rectangle()
 {
-  m_colors = std::array<color8_t, 3> {
-    color8_t{ 255, 255, 255 },
-    color8_t{ 255, 255, 255 },
-    color8_t{ 255, 255, 255 }
+  m_colors = std::array<color8_t, 4> {
+    color8_t{ 255, 0, 0 },
+    color8_t{ 0, 255, 0 },
+    color8_t{ 0, 0, 255 },
+    color8_t{ 255, 0, 255 },
   };
+
   init();
 }
 
-Triangle::Triangle(std::array<color8_t, 3> colors)
+Rectangle::Rectangle(std::array<color8_t, 4> colors)
 : m_colors{colors}
 {
   init();
 }
 
-void Triangle::init()
+void Rectangle::init()
 {
+  /* create vertex array */
   m_vaOBJ = std::unique_ptr<VertexArray>(new VertexArray);
-
+  
+  /* create vertex buffer */
   m_vbOBJ = std::unique_ptr<Buffer<GL_ARRAY_BUFFER>>(
     new Buffer<GL_ARRAY_BUFFER>(sizeof(m_localspace) + sizeof(m_colors)));
+  
+  /* create and init index buffer */
+  m_ibOBJ = std::unique_ptr<Buffer<GL_ELEMENT_ARRAY_BUFFER>>(
+    new Buffer<GL_ELEMENT_ARRAY_BUFFER>(sizeof(m_indices), m_indices.data()));
+
+  /* init vertex buffer */
   m_vbOBJ.get()->namedBufferSubData(0, sizeof(m_localspace), m_localspace.data());
   m_vbOBJ.get()->namedBufferSubData(sizeof(m_localspace), sizeof(m_colors), m_colors.data());
 
@@ -48,37 +61,37 @@ void Triangle::init()
   m_vaOBJ.get()->bindVertexBuffer(1, m_vbOBJ.get(), 0, sizeof(color8_t));
 }
 
-void Triangle::scale(float x, float y)
+void Rectangle::scale(float x, float y)
 {
   m_scalemat = glm::scale(identity_matrix, glm::vec3(x, y, 0.f));
 }
 
-void Triangle::rotate(float angle)
+void Rectangle::rotate(float angle)
 {
   m_rotatemat = glm::rotate(identity_matrix, glm::radians(angle), glm::vec3(0.f, 0.f, 1.f));
 }
 
-void Triangle::translate(float x, float y)
+void Rectangle::translate(float x, float y)
 {
   m_transmat = glm::translate(identity_matrix, glm::vec3(x, y, 0.f));
 }
 
-void Triangle::render(Shader* shader, uint32_t drawmode)
+void Rectangle::render(Shader* shader, uint32_t drawmode)
 {
   m_vaOBJ.get()->bind();
-  shader->use();
-
+  
   const glm::mat4 model       = m_transmat * m_rotatemat * m_scalemat;
   const glm::mat4 view        = glm::translate(identity_matrix, glm::vec3(0.f, 0.f, 0.f));
   const glm::mat4 projection  = glm::ortho(-1, 1, -1, 1);
   const glm::mat4 MVP         = projection * view * model;
-  shader->setMatrix4("MVP", MVP);
   
+  shader->use();
+  shader->setMatrix4("MVP", MVP);
   // shader->setMatrix4("model", model);
   // shader->setMatrix4("view", view);
   // shader->setMatrix4("projection", projection);
 
-  glDrawArrays(drawmode, 0, 3);
+  glDrawElements(drawmode, 6, GL_UNSIGNED_BYTE, 0);
 }
 
 

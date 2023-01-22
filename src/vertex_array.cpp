@@ -1,7 +1,5 @@
 #include "vertex_array.h"
 
-#include <GL/glew.h>
-
 VertexArray::VertexArray()
 {
   glGenVertexArrays(1, &m_vaOBJ);
@@ -25,7 +23,7 @@ void VertexArray::setAttribBinding(uint32_t attribindex, uint32_t bindingindex)
 
 void VertexArray::bindVertexBuffer(
   uint32_t      bindingindex,
-  VertexBuffer* buffer,
+  Buffer<GL_ARRAY_BUFFER>* buffer,
   uint32_t      offset,
   uint32_t      stride)
 {

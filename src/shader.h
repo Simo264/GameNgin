@@ -27,13 +27,19 @@ private:
 public:
 
   // constructors
-  Shader(const char* vsFilename, const char* fsFilename, const char* gsFilename = nullptr);
+  Shader(
+    const char* vsFilename, 
+    const char* fsFilename, 
+    const char* gsFilename = nullptr);
   Shader() { }
   // sets the current shader as active
   void use();
 
   // compiles the shader from given source code
-  void compile(const char* vertexSource, const char* fragmentSource, const char* geometrySource = nullptr);
+  void compile(
+    const char* vertexSource, 
+    const char* fragmentSource, 
+    const char* geometrySource = nullptr);
   
   // utility functions
   void setFloat    (const char*name, float value);

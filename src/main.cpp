@@ -12,6 +12,7 @@
 #include "shader.h"
 
 #include "geometry/triangle.h"
+#include "geometry/rectangle.h"
 
 
 // Window config
@@ -56,7 +57,7 @@ int main()
   logger::trace("Shaders loaded successfully");
 
   Triangle triangle;
-
+  Rectangle rectangle;
 
   // deltaTime variables
   // -------------------
@@ -70,7 +71,7 @@ int main()
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
 
-    globals::current_time = currentFrame;
+    globals::world_time = currentFrame;
 
     // input
     // ------
@@ -79,14 +80,18 @@ int main()
 
     // update state
     // ------
-    triangle.rotate(currentFrame*2);
-    triangle.translate(sin(currentFrame), 0);
-    triangle.scale(0.5, 0.5);
+    rectangle.scale(sin(currentFrame), 0.5f);
+    //rectangle.translate(sin(currentFrame), 0);
+
+    //triangle.rotate(currentFrame*2);
+    //triangle.translate(sin(currentFrame), 0);
+    //triangle.scale(0.5, 0.5);
     
     // render
     // ------
     window.render(0.7f, 0.1f, 0.2);
-    triangle.render(&shader);
+    //triangle.render(&shader);
+    rectangle.render(&shader);
 
     // Swap front and back buffers 
     window.swapBuffers();
