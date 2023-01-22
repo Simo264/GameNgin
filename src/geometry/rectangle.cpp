@@ -14,10 +14,10 @@ const std::array<uint8_t, 6> Rectangle::m_indices = std::array<uint8_t, 6>{
   0,1,3,  0,2,3
 };
 
-static const glm::mat4 identity_matrix = glm::mat4(1.f);
 
 Rectangle::Rectangle()
 {
+  /* default color values */
   m_colors = std::array<color8_t, 4> {
     color8_t{ 255, 0, 0 },
     color8_t{ 0, 255, 0 },
@@ -61,27 +61,12 @@ void Rectangle::init()
   m_vaOBJ.get()->bindVertexBuffer(1, m_vbOBJ.get(), 0, sizeof(color8_t));
 }
 
-void Rectangle::scale(float x, float y)
-{
-  m_scalemat = glm::scale(identity_matrix, glm::vec3(x, y, 0.f));
-}
-
-void Rectangle::rotate(float angle)
-{
-  m_rotatemat = glm::rotate(identity_matrix, glm::radians(angle), glm::vec3(0.f, 0.f, 1.f));
-}
-
-void Rectangle::translate(float x, float y)
-{
-  m_transmat = glm::translate(identity_matrix, glm::vec3(x, y, 0.f));
-}
-
 void Rectangle::render(Shader* shader, uint32_t drawmode)
 {
   m_vaOBJ.get()->bind();
   
   const glm::mat4 model       = m_transmat * m_rotatemat * m_scalemat;
-  const glm::mat4 view        = glm::translate(identity_matrix, glm::vec3(0.f, 0.f, 0.f));
+  const glm::mat4 view        = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
   const glm::mat4 projection  = glm::ortho(-1, 1, -1, 1);
   const glm::mat4 MVP         = projection * view * model;
   

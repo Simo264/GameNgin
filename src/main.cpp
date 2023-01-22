@@ -56,7 +56,7 @@ int main()
   Shader shader("../shaders/vertex.shader", "../shaders/fragment.shader");
   logger::trace("Shaders loaded successfully");
 
-  Triangle triangle;
+  //Triangle triangle;
   Rectangle rectangle;
 
   // deltaTime variables
@@ -80,13 +80,10 @@ int main()
 
     // update state
     // ------
-    rectangle.scale(sin(currentFrame), 0.5f);
-    //rectangle.translate(sin(currentFrame), 0);
+    rectangle.scale(0.5, 0.5f);
+    rectangle.translate(sin(currentFrame), 0);
 
-    //triangle.rotate(currentFrame*2);
-    //triangle.translate(sin(currentFrame), 0);
-    //triangle.scale(0.5, 0.5);
-    
+
     // render
     // ------
     window.render(0.7f, 0.1f, 0.2);
