@@ -1,31 +1,29 @@
 #ifndef TRIANGLE_H
 #define TRIANGLE_H
 
-#include <GL/glew.h>
-#include <glm/glm.hpp>
-#include <memory>
 #include <array>
+#include "abstract_object.h"
 
-#include "object_interface.h"
 
-#include "../vertex.h"
-
-class Triangle : public ObjectInterface
+// Triangle class
+// -----------------------------------------------------------
+class Triangle : public ABCobject
 {
 private:
   /* objects space */
-  static const std::array<position_t, 3> m_localspace;
+  static const std::array<position_t, 3>  m_localspace;
 
   /* vertex colors */
-  std::array<color8_t, 3>   m_colors;
+  static const std::array<color8_t, 3>    m_colors;
 
   void init();
 
 public:
-  Triangle();
-  Triangle(std::array<color8_t, 3> colors);
+  Triangle(glm::vec2 dimension_, glm::vec2 position_);
 
-  void render(class Shader* shader, uint32_t drawmode);
+  void render(class Shader* shader, uint32_t drawmode = GL_TRIANGLES);
+
+  void setColors(std::array<color8_t, 3> colors);
 };
 
 #endif

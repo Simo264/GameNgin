@@ -2,32 +2,29 @@
 #define RECTANGLE_H
 
 #include <GL/glew.h>
-#include <glm/glm.hpp>
-#include <memory>
 #include <array>
 
-#include "object_interface.h"
-#include "../vertex.h"
+#include "abstract_object.h"
 
-class Rectangle : public ObjectInterface
+// Rectangle class
+// -----------------------------------------------------------
+class Rectangle : public ABCobject
 {
 private:
-  std::unique_ptr<Buffer<GL_ELEMENT_ARRAY_BUFFER>> m_ibOBJ;
-
   /* objects space */
-  static const std::array<position_t, 4> m_localspace;
-  static const std::array<uint8_t, 6> m_indices;
-  
+  static const std::array<position_t, 4>  m_localspace;
+  static const std::array<uint8_t,    6>  m_indices;
   /* vertex colors */
-  std::array<color8_t, 4>   m_colors;
+  std::array<color8_t, 4>  m_colors;
 
   void init();
 
 public:
-  Rectangle();
-  Rectangle(std::array<color8_t, 4> colors);
+  Rectangle(glm::vec2 dimension_, glm::vec2 position_);
 
   void render(class Shader* shader, uint32_t drawmode = GL_TRIANGLES);
+
+  void setColors(std::array<color8_t, 4> colors);
 };
 
 #endif

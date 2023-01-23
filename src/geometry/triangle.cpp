@@ -3,29 +3,28 @@
 #include "../globals.h"
 
 
-
-const std::array<position_t, 3> Triangle::m_localspace = std::array<position_t, 3>{
+/* default vertex positions */
+const std::array<position_t, 3> Triangle::m_localspace = {
   position_t{ -1, -1 },
   position_t{ +1, -1 },
   position_t{  0, +1 }
 };
 
-Triangle::Triangle()
+/* default color values */
+const std::array<color8_t, 3> Triangle::m_colors = {
+  color8_t{ 255, 0, 0 },
+  color8_t{ 0, 255, 0 },
+  color8_t{ 255, 255, 0 }
+};
+
+Triangle::Triangle(glm::vec2 dimension_, glm::vec2 position_)
+: ABCobject(dimension_, position_)
 {
-  /* default color values */
-  m_colors = std::array<color8_t, 3> {
-    color8_t{ 255, 255, 255 },
-    color8_t{ 255, 255, 255 },
-    color8_t{ 255, 255, 255 }
-  };
   init();
+
+  scale(1.f, 1.f);
 }
 
-Triangle::Triangle(std::array<color8_t, 3> colors)
-: m_colors{colors}
-{
-  init();
-}
 
 void Triangle::init()
 {
@@ -60,4 +59,7 @@ void Triangle::render(Shader* shader, uint32_t drawmode)
   glDrawArrays(drawmode, 0, 3);
 }
 
+void Triangle::setColors(std::array<color8_t, 3> colors)
+{
 
+}

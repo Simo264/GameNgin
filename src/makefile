@@ -1,4 +1,4 @@
-TARGET 				= exe
+TARGET 				= app.exe
 IMGUI_DIR 		= imgui/
 GEOMETRY_DIR 	= geometry/
 

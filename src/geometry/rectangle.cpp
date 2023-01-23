@@ -4,34 +4,34 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-const std::array<position_t, 4> Rectangle::m_localspace = std::array<position_t, 4> {
+/* default vertex positions */
+const std::array<position_t, 4> Rectangle::m_localspace = {
   position_t{ -1, -1 }, // bottom left
   position_t{ +1, -1 }, // bottom right
   position_t{ -1, +1 }, // top left
   position_t{ +1, +1 }  // top right
 };
-const std::array<uint8_t, 6> Rectangle::m_indices = std::array<uint8_t, 6>{
-  0,1,3,  0,2,3
+/* vertex indices */
+const std::array<uint8_t, 6> Rectangle::m_indices = {
+  0,1,3,  // tl - tr -  bl
+  0,2,3   // tl - bl - br
 };
 
 
-Rectangle::Rectangle()
+Rectangle::Rectangle(glm::vec2 dimension_, glm::vec2 position_)
+: ABCobject(dimension_, position_)
 {
   /* default color values */
-  m_colors = std::array<color8_t, 4> {
-    color8_t{ 255, 0, 0 },
-    color8_t{ 0, 255, 0 },
-    color8_t{ 0, 0, 255 },
-    color8_t{ 255, 0, 255 },
+  m_colors = {
+    color8_t{ 255, 0, 0 },      // top left
+    color8_t{ 0, 255, 0 },      // top right
+    color8_t{ 0, 0, 255 },      // bottom left
+    color8_t{ 255, 255, 255 },  // bottom right
   };
 
   init();
-}
 
-Rectangle::Rectangle(std::array<color8_t, 4> colors)
-: m_colors{colors}
-{
-  init();
+  scale(1.f, 1.f);
 }
 
 void Rectangle::init()
@@ -65,18 +65,23 @@ void Rectangle::render(Shader* shader, uint32_t drawmode)
 {
   m_vaOBJ.get()->bind();
   
-  const glm::mat4 model       = m_transmat * m_rotatemat * m_scalemat;
-  const glm::mat4 view        = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.f, 0.f));
-  const glm::mat4 projection  = glm::ortho(-1, 1, -1, 1);
-  const glm::mat4 MVP         = projection * view * model;
+  glm::mat4 model       = m_transmat * m_rotatemat * m_scalemat;
+  glm::mat4 projection  = glm::ortho(0.f, 720.f, 720.f, 0.f, -1.f, 1.f);
   
   shader->use();
-  shader->setMatrix4("MVP", MVP);
-  // shader->setMatrix4("model", model);
-  // shader->setMatrix4("view", view);
-  // shader->setMatrix4("projection", projection);
+  shader->setMatrix4("model", model);
+  shader->setMatrix4("projection", projection);
 
   glDrawElements(drawmode, 6, GL_UNSIGNED_BYTE, 0);
 }
 
+void Rectangle::setColors(std::array<color8_t, 4> colors)
+{
+  m_colors = colors;
 
+  m_vbOBJ.get()->namedBufferSubData(
+    sizeof(m_localspace),
+    sizeof(m_colors),
+    m_colors.data());
+
+}

@@ -2,9 +2,6 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-#include <string>
-#include <iostream>
-
 #include "logger.h"
 #include "window.h"
 #include "globals.h"
@@ -57,7 +54,7 @@ int main()
   logger::trace("Shaders loaded successfully");
 
   //Triangle triangle;
-  Rectangle rectangle;
+  Rectangle rectangle(glm::vec2(WINDOW_WIDTH/2, WINDOW_WIDTH/2), glm::vec2(0, 0));
 
   // deltaTime variables
   // -------------------
@@ -80,14 +77,12 @@ int main()
 
     // update state
     // ------
-    rectangle.scale(0.5, 0.5f);
-    rectangle.translate(sin(currentFrame), 0);
+
 
 
     // render
     // ------
     window.render(0.7f, 0.1f, 0.2);
-    //triangle.render(&shader);
     rectangle.render(&shader);
 
     // Swap front and back buffers 
