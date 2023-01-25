@@ -1,7 +1,7 @@
 #ifndef RECTANGLE_H
 #define RECTANGLE_H
 
-#include <GL/glew.h>
+
 #include <array>
 
 #include "abstract_object.h"

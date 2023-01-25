@@ -12,7 +12,6 @@ class Triangle : public ABCobject
 private:
   /* objects space */
   static const std::array<position_t, 3>  m_localspace;
-
   /* vertex colors */
   static const std::array<color8_t, 3>    m_colors;
 
@@ -25,5 +24,6 @@ public:
 
   void setColors(std::array<color8_t, 3> colors);
 };
+// -----------------------------------------------------------
 
 #endif

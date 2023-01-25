@@ -6,10 +6,10 @@
 
 namespace logger
 {
-  void log(const std::string& msg, std::ostream& os = std::cout);
-  void trace(const std::string& msg, std::ostream& os = std::cout);
-  void warning(const std::string& msg, std::ostream& os = std::cout);
-  void error(const std::string& msg, std::ostream& os = std::cout);
+  void log(const char* filename, int lineno, const std::string& msg = "", std::ostream& os = std::cout);
+  void trace(const char* filename, int lineno, const std::string& msg = "", std::ostream& os = std::cout);
+  void warning(const char* filename, int lineno, const std::string& msg = "", std::ostream& os = std::cout);
+  void error(const char* filename, int lineno, const std::string& msg = "", std::ostream& os = std::cout);
 };
 
 #endif

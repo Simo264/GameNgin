@@ -18,7 +18,7 @@ const std::array<uint8_t, 6> Rectangle::m_indices = {
 };
 
 
-Rectangle::Rectangle(glm::vec2 dimension_, glm::vec2 position_)
+Rectangle::Rectangle(glm::vec2 dimension_, glm::vec2 position_) 
 : ABCobject(dimension_, position_)
 {
   /* default color values */
@@ -30,8 +30,6 @@ Rectangle::Rectangle(glm::vec2 dimension_, glm::vec2 position_)
   };
 
   init();
-
-  scale(1.f, 1.f);
 }
 
 void Rectangle::init()
@@ -65,9 +63,11 @@ void Rectangle::render(Shader* shader, uint32_t drawmode)
 {
   m_vaOBJ.get()->bind();
   
-  glm::mat4 model       = m_transmat * m_rotatemat * m_scalemat;
-  glm::mat4 projection  = glm::ortho(0.f, 720.f, 720.f, 0.f, -1.f, 1.f);
-  
+  const glm::mat4 scale       = glm::scale(glm::mat4(1.f), glm::vec3(dimension, 0.f));
+  const glm::mat4 translate   = glm::translate(glm::mat4(1.f), glm::vec3(position, 0.f));
+  const glm::mat4 model       = translate * m_rotatemat * scale;
+  const glm::mat4 projection  = glm::ortho(0.f, 720.f, 720.f, 0.f, -1.0f, 1.0f);
+
   shader->use();
   shader->setMatrix4("model", model);
   shader->setMatrix4("projection", projection);

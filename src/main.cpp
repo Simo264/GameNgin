@@ -2,10 +2,16 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
+#include <chrono>
+#include <thread>
+
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
+
 #include "logger.h"
 #include "window.h"
 #include "globals.h"
-
 #include "shader.h"
 
 #include "geometry/triangle.h"
@@ -15,20 +21,21 @@
 // Window config
 #define WINDOW_WIDTH  720
 #define WINDOW_HEIGHT 720
-#define WINDOW_TITLE  "Breakout"
+#define WINDOW_TITLE  "GameNgin"
 
 static void process_input(Window* window);
 
 int main()
 {
+  // glfw: init
+  // ----------------
   if(!glfwInit())
   {
-    logger::error("Error on init GLFW");
+    logger::error(__FILE__, __LINE__,"Error on init GLFW");
     glfwTerminate();
     return -1;
   }
-  logger::trace("GLFW initialized successfully");
-  
+  logger::trace(__FILE__, __LINE__,"GLFW initialized successfully");
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -39,22 +46,16 @@ int main()
   // ----------------
   if(glewInit() != GLEW_OK)
   {
-    logger::error("Error on init GLEW");
+    logger::error(__FILE__, __LINE__, "Error on init GLEW");
     glfwTerminate();
     return -1;
   }
-  logger::trace("GLEW initialized successfully");
-  
-
-  // OpenGL configuration
-  // --------------------
-  glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+  logger::trace(__FILE__, __LINE__, "GLEW initialized successfully");
 
   Shader shader("../shaders/vertex.shader", "../shaders/fragment.shader");
-  logger::trace("Shaders loaded successfully");
+  logger::trace(__FILE__, __LINE__,"Shaders loaded successfully");
 
-  //Triangle triangle;
-  Rectangle rectangle(glm::vec2(WINDOW_WIDTH/2, WINDOW_WIDTH/2), glm::vec2(0, 0));
+  Rectangle rect(glm::vec2{ 50,50 }, glm::vec2{ 100,100 });
 
   // deltaTime variables
   // -------------------
@@ -67,7 +68,6 @@ int main()
     float currentFrame = glfwGetTime();
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
-
     globals::world_time = currentFrame;
 
     // input
@@ -77,18 +77,18 @@ int main()
 
     // update state
     // ------
-
-
-
+    rect.position.x += 2;
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+     
     // render
     // ------
-    window.render(0.7f, 0.1f, 0.2);
-    rectangle.render(&shader);
+    window.render(100.f, 255.f, 0.f);
+    rect.render(&shader);
 
     // Swap front and back buffers 
     window.swapBuffers();
   }
-  
+
   glfwTerminate();
 
   return 0;

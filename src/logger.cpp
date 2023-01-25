@@ -5,20 +5,20 @@
 
 namespace logger
 {
-  void log(const std::string& msg, std::ostream& os)
+  void log(const char* filename, int lineno, const std::string& msg, std::ostream& os)
   {
-    os << msg << std::endl;
+    os << "[LOG]" << "[" << filename << ":" << lineno << "]" << msg << std::endl;
   }
-  void trace(const std::string& msg, std::ostream& os)
+  void trace(const char* filename, int lineno, const std::string& msg, std::ostream& os)
   {
-    os << "[TRACE]" << msg << std::endl;
+    os << "[TRACE]" << "[" << filename << ":" << lineno << "]" << msg << std::endl;
   }
-  void warning(const std::string& msg, std::ostream& os)
+  void warning(const char* filename, int lineno, const std::string& msg, std::ostream& os)
   {
-    os << "[WARNING]" << msg << std::endl;
+    os << "[WARNING]" << "[" << filename << ":" << lineno << "]" << msg << std::endl;
   }
-  void error(const std::string& msg, std::ostream& os)
+  void error(const char* filename, int lineno, const std::string& msg, std::ostream& os)
   {
-    os << "[ERROR]" << msg << std::endl;
+    os << "[ERROR]" << "[" << filename << ":" << lineno << "]" << msg << std::endl;
   }
 };
