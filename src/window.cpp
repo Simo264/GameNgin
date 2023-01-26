@@ -1,14 +1,12 @@
-#include "window.h"
+#include "../include/window.h"
+#include "../include/logger.h"
+#include "../include/globals.h"
 
-#include <GLFW/glfw3.h>
 #include <cstdlib>
-
 #include <string>
 #include <fstream>
 #include <sstream>
 
-#include "logger.h"
-#include "globals.h"
 
 Window::Window(
   uint16_t      width, 
@@ -20,23 +18,20 @@ Window::Window(
   m_window = glfwCreateWindow(width, height, title, monitor, share);
   if(!m_window)
   {
-    logger::error(__FILE__, __LINE__, "Error on create window");
+    LOG_ERROR("Error on create window");
     glfwTerminate();
     exit(EXIT_FAILURE);
   }
   glfwMakeContextCurrent(m_window);
-  glfwSetFramebufferSizeCallback(m_window, framebuffer_size_callback);
+  
+  glfwSetFramebufferSizeCallback(m_window, [](GLFWwindow* window, int width, int height){
+    glViewport(0, 0, width, height);
+    globals::window_width = width;
+    globals::window_height= height;
+  });
+
   glViewport(0, 0, width, height);
   
-  globals::window_width = width;
-  globals::window_height= height;
-}
-
-void Window::framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-  // make sure the viewport matches the new window dimensions; note that width and 
-  // height will be significantly larger than specified on retina displays.
-  glViewport(0, 0, width, height);
   globals::window_width = width;
   globals::window_height= height;
 }

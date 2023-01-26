@@ -1,6 +1,6 @@
-#include "triangle.h"
-#include "../shader.h"
-#include "../globals.h"
+#include "../include/triangle.h"
+#include "../include/shader.h"
+#include "../include/globals.h"
 
 
 /* default vertex positions */
@@ -18,7 +18,7 @@ const std::array<color8_t, 3> Triangle::m_colors = {
 };
 
 Triangle::Triangle(glm::vec2 dimension_, glm::vec2 position_) 
-: ABCobject(dimension_, position_)
+: Object(dimension_, position_)
 {
   init();
 }

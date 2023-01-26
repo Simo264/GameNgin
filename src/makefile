@@ -1,10 +1,8 @@
 TARGET 				= app.exe
 IMGUI_DIR 		= imgui/
-GEOMETRY_DIR 	= geometry/
 
 SRC_FILES =		$(wildcard *.cpp)			
 SRC_FILES += 	$(wildcard $(IMGUI_DIR)*.cpp)		# compile imgui/*.cpp files
-SRC_FILES += 	$(wildcard $(GEOMETRY_DIR)*.cpp)	# compile geometry/*.cpp files
 
 OBJ_FILES = 	$(patsubst %.cpp, %.o, $(SRC_FILES))
 
@@ -25,7 +23,7 @@ $(TARGET): $(OBJ_FILES)
 
 clean:
 # remove all object files excluding the imgui/ dir
-	rm -v  *.o geometry/*.o $(TARGET)
+	rm -v  *.o $(TARGET)
 
 clean-all:
 #remove all

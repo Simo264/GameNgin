@@ -4,11 +4,11 @@
 
 #include <array>
 
-#include "abstract_object.h"
+#include "object.h"
 
 // Rectangle class
 // -----------------------------------------------------------
-class Rectangle : public ABCobject
+class Rectangle : public Object
 {
 private:
   /* objects space */

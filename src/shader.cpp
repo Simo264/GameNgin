@@ -6,10 +6,9 @@
 ** Creative Commons, either version 4 of the License, or (at your
 ** option) any later version.
 ******************************************************************/
-#include "shader.h"
+#include "../include/shader.h"
 
 #include <GL/glew.h>
-#include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 #include <iostream>

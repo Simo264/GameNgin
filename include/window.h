@@ -1,7 +1,9 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <functional>
 
 // Window class
 // -----------------------------------------------------------
@@ -9,7 +11,6 @@ class Window
 {
 private:
   GLFWwindow* m_window;
-  static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
 public:
   Window(uint16_t width, 
@@ -26,6 +27,8 @@ public:
   void use() const          { glfwMakeContextCurrent(m_window);         }
   int getKey(int key) const { return glfwGetKey(m_window, key);         }
   GLFWwindow* getWindowObj() const { return m_window; }
+
+  void processInput(std::function<void(Window*)> callback) { callback(this); }
 
   void render(float r, float g, float b, uint32_t mask = GL_COLOR_BUFFER_BIT);
 };

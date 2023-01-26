@@ -1,6 +1,6 @@
-#include "rectangle.h"
-#include "../shader.h"
-#include "../globals.h"
+#include "../include/rectangle.h"
+#include "../include/shader.h"
+#include "../include/globals.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -19,7 +19,7 @@ const std::array<uint8_t, 6> Rectangle::m_indices = {
 
 
 Rectangle::Rectangle(glm::vec2 dimension_, glm::vec2 position_) 
-: ABCobject(dimension_, position_)
+: Object(dimension_, position_)
 {
   /* default color values */
   m_colors = {

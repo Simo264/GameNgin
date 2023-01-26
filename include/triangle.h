@@ -2,12 +2,12 @@
 #define TRIANGLE_H
 
 #include <array>
-#include "abstract_object.h"
+#include "object.h"
 
 
 // Triangle class
 // -----------------------------------------------------------
-class Triangle : public ABCobject
+class Triangle : public Object
 {
 private:
   /* objects space */

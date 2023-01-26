@@ -4,18 +4,19 @@
 
 #include <chrono>
 #include <thread>
+#include <map>
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 
-#include "logger.h"
-#include "window.h"
-#include "globals.h"
-#include "shader.h"
+#include "../include/logger.h"
+#include "../include/window.h"
+#include "../include/globals.h"
+#include "../include/shader.h"
 
-#include "geometry/triangle.h"
-#include "geometry/rectangle.h"
+#include "../include/triangle.h"
+#include "../include/rectangle.h"
 
 
 // Window config
@@ -23,7 +24,12 @@
 #define WINDOW_HEIGHT 720
 #define WINDOW_TITLE  "GameNgin"
 
-static void process_input(Window* window);
+// deltaTime variables
+// -------------------
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
+
+static void input_callback(Window* window);
 
 int main()
 {
@@ -31,14 +37,15 @@ int main()
   // ----------------
   if(!glfwInit())
   {
-    logger::error(__FILE__, __LINE__,"Error on init GLFW");
+    LOG_ERROR("Error on init GLFW");
     glfwTerminate();
     return -1;
   }
-  logger::trace(__FILE__, __LINE__,"GLFW initialized successfully");
+  LOG_TRACE("GLFW initialized successfully");
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
   
   Window window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
 
@@ -46,44 +53,50 @@ int main()
   // ----------------
   if(glewInit() != GLEW_OK)
   {
-    logger::error(__FILE__, __LINE__, "Error on init GLEW");
+    LOG_ERROR("Error on init GLEW");
     glfwTerminate();
     return -1;
   }
-  logger::trace(__FILE__, __LINE__, "GLEW initialized successfully");
+  LOG_TRACE("GLEW initialized successfully");
 
   Shader shader("../shaders/vertex.shader", "../shaders/fragment.shader");
-  logger::trace(__FILE__, __LINE__,"Shaders loaded successfully");
+  LOG_TRACE("Shaders loaded successfully");
 
   Rectangle rect(glm::vec2{ 50,50 }, glm::vec2{ 100,100 });
+  Rectangle rect2(glm::vec2{ 50,50 }, glm::vec2{ 300,200 });
 
-  // deltaTime variables
-  // -------------------
-  float deltaTime = 0.0f;
-  float lastFrame = 0.0f;
+  globals::world_objects.insert({rect.id,   &rect});
+  globals::world_objects.insert({rect2.id,  &rect2});
+
+
   while (!window.shouldClose())
   {
     // calculate delta time
     // --------------------
-    float currentFrame = glfwGetTime();
+    const double currentFrame = static_cast<double>(glfwGetTime());
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
     globals::world_time = currentFrame;
 
+    //LOG_MESSAGE(std::to_string(deltaTime) + "  " + std::to_string(100 * deltaTime));
+
     // input
     // ------
-    process_input(&window);
+    window.processInput(input_callback);
     glfwPollEvents();
 
     // update state
     // ------
-    rect.position.x += 2;
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
-     
+
+
+
     // render
     // ------
     window.render(100.f, 255.f, 0.f);
     rect.render(&shader);
+    rect2.render(&shader);
+
+
 
     // Swap front and back buffers 
     window.swapBuffers();
@@ -94,9 +107,40 @@ int main()
   return 0;
 }
 
-void process_input(Window* window)
+void input_callback(Window* window)
 {
+  Rectangle* rect = dynamic_cast<Rectangle*>(globals::world_objects.at(0));
+
   if (window->getKey(GLFW_KEY_ESCAPE) == GLFW_PRESS)
+  {
     window->close();
+    return;
+  }
+  
+  if(window->getKey(GLFW_KEY_A) == GLFW_PRESS)
+  {
+    rect->position.x -= 2 * (deltaTime*100) ;
+    return;
+  }
+
+  if(window->getKey(GLFW_KEY_D) == GLFW_PRESS)
+  {
+    rect->position.x += 2 * (deltaTime*100);
+    return;
+  }
+
+  if(window->getKey(GLFW_KEY_W) == GLFW_PRESS)
+  {
+    rect->position.y -= 2 * (deltaTime*100) ;
+    return;
+  }
+
+  if(window->getKey(GLFW_KEY_S) == GLFW_PRESS)
+  {
+    rect->position.y += 2 * (deltaTime*100);
+    return;
+  }
+
+
 }
 

@@ -1,4 +1,4 @@
-#include "globals.h"
+#include "../include/globals.h"
 
 namespace globals
 {
@@ -6,4 +6,6 @@ namespace globals
   uint16_t window_height  = 0;
   
   double world_time       = 0;
+
+  std::map<uint32_t, Object*> world_objects = std::map<uint32_t, Object*>();
 };

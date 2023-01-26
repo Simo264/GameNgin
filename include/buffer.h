@@ -2,7 +2,6 @@
 #define BUFFER_H
 
 #include <GL/glew.h>
-#include <cstdint>
 
 template <uint32_t target>
 class Buffer
