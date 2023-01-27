@@ -1,26 +1,26 @@
-#include "../include/rectangle.h"
+#include "../include/box.h"
 #include "../include/shader.h"
 #include "../include/globals.h"
 
-#include <glm/gtc/matrix_transform.hpp>
-
 /* default vertex positions */
-const std::array<position_t, 4> Rectangle::m_localspace = {
+const std::array<position_t, 4> Box::m_localspace = {
   position_t{ -1, -1 }, // bottom left
   position_t{ +1, -1 }, // bottom right
   position_t{ -1, +1 }, // top left
   position_t{ +1, +1 }  // top right
 };
-/* vertex indices */
-const std::array<uint8_t, 6> Rectangle::m_indices = {
+/* default vertex indices */
+const std::array<uint8_t, 6> Box::m_indices = {
   0,1,3,  // tl - tr -  bl
   0,2,3   // tl - bl - br
 };
 
 
-Rectangle::Rectangle(glm::vec2 dimension_, glm::vec2 position_) 
-: Object(dimension_, position_)
+Box::Box(glm::vec2 dimension_, glm::vec2 position_) 
+: Object(), dimension{dimension_}, position{position_}
 {
+  name = "Box_" + std::to_string(id);
+
   /* default color values */
   m_colors = {
     color8_t{ 255, 0, 0 },      // top left
@@ -32,7 +32,7 @@ Rectangle::Rectangle(glm::vec2 dimension_, glm::vec2 position_)
   init();
 }
 
-void Rectangle::init()
+void Box::init()
 {
   /* create vertex array */
   m_vaOBJ = std::unique_ptr<VertexArray>(new VertexArray);
@@ -59,23 +59,22 @@ void Rectangle::init()
   m_vaOBJ.get()->bindVertexBuffer(1, m_vbOBJ.get(), 0, sizeof(color8_t));
 }
 
-void Rectangle::render(Shader* shader, uint32_t drawmode)
+void Box::render(Shader* shader, uint32_t drawmode)
 {
-  m_vaOBJ.get()->bind();
-  
-  const glm::mat4 scale       = glm::scale(glm::mat4(1.f), glm::vec3(dimension, 0.f));
+  const glm::mat4 scale       = glm::scale(glm::mat4(1.f), glm::vec3(dimension*0.5f, 0.f));
   const glm::mat4 translate   = glm::translate(glm::mat4(1.f), glm::vec3(position, 0.f));
   const glm::mat4 model       = translate * m_rotatemat * scale;
-  const glm::mat4 projection  = glm::ortho(0.f, 720.f, 720.f, 0.f, -1.0f, 1.0f);
+  const glm::mat4 projection  = glm::ortho(0.f, (float)globals::window_width, (float)globals::window_height, 0.f, -1.0f, 1.0f);
 
   shader->use();
   shader->setMatrix4("model", model);
   shader->setMatrix4("projection", projection);
-
+  
+  m_vaOBJ.get()->bind();
   glDrawElements(drawmode, 6, GL_UNSIGNED_BYTE, 0);
 }
 
-void Rectangle::setColors(std::array<color8_t, 4> colors)
+void Box::setColors(std::array<color8_t, 4> colors)
 {
   m_colors = colors;
 

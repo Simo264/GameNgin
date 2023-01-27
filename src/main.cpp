@@ -5,6 +5,8 @@
 #include <chrono>
 #include <thread>
 #include <map>
+#include <memory>
+#include <iostream>
 
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
@@ -12,11 +14,11 @@
 
 #include "../include/logger.h"
 #include "../include/window.h"
-#include "../include/globals.h"
+#include "../include/world.h"
 #include "../include/shader.h"
 
-#include "../include/triangle.h"
-#include "../include/rectangle.h"
+#include "../include/box.h"
+#include "../include/collision_detection.h"
 
 
 // Window config
@@ -28,6 +30,11 @@
 // -------------------
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+
+// boxes
+// -------------------
+Box* box1 = nullptr;
+Box* box2 = nullptr;
 
 static void input_callback(Window* window);
 
@@ -62,12 +69,11 @@ int main()
   Shader shader("../shaders/vertex.shader", "../shaders/fragment.shader");
   LOG_TRACE("Shaders loaded successfully");
 
-  Rectangle rect(glm::vec2{ 50,50 }, glm::vec2{ 100,100 });
-  Rectangle rect2(glm::vec2{ 50,50 }, glm::vec2{ 300,200 });
+  box1 = new Box(glm::vec2{ 50,50 }, glm::vec2{ 50,50 });
+  box2 = new Box(glm::vec2{ 50,50 }, glm::vec2{ 300,200 });
 
-  globals::world_objects.insert({rect.id,   &rect});
-  globals::world_objects.insert({rect2.id,  &rect2});
-
+  world::insert_object(box1);
+  world::insert_object(box2);
 
   while (!window.shouldClose())
   {
@@ -76,9 +82,7 @@ int main()
     const double currentFrame = static_cast<double>(glfwGetTime());
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
-    globals::world_time = currentFrame;
-
-    //LOG_MESSAGE(std::to_string(deltaTime) + "  " + std::to_string(100 * deltaTime));
+    world::world_time = currentFrame;
 
     // input
     // ------
@@ -87,14 +91,27 @@ int main()
 
     // update state
     // ------
-
+    if(box2)
+    {
+      if(collision_detection::basic_hitbox(box1, box2))
+      {
+        world::destroy_object(box2);
+        box2 = nullptr;
+      }
+    }
 
 
     // render
     // ------
     window.render(100.f, 255.f, 0.f);
-    rect.render(&shader);
-    rect2.render(&shader);
+    for(auto it = world::world_objects.begin(); it != world::world_objects.end(); ++it)
+    {
+      Box* b = dynamic_cast<Box*>(it->second);
+      if(b)
+      {
+        b->render(&shader);
+      }
+    }
 
 
 
@@ -109,8 +126,6 @@ int main()
 
 void input_callback(Window* window)
 {
-  Rectangle* rect = dynamic_cast<Rectangle*>(globals::world_objects.at(0));
-
   if (window->getKey(GLFW_KEY_ESCAPE) == GLFW_PRESS)
   {
     window->close();
@@ -119,28 +134,27 @@ void input_callback(Window* window)
   
   if(window->getKey(GLFW_KEY_A) == GLFW_PRESS)
   {
-    rect->position.x -= 2 * (deltaTime*100) ;
+    box1->position.x -= 2 * (deltaTime*100);
     return;
   }
 
   if(window->getKey(GLFW_KEY_D) == GLFW_PRESS)
   {
-    rect->position.x += 2 * (deltaTime*100);
+    box1->position.x += 2 * (deltaTime*100);
     return;
   }
 
   if(window->getKey(GLFW_KEY_W) == GLFW_PRESS)
   {
-    rect->position.y -= 2 * (deltaTime*100) ;
+    box1->position.y -= 2 * (deltaTime*100) ;
     return;
   }
 
   if(window->getKey(GLFW_KEY_S) == GLFW_PRESS)
   {
-    rect->position.y += 2 * (deltaTime*100);
+    box1->position.y += 2 * (deltaTime*100);
     return;
   }
-
-
 }
+
 

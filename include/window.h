@@ -26,6 +26,12 @@ public:
   void swapBuffers()        { glfwSwapBuffers(m_window);                }
   void use() const          { glfwMakeContextCurrent(m_window);         }
   int getKey(int key) const { return glfwGetKey(m_window, key);         }
+  
+  void getFrameBufferSize(int& w, int& h) 
+  { 
+    glfwGetFramebufferSize(m_window, &w, &h); 
+  }
+
   GLFWwindow* getWindowObj() const { return m_window; }
 
   void processInput(std::function<void(Window*)> callback) { callback(this); }
