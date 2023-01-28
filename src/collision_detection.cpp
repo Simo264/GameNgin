@@ -1,3 +1,4 @@
+#include "../include/core_minimal.h"
 #include "../include/collision_detection.h"
 
 bool collision_detection::basic_hitbox(Box* box1, Box* box2)

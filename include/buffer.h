@@ -1,8 +1,6 @@
 #ifndef BUFFER_H
 #define BUFFER_H
 
-#include <GL/glew.h>
-
 template <uint32_t target>
 class Buffer
 {

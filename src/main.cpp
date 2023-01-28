@@ -1,16 +1,4 @@
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-
-#include <chrono>
-#include <thread>
-#include <map>
-#include <memory>
-#include <iostream>
-
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_glfw.h"
-#include "imgui/imgui_impl_opengl3.h"
+#include "../include/core_minimal.h"
 
 #include "../include/logger.h"
 #include "../include/window.h"
@@ -35,7 +23,6 @@ float lastFrame = 0.0f;
 // -------------------
 Box* box1 = nullptr;
 Box* box2 = nullptr;
-
 static void input_callback(Window* window);
 
 int main()
@@ -46,7 +33,7 @@ int main()
   {
     LOG_ERROR("Error on init GLFW");
     glfwTerminate();
-    return -1;
+    exit(EXIT_FAILURE);
   }
   LOG_TRACE("GLFW initialized successfully");
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -66,10 +53,12 @@ int main()
   }
   LOG_TRACE("GLEW initialized successfully");
 
+
+
   Shader shader("../shaders/vertex.shader", "../shaders/fragment.shader");
   LOG_TRACE("Shaders loaded successfully");
 
-  box1 = new Box(glm::vec2{ 50,50 }, glm::vec2{ 50,50 });
+  box1 = new Box(glm::vec2{ 50,50 }, glm::vec2{ 0,0 });
   box2 = new Box(glm::vec2{ 50,50 }, glm::vec2{ 300,200 });
 
   world::insert_object(box1);
@@ -91,27 +80,34 @@ int main()
 
     // update state
     // ------
-    if(box2)
-    {
-      if(collision_detection::basic_hitbox(box1, box2))
-      {
-        world::destroy_object(box2);
-        box2 = nullptr;
-      }
-    }
+    uint32_t drawmode = GL_TRIANGLES;
+    if(collision_detection::basic_hitbox(box1, box2))
+      drawmode = GL_LINE_LOOP;
+
+    // if(box2)
+    // {
+    //   if(collision_detection::basic_hitbox(box1, box2))
+    //   {
+    //     world::destroy_object(box2);
+    //     box2 = nullptr;
+    //   }
+    // }
 
 
     // render
     // ------
     window.render(100.f, 255.f, 0.f);
-    for(auto it = world::world_objects.begin(); it != world::world_objects.end(); ++it)
-    {
-      Box* b = dynamic_cast<Box*>(it->second);
-      if(b)
-      {
-        b->render(&shader);
-      }
-    }
+    box1->render(&shader, drawmode);
+    box2->render(&shader);
+    
+    // for(auto it = world::world_objects.begin(); it != world::world_objects.end(); ++it)
+    // {
+    //   Box* b = dynamic_cast<Box*>(it->second);
+    //   if(b)
+    //   {
+    //     b->render(&shader);
+    //   }
+    // }
 
 
 

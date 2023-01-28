@@ -1,3 +1,5 @@
+#include "../include/core_minimal.h"
+
 #include "../include/box.h"
 #include "../include/shader.h"
 #include "../include/globals.h"
@@ -61,8 +63,14 @@ void Box::init()
 
 void Box::render(Shader* shader, uint32_t drawmode)
 {
-  const glm::mat4 scale       = glm::scale(glm::mat4(1.f), glm::vec3(dimension*0.5f, 0.f));
-  const glm::mat4 translate   = glm::translate(glm::mat4(1.f), glm::vec3(position, 0.f));
+  const glm::mat4 scale       = glm::scale(glm::mat4(1.f), glm::vec3(
+    dimension*0.5f, 0.f));
+  
+  const glm::mat4 translate   = glm::translate(glm::mat4(1.f), glm::vec3(
+    position.x + dimension.x/2,
+    position.y + dimension.y/2, 
+    0.f));
+  
   const glm::mat4 model       = translate * m_rotatemat * scale;
   const glm::mat4 projection  = glm::ortho(0.f, (float)globals::window_width, (float)globals::window_height, 0.f, -1.0f, 1.0f);
 

@@ -1,11 +1,6 @@
 #ifndef RECTANGLE_H
 #define RECTANGLE_H
 
-#include <glm/glm.hpp>
-#include <glm/gtx/transform.hpp>
-#include <array>
-#include <memory>
-
 #include "object.h"
 #include "vertex.h"
 #include "vertex_array.h"

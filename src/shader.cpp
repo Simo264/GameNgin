@@ -6,14 +6,9 @@
 ** Creative Commons, either version 4 of the License, or (at your
 ** option) any later version.
 ******************************************************************/
+#include "../include/core_minimal.h"
 #include "../include/shader.h"
 
-#include <GL/glew.h>
-#include <glm/gtc/type_ptr.hpp>
-
-#include <iostream>
-#include <fstream>
-#include <sstream>
 
 Shader::Shader(const char* vsFilename, const char* fsFilename, const char* gsFilename)
 {

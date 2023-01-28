@@ -1,10 +1,7 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#include <cstdint>
-#include <map>
-
-#include "../include/object.h"
+#include "object.h"
 
 namespace world
 {

@@ -1,3 +1,4 @@
+#include "../include/core_minimal.h"
 #include "../include/globals.h"
 
 uint32_t globals::window_width  = 0;

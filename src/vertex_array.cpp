@@ -1,3 +1,5 @@
+#include "../include/core_minimal.h"
+
 #include "../include/vertex_array.h"
 
 VertexArray::VertexArray()

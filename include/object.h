@@ -1,9 +1,6 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include <string>
-#include <typeinfo>
-
 // Object class 
 // -----------------------------------------------------------
 class Object
@@ -15,7 +12,7 @@ protected:
 public:
   /* object id readonly */
   const uint32_t& id = m_id;
-  /* object name readonly */
+  /* object name */
   std::string name;
 
   Object()  

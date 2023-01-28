@@ -1,11 +1,8 @@
+#include "../include/core_minimal.h"
+
 #include "../include/window.h"
 #include "../include/logger.h"
 #include "../include/globals.h"
-
-#include <cstdlib>
-#include <string>
-#include <fstream>
-#include <sstream>
 
 
 Window::Window(

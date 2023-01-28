@@ -1,3 +1,5 @@
+#include "../include/core_minimal.h"
+
 #include "../include/world.h"
 #include "../include/shader.h"
 
