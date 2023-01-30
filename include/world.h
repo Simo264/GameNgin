@@ -5,9 +5,8 @@
 
 namespace world
 {
-  extern double world_time;
   extern std::map<uint32_t, Object*> world_objects;
-  
+
   Object* get_object_by_name(const char* objectname);
   Object* get_object_by_id(uint32_t id);
 

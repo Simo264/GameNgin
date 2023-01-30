@@ -4,9 +4,18 @@
 #include "../include/logger.h"
 #include "../include/globals.h"
 
-
 Window::Window(
   uint16_t      width, 
+  uint16_t      height, 
+  const char*   title, 
+  GLFWmonitor*  monitor, 
+  GLFWwindow*   share)
+{
+  create(width, height, title);
+}
+
+void Window::create(
+  int16_t       width, 
   uint16_t      height, 
   const char*   title, 
   GLFWmonitor*  monitor, 

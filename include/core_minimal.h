@@ -1,5 +1,5 @@
-#ifndef CORE_UTILS_H
-#define CORE_UTILS_H
+#ifndef CORE_MINIMAL_H
+#define CORE_MINIMAL_H
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>

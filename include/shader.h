@@ -28,6 +28,7 @@ public:
     const char* fsFilename, 
     const char* gsFilename = nullptr);
   Shader() { }
+  
   // sets the current shader as active
   void use();
 
