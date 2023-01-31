@@ -27,11 +27,11 @@ public:
     GLFWmonitor*  monitor = nullptr, 
     GLFWwindow*   share   = nullptr);
 
-  bool shouldClose() const  { return glfwWindowShouldClose(m_window);   }
-  void close()              { glfwSetWindowShouldClose(m_window, true); }
-  void swapBuffers()        { glfwSwapBuffers(m_window);                }
-  void use() const          { glfwMakeContextCurrent(m_window);         }
-  int getKey(int key) const { return glfwGetKey(m_window, key);         }
+  bool  shouldClose()   const { return glfwWindowShouldClose(m_window);   }
+  void  close()               { glfwSetWindowShouldClose(m_window, true); }
+  void  swapBuffers()         { glfwSwapBuffers(m_window);                }
+  void  use()           const { glfwMakeContextCurrent(m_window);         }
+  int   getKey(int key) const { return glfwGetKey(m_window, key);         }
   
   void getFrameBufferSize(int& w, int& h) 
   { 
@@ -39,8 +39,6 @@ public:
   }
 
   GLFWwindow* getWindowObj() const { return m_window; }
-
-  void processInput(std::function<void(Window*)> callback) { callback(this); }
 
   void render(float r, float g, float b, uint32_t mask = GL_COLOR_BUFFER_BIT);
 };

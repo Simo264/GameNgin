@@ -61,7 +61,7 @@ void Box::init()
   m_vaOBJ.get()->bindVertexBuffer(1, m_vbOBJ.get(), 0, sizeof(color8_t));
 }
 
-void Box::render(Shader* shader, uint32_t drawmode)
+void Box::render(Shader* shader)
 {
   const glm::mat4 scale       = glm::scale(glm::mat4(1.f), glm::vec3(
     dimension*0.5f, 0.f));

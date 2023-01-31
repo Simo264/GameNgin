@@ -6,16 +6,20 @@
 
 namespace GameNgin
 { 
-  extern Window window;
-  extern bool gameloop;
+  extern Window   window;
+  extern bool     gameloop;
 
   void initGL();
-
   void input(double deltatime);
   void update(double deltatime);
-  void render(double deltatime, Shader* shader);
-
+  void render(Shader* shader);
   void free();
+
+
+  void initImGui();
+  void renderImGui();
+  void destroyImGui();
+ 
 };
 
 #endif

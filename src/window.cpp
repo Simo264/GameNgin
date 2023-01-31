@@ -29,6 +29,7 @@ void Window::create(
     exit(EXIT_FAILURE);
   }
   glfwMakeContextCurrent(m_window);
+  glfwSwapInterval(1); // Enable vsync
   glViewport(0, 0, width, height);
 
   globals::window_width = width;
@@ -45,5 +46,7 @@ void Window::render(float r, float g, float b, uint32_t mask)
 {
   glClearColor(r/255.f, g/255.f, b/255.f, 1.f);
   glClear(mask);
+
+  glViewport(0, 0, globals::window_width, globals::window_height);
 }
 

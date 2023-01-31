@@ -15,6 +15,7 @@ public:
   /* object name */
   std::string name;
 
+
   Object()  
   {
     m_id = m_instancecounter;
@@ -29,6 +30,7 @@ public:
     return "id=" + std::to_string(id) + " name=" + name;
   }
   
+  virtual void render(class Shader* shader) { }
 };
 // -----------------------------------------------------------
 

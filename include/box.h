@@ -33,6 +33,8 @@ public:
   glm::vec2 dimension;
   /* object dimension */
   glm::vec2 position;
+  /* object drawmode */
+  uint32_t drawmode = GL_TRIANGLES;
 
   Box(glm::vec2 dimension_, glm::vec2 position_);
 
@@ -41,7 +43,7 @@ public:
     m_rotatemat = glm::rotate(m_rotatemat, glm::radians(angle), glm::vec3(0.f, 0.f, 1.f));
   }
 
-  void render(class Shader* shader, uint32_t drawmode = GL_TRIANGLES);
+  void render(class Shader* shader) override;
 
   void setColors(std::array<color8_t, 4> colors);
 };
