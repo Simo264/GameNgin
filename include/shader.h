@@ -19,6 +19,8 @@ public:
     const char* fsFilename, 
     const char* gsFilename = nullptr);
   Shader() { }
+
+  ~Shader() { glDeleteProgram(m_shaderOBJ); }
   
   // sets the current shader as active
   void use();

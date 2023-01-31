@@ -5,9 +5,9 @@ in vec2 textCoord;
 
 out vec4 fragColor;
 
-uniform sampler2D s_texture;
+uniform sampler2D image;
 
 void main()
 {
-  fragColor = texture(s_texture, textCoord) * color;
+  fragColor = color * texture(image, textCoord);
 }

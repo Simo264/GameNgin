@@ -1,14 +1,10 @@
 #include "../include/core_minimal.h"
 #include "../include/gamengin.h"
-
-#include "../include/logger.h"
 #include "../include/world.h"
+#include "../include/resource_manager.h"
 
 #include "../include/box.h"
-#include "../include/collision_detection.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "../include/stb_image.h"
 
 int main()
 {
@@ -22,18 +18,24 @@ int main()
 
   // load and create shaders
   // -------------------------
-  Shader basicShader("../shaders/basic.vertex.shader", "../shaders/basic.fragment.shader");
-  Shader textShader("../shaders/texture.vertex.shader", "../shaders/texture.fragment.shader");
-
-  // load and create a texture 
-  // -------------------------
+  ResourceManager::loadShader("../shaders/basic.vertex.shader", 
+                              "../shaders/basic.fragment.shader", 
+                              nullptr, 
+                              "basic.shader");
+  ResourceManager::loadShader("../shaders/texture.vertex.shader", 
+                              "../shaders/texture.fragment.shader", 
+                              nullptr, 
+                              "texture.shader");
+  Shader* shader = ResourceManager::getShader("texture.shader");
   
+  // load and create textures
+  // -------------------------
+  ResourceManager::loadTexture("../res/image.png", true, "image");
 
 
   // init world 
   // ----------
-  world::push_object(new Box(glm::vec2{ 50,50 }, glm::vec2{ 0,0 }));
-  //world::push_object(new Box(glm::vec2{ 50,50 }, glm::vec2{ 300,200 }));
+  world::push_object(new Box(glm::vec2{ 50,50 }, glm::vec2{ 100,100 }));
 
 
   // deltaTime variables
@@ -59,7 +61,7 @@ int main()
 
     // render
     // ------
-    GameNgin::render(&textShader);
+    GameNgin::render(shader);
   }
 
   GameNgin::free();

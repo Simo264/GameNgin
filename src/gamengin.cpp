@@ -163,9 +163,9 @@ namespace GameNgin
     {
       ImGui::SliderInt3("Box color", color, 0, 255);
       
-      // color8_t col8t;
-      // std::copy(color, color + 3, col8t.begin());
-      // box->setColor(col8t);
+      color8_t col8t;
+      std::copy(color, color + 3, col8t.begin());
+      box->setColor(col8t);
 
       ImGui::End();
     }                          
