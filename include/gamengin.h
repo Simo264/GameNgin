@@ -15,11 +15,9 @@ namespace GameNgin
   void render(Shader* shader);
   void free();
 
-
   void initImGui();
   void renderImGui();
   void destroyImGui();
- 
 };
 
 #endif

@@ -15,8 +15,6 @@ namespace world
   void destroy_object(Object* object);
   void destroy_object(uint32_t objectid);
 
-  void render(Shader* shader);
-
   void free();
 };
 

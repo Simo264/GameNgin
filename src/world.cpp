@@ -1,6 +1,5 @@
 #include "../include/core_minimal.h"
 #include "../include/world.h"
-#include "../include/shader.h"
 
 namespace world
 {
@@ -49,15 +48,6 @@ namespace world
     if(!object) return;
 
     world::world_objects.insert({object->id, object});
-  }
-
-  void render(Shader* shader)
-  {
-    for(auto it = world_objects.begin(); it != world_objects.end(); ++it)
-    {
-      Object* obj = it->second;
-      obj->render(shader);
-    }
   }
 
   void free()

@@ -7,25 +7,33 @@
 #include "../include/box.h"
 #include "../include/collision_detection.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "../include/stb_image.h"
+
 int main()
 {
   // init OpenGL 
-  // ------
+  // -----------
   GameNgin::initGL();
   
   // init ImGui 
-  // ------
+  // ----------
   GameNgin::initImGui();
 
-  // GameNgin::loadShaders();
-  Shader shader("../shaders/vertex.shader", "../shaders/fragment.shader");
+  // load and create shaders
+  // -------------------------
+  Shader basicShader("../shaders/basic.vertex.shader", "../shaders/basic.fragment.shader");
+  Shader textShader("../shaders/texture.vertex.shader", "../shaders/texture.fragment.shader");
+
+  // load and create a texture 
+  // -------------------------
+  
 
 
-  /* init world */
-  Box* box1 = new Box(glm::vec2{ 50,50 }, glm::vec2{ 0,0 });
-  Box* box2 = new Box(glm::vec2{ 50,50 }, glm::vec2{ 300,200 });
-  world::push_object(box1);
-  world::push_object(box2);
+  // init world 
+  // ----------
+  world::push_object(new Box(glm::vec2{ 50,50 }, glm::vec2{ 0,0 }));
+  //world::push_object(new Box(glm::vec2{ 50,50 }, glm::vec2{ 300,200 }));
 
 
   // deltaTime variables
@@ -51,7 +59,7 @@ int main()
 
     // render
     // ------
-    GameNgin::render(&shader);
+    GameNgin::render(&textShader);
   }
 
   GameNgin::free();

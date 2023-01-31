@@ -32,12 +32,14 @@ public:
   void  swapBuffers()         { glfwSwapBuffers(m_window);                }
   void  use()           const { glfwMakeContextCurrent(m_window);         }
   int   getKey(int key) const { return glfwGetKey(m_window, key);         }
+
+  void setWindowSize(int w, int h) { glfwSetWindowSize(m_window, w, h); }
   
   void getFrameBufferSize(int& w, int& h) 
   { 
     glfwGetFramebufferSize(m_window, &w, &h); 
   }
-
+  
   GLFWwindow* getWindowObj() const { return m_window; }
 
   void render(float r, float g, float b, uint32_t mask = GL_COLOR_BUFFER_BIT);

@@ -1,9 +1,8 @@
 #include "../include/core_minimal.h"
 #include "../include/gamengin.h"
 
-
+#include "../include/globals.h"
 #include "../include/logger.h"
-
 #include "../include/world.h"
 #include "../include/box.h"
 #include "../include/collision_detection.h"
@@ -16,6 +15,8 @@
 #define WINDOW_WIDTH  720
 #define WINDOW_HEIGHT 720
 #define WINDOW_TITLE  "GameNgin"
+
+static int color[3] = { 255,255,255 };
 
 namespace GameNgin
 {
@@ -42,6 +43,9 @@ namespace GameNgin
     // ----------------
     window.create(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
 
+    glfwSwapInterval(1); // Enable vsync
+    glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+
     // glew: init
     // ----------------
     if(glewInit() != GLEW_OK)
@@ -51,8 +55,11 @@ namespace GameNgin
       exit(EXIT_FAILURE);
     }
     LOG_TRACE("GLEW initialized successfully");
+
+    globals::window_width = WINDOW_WIDTH;
+    globals::window_height = WINDOW_HEIGHT;
   
-  }// end initGL()
+  }
 
   void input(double deltatime)
   {
@@ -60,8 +67,8 @@ namespace GameNgin
 
     Box* box1 = dynamic_cast<Box*>(world::get_object_by_id(0));
 
-    // press ESC
-    if (window.getKey(GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    // Close window
+    if (window.getKey(GLFW_KEY_ESCAPE) == GLFW_PRESS || window.shouldClose())
     {
       gameloop = false; // end of game loop
       window.close(); 
@@ -100,19 +107,20 @@ namespace GameNgin
 
   void update(double deltatime)
   {
-    Box* box1 = dynamic_cast<Box*>(world::get_object_by_id(0));
-    Box* box2 = dynamic_cast<Box*>(world::get_object_by_id(1));
+    // Box* box1 = dynamic_cast<Box*>(world::get_object_by_id(0));
+    // Box* box2 = dynamic_cast<Box*>(world::get_object_by_id(1));
 
-    box1->drawmode = GL_TRIANGLES;
-    if(collision_detection::basic_hitbox(box1, box2))
-      box1->drawmode = GL_LINE_LOOP;
+    // box1->drawmode = GL_TRIANGLES;
+    // if(collision_detection::basic_hitbox(box1, box2))
+    //   box1->drawmode = GL_LINE_LOOP;
   }
 
   void render(Shader* shader)
   {
     window.render(200, 100, 255);
-
-    world::render(shader);
+    
+    Box* box = dynamic_cast<Box*>(world::get_object_by_id(0));
+    box->render(shader);
 
     renderImGui();
 
@@ -140,20 +148,27 @@ namespace GameNgin
 
     // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(window.getWindowObj(), true);
-    ImGui_ImplOpenGL3_Init("#version 130");
+    ImGui_ImplOpenGL3_Init("#version 450");
   }
 
   void renderImGui()
   {
-    // Start the Dear ImGui frame
+    Box* box = dynamic_cast<Box*>(world::get_object_by_id(0));
+    
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
+    ImGui::SetWindowSize(ImVec2(200, 720));
+    if(ImGui::Begin("Hello, world!"))
+    {
+      ImGui::SliderInt3("Box color", color, 0, 255);
+      
+      // color8_t col8t;
+      // std::copy(color, color + 3, col8t.begin());
+      // box->setColor(col8t);
 
-    ImGui::Begin("Hello, world!");                          
-    ImGui::Text("This is some useful text.");               
-    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-    ImGui::End();
+      ImGui::End();
+    }                          
 
     // Rendering
     ImGui::Render();

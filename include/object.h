@@ -10,9 +10,8 @@ protected:
   uint32_t        m_id;
 
 public:
-  /* object id readonly */
+  // object id - readonly 
   const uint32_t& id = m_id;
-  /* object name */
   std::string name;
 
 
@@ -29,8 +28,6 @@ public:
   {
     return "id=" + std::to_string(id) + " name=" + name;
   }
-  
-  virtual void render(class Shader* shader) { }
 };
 // -----------------------------------------------------------
 

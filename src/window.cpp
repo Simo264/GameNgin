@@ -29,11 +29,6 @@ void Window::create(
     exit(EXIT_FAILURE);
   }
   glfwMakeContextCurrent(m_window);
-  glfwSwapInterval(1); // Enable vsync
-  glViewport(0, 0, width, height);
-
-  globals::window_width = width;
-  globals::window_height = height;
   
   glfwSetFramebufferSizeCallback(m_window, [](GLFWwindow* window, int width, int height){
     glViewport(0, 0, width, height);
