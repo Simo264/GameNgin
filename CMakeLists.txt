@@ -4,51 +4,26 @@ project(GameNgin)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 
-
-if (WIN32)
-  set(PLATFORM "Windows")
-endif (WIN32)
-
-if(UNIX AND NOT APPLE)
-  set(PLATFORM "Linux")
-endif()
-
-
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  set(COMMON_CXX_FLAGS "${COMMON_CXX_FLAGS} -g3 -O0 -Wall -pedantic -Wextra -m64 -mavx2 -mfma -ffast-math")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-  set(COMMON_CXX_FLAGS "${COMMON_CXX_FLAGS} -Wall -pedantic -Wextra -m64 -mavx2 -mfma -ffast-math")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-  set(COMMON_CXX_FLAGS "${COMMON_CXX_FLAGS} /std:c++17 /W4 /arch:AVX2 /fp:fast /MP /DNOMINMAX")
-endif()
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/")
+set(COMMON_CXX_FLAGS "${COMMON_CXX_FLAGS} -Wall -pedantic -Wextra -m64 -mavx2 -mfma -ffast-math")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/bin/")
 
 find_package(OpenGL REQUIRED)
 
-add_subdirectory(externals/cmake/glad)
-add_subdirectory(externals/cmake/glfw)
-add_subdirectory(externals/cmake/glm)
+set(GLFW_BUILD_DOCS     OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS    OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
-include_directories(src/)
-include_directories(externals/includes)
+file(GLOB_RECURSE Sources "src/**.cpp" "src/**.h" "externals/glad/src/glad.c" "externals/imgui/*.cpp")
+add_executable(GameNgin ${Sources})
 
-file(GLOB_RECURSE GameNginSources "Source/**.cpp" "Source/**.h" "Source/**.hpp")
+add_subdirectory(externals/glfw)
+add_subdirectory(externals/glm)
 
-add_library(FractalEngine STATIC ${GameNginSources})
+include_directories(externals/glad/include)
+include_directories(externals/glfw/include)
+include_directories(externals/glm)
+include_directories(externals/imgui)
 
-if(PLATFORM STREQUAL "Linux")
-target_link_libraries(GameNgin -lGL) 
-target_link_libraries(GameNgin -lglfw)
-target_link_libraries(GameNgin -lglad)
-target_link_libraries(GameNgin -lassimp)
-target_link_libraries(GameNgin -ltinyxml2)
-endif()
+target_link_libraries(GameNgin glfw ${GLFW_LIBRARIES})
 
-if(PLATFORM STREQUAL "Windows")
-target_link_libraries(GameNgin opengl32)
-target_link_libraries(GameNgin glfw)
-target_link_libraries(GameNgin glad)
-target_link_libraries(GameNgin tinyxml2)
-target_link_libraries(GameNgin assimp)
-endif()
+# add_library(GameNgin STATIC ${Sources})

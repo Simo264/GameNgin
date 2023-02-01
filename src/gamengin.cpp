@@ -8,9 +8,9 @@
 #include "include/box.h"
 #include "include/collision_detection.h"
 
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_glfw.h"
-#include "imgui/imgui_impl_opengl3.h"
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
 #define WINDOW_TITLE  "GameNgin"
 
@@ -18,20 +18,18 @@ static int color[3] = { 255,255,255 };
 
 namespace GameNgin
 {
+  Window window = Window(vec2ui(WINDOW_WIDTH, WINDOW_HEIGH), WINDOW_TITLE);
   bool gameloop = true;
 
   void initGL()
   {
-
-    // glew: init
-    // ----------------
-    if(glewInit() != GLEW_OK)
+    // glad: load all OpenGL function pointers
+    // ---------------------------------------
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
-      LOG_ERROR("Error on init GLEW");
-      glfwTerminate();
+      LOG_ERROR("Failed to initialize GLAD");
       exit(EXIT_FAILURE);
-    }
-    LOG_TRACE("GLEW initialized successfully");
+    }    
   }
 
   void input(double deltatime)
@@ -115,50 +113,50 @@ namespace GameNgin
 
   void initImGui()
   {
-    // Setup Dear ImGui context
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    // // Setup Dear ImGui context
+    // IMGUI_CHECKVERSION();
+    // ImGui::CreateContext();
+    // ImGuiIO& io = ImGui::GetIO(); (void)io;
+    // //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    // //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
-    // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
+    // // Setup Dear ImGui style
+    // ImGui::StyleColorsDark();
 
-    // Setup Platform/Renderer backends
-    ImGui_ImplGlfw_InitForOpenGL(window.getWindow(), true);
-    ImGui_ImplOpenGL3_Init("#version 450");
+    // // Setup Platform/Renderer backends
+    // ImGui_ImplGlfw_InitForOpenGL(window.getWindow(), true);
+    // ImGui_ImplOpenGL3_Init("#version 450");
   }
 
   void renderImGui()
   {
-    Box* box = dynamic_cast<Box*>(World::getObjectByID(0));
+    // Box* box = dynamic_cast<Box*>(World::getObjectByID(0));
     
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-    ImGui::SetWindowSize(ImVec2(200, 720));
-    if(ImGui::Begin("Hello, world!"))
-    {
-      ImGui::SliderInt3("Box color", color, 0, 255);
+    // ImGui_ImplOpenGL3_NewFrame();
+    // ImGui_ImplGlfw_NewFrame();
+    // ImGui::NewFrame();
+    // ImGui::SetWindowSize(ImVec2(200, 720));
+    // if(ImGui::Begin("Hello, world!"))
+    // {
+    //   ImGui::SliderInt3("Box color", color, 0, 255);
       
-      // color8_t col8t;
-      // std::copy(color, color + 3, col8t.begin());
-      // box->setColor(col8t);
+    //   // color8_t col8t;
+    //   // std::copy(color, color + 3, col8t.begin());
+    //   // box->setColor(col8t);
 
-      ImGui::End();
-    }                          
+    //   ImGui::End();
+    // }                          
 
-    // Rendering
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    // // Rendering
+    // ImGui::Render();
+    // ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
   }
 
   void destroyImGui()
   {
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
+    // ImGui_ImplOpenGL3_Shutdown();
+    // ImGui_ImplGlfw_Shutdown();
+    // ImGui::DestroyContext();
   }
 
 }

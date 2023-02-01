@@ -6,8 +6,7 @@
 
 namespace GameNgin
 { 
-  class Window;
-
+  extern Window   window;
   extern bool     gameloop;
 
   void initGL();
