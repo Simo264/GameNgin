@@ -1,13 +1,14 @@
-#include "../include/core_minimal.h"
-#include "../include/gamengin.h"
-#include "../include/world.h"
-#include "../include/resource_manager.h"
+#include "include/core_minimal.h"
+#include "include/gamengin.h"
+#include "include/world.h"
+#include "include/resource_manager.h"
 
-#include "../include/box.h"
+#include "include/box.h"
 
 
 int main()
 {
+
   // init OpenGL 
   // -----------
   GameNgin::initGL();
@@ -35,7 +36,10 @@ int main()
 
   // init world 
   // ----------
-  world::push_object(new Box(glm::vec2{ 50,50 }, glm::vec2{ 100,100 }));
+  World::pushObject(new Box(vec2{ 50,50 }, vec2{ 0,0 }));
+  World::pushObject(new Box(vec2{ 50,50 }, vec2{ 100,100 }));
+  World::pushObject(new Box(vec2{ 50,50 }, vec2{ 300,100 }));
+  World::pushObject(new Box(vec2{ 50,50 }, vec2{ 100,300 }));
 
 
   // deltaTime variables

@@ -1,5 +1,5 @@
-#include "../include/core_minimal.h"
-#include "../include/texture.h"
+#include "include/core_minimal.h"
+#include "include/texture.h"
 
 Texture::Texture()
 {

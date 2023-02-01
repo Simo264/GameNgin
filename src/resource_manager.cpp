@@ -1,11 +1,11 @@
-#include "../include/core_minimal.h"
-#include "../include/resource_manager.h"
-#include "../include/shader.h"
-#include "../include/texture.h"
-#include "../include/logger.h"
+#include "include/core_minimal.h"
+#include "include/resource_manager.h"
+#include "include/shader.h"
+#include "include/texture.h"
+#include "include/logger.h"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "../include/stb_image.h"
+#include "include/stb_image.h"
 
 // Instantiate static variables
 std::map<std::string, Shader*>  ResourceManager::shaders;

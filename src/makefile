@@ -6,7 +6,7 @@ SRC_FILES += 	$(wildcard $(IMGUI_DIR)*.cpp)		# compile imgui/*.cpp files
 
 OBJ_FILES = 	$(patsubst %.cpp, %.o, $(SRC_FILES))
 
-CXX_FLAGS 		= -std=c++14 -Wall
+CXX_FLAGS 		= -std=c++17 -Wall
 OPENGL_FLAGS 	= -lGL -lglfw -lX11 -lGLEW
 
 

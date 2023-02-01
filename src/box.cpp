@@ -1,11 +1,11 @@
-#include "../include/core_minimal.h"
-#include "../include/box.h"
-#include "../include/resource_manager.h"
-#include "../include/shader.h"
-#include "../include/texture.h"
-#include "../include/globals.h"
+#include "include/core_minimal.h"
+#include "include/box.h"
+#include "include/resource_manager.h"
+#include "include/shader.h"
+#include "include/texture.h"
+#include "include/globals.h"
 
-Box::Box(glm::vec2 dimension_, glm::vec2 position_) 
+Box::Box(vec2 dimension_, vec2 position_) 
 : Object(), dimension{dimension_}, position{position_}
 {
   name = "Box_" + std::to_string(id);
@@ -16,19 +16,19 @@ Box::Box(glm::vec2 dimension_, glm::vec2 position_)
 void Box::init()
 {
   // default vertex positions 
-  static const std::array<position_t, 4> localspace = {
+  static const std::array<position_t, 4>  localspace = {
     position_t{ -1, -1 }, // bottom left
     position_t{ +1, -1 }, // bottom right
     position_t{ -1, +1 }, // top left
     position_t{ +1, +1 }  // top right
   };
   // default vertex indices 
-  static const std::array<uint8_t, 6> indices = {
+  static const std::array<uint8_t, 6>     indices = {
     0,1,3,  // tl - tr -  bl
     0,2,3   // tl - bl - br
   };
   // default color values 
-  static const std::array<color8_t, 4> colors = {
+  static const std::array<color8_t, 4>    colors = {
     color8_t{ 255, 255, 255 },  // top left
     color8_t{ 255, 255, 255 },  // top right
     color8_t{ 255, 255, 255 },  // bottom left
@@ -78,16 +78,16 @@ void Box::init()
 
 void Box::render(Shader* shader)
 {
-  const glm::mat4 scale       = glm::scale(glm::mat4(1.f), glm::vec3(
+  const mat4 scale       = glm::scale(mat4(1.f), vec3(
                                   dimension * 0.5f, 0.f));
-  const glm::mat4 translate   = glm::translate(glm::mat4(1.f), glm::vec3(
+  const mat4 translate   = glm::translate(mat4(1.f), vec3(
                                   position.x + dimension.x/2,
                                   position.y + dimension.y/2, 
                                   0.f));
-  const glm::mat4 model       = translate * m_rotatemat * scale;
-  const glm::mat4 projection  = glm::ortho(0.f, 
-                                  (float)globals::window_width, 
-                                  (float)globals::window_height, 
+  const mat4 model       = translate * m_rotatemat * scale;
+  const mat4 projection  = ortho(0.f, 
+                                  (float)Globals::window_dimension.x, 
+                                  (float)Globals::window_dimension.y, 
                                   0.f, -1.0f, 1.0f);
 
   shader->use();
@@ -95,7 +95,6 @@ void Box::render(Shader* shader)
   shader->setMatrix4("projection", projection);
 
   // bind textures on corresponding texture units
-  auto texture = ResourceManager::getTexture("image");
   texture->use();
   texture->bind();
   
@@ -105,21 +104,10 @@ void Box::render(Shader* shader)
 
 void Box::setColor(color8_t color)
 {
-  std::array<color8_t, 4> arrcolor = {
-    color,  // top left
-    color,  // top right
-    color,  // bottom left
-    color   // bottom right
-  };
+  std::array<color8_t, 4> arrcolor = { color,color,color,color };
 
   m_vbOBJ.get()->namedBufferSubData(
-    sizeof(position_t)*4,
-    sizeof(color8_t)*4,
+    sizeof(position_t) * 4,
+    sizeof(color8_t) * 4,
     arrcolor.data());
-
-}
-
-void Box::setTexture()
-{
-
 }

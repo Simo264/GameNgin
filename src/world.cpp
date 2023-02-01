@@ -1,12 +1,12 @@
-#include "../include/core_minimal.h"
-#include "../include/world.h"
+#include "include/core_minimal.h"
+#include "include/world.h"
 
-namespace world
+namespace World
 {
   std::map<uint32_t, Object*> world_objects;
 
 
-  Object* get_object_by_name(const char* objectname)
+  Object* getObjectByName(const char* objectname)
   {
     for(auto it = world_objects.begin(); it != world_objects.end(); ++it)
     {
@@ -17,7 +17,7 @@ namespace world
     return nullptr;
   }
 
-  Object* get_object_by_id(uint32_t objectid)
+  Object* getObjectByID(uint32_t objectid)
   {
     auto it = world_objects.find(objectid);
     if (it == world_objects.end())
@@ -25,8 +25,14 @@ namespace world
     return it->second;
   }
 
+  void pushObject(Object* object)
+  {
+    if(!object) return;
 
-  void destroy_object(Object* object)
+    world_objects.insert({object->id, object});
+  }
+
+  void destroyObject(Object* object)
   {
     if(!object) return;
 
@@ -34,20 +40,13 @@ namespace world
     delete object;
   }
 
-  void destroy_object(uint32_t objectid)
+  void destroyObject(uint32_t objectid)
   {
-    Object* obj = get_object_by_id(objectid);
+    Object* obj = getObjectByID(objectid);
     if(!obj) return;
 
     world_objects.erase(objectid);
     delete obj;
-  }
-
-  void push_object(Object* object)
-  {
-    if(!object) return;
-
-    world::world_objects.insert({object->id, object});
   }
 
   void free()

@@ -1,5 +1,5 @@
-#include "../include/core_minimal.h"
-#include "../include/shader.h"
+#include "include/core_minimal.h"
+#include "include/shader.h"
 
 
 Shader::Shader(const char* vsFilename, const char* fsFilename, const char* gsFilename)
@@ -94,21 +94,21 @@ void Shader::setInteger(const char* name, int value)
 {
   glUniform1i(glGetUniformLocation(m_shaderOBJ, name), value);
 }
-void Shader::setVector2f(const char* name, const glm::vec2& value)
+void Shader::setVector2f(const char* name, const vec2& value)
 {
   glUniform2f(glGetUniformLocation(m_shaderOBJ, name), value.x, value.y);
 }
-void Shader::setVector3f(const char* name, const glm::vec3& value)
+void Shader::setVector3f(const char* name, const vec3& value)
 {
   glUniform3f(glGetUniformLocation(m_shaderOBJ, name), value.x, value.y, value.z);
 }
-void Shader::setVector4f(const char* name, const glm::vec4& value)
+void Shader::setVector4f(const char* name, const vec4& value)
 {
   glUniform4f(glGetUniformLocation(m_shaderOBJ, name), value.x, value.y, value.z, value.w);
 }
-void Shader::setMatrix4(const char* name, const glm::mat4& matrix)
+void Shader::setMatrix4(const char* name, const mat4& matrix)
 {
-  glUniformMatrix4fv(glGetUniformLocation(m_shaderOBJ, name), 1, false, glm::value_ptr(matrix));
+  glUniformMatrix4fv(glGetUniformLocation(m_shaderOBJ, name), 1, false, value_ptr(matrix));
 }
 
 void Shader::checkCompileErrors(uint32_t object, const std::string& type)
