@@ -5,13 +5,22 @@
 
 #include "include/box.h"
 
+#include "include/window_manager.h"
+
+WindowManager gWindowManager;
 
 int main()
 {
-
-  // init OpenGL 
-  // -----------
-  GameNgin::initGL();
+  // Start up engine systems in the correct order.
+  gWindowManager.startUp();
+  //gMemoryManager.startUp();
+  //gFileSystemManager.startUp();
+  //gVideoManager.startUp();
+  //gTextureManager.startUp();
+  //gRenderManager.startUp();
+  //gAnimationManager.startUp();
+  //gPhysicsManager.startUp();
+  // ...
   
   // init ImGui 
   // ----------
@@ -42,6 +51,12 @@ int main()
   World::pushObject(new Box(vec2{ 50,50 }, vec2{ 100,300 }));
 
 
+  // Run the game.
+  //gSimulationManager.run();
+
+
+
+
   // deltaTime variables
   // -------------------
   double deltaTime    = 0.0f;
@@ -67,6 +82,15 @@ int main()
     // ------
     GameNgin::render(shader);
   }
+  
+  // Shut everything down, in reverse order.
+  // ...
+  // gPhysicsManager.shutDown();
+  // gAnimationManager.shutDown();
+  // gRenderManager.shutDown();
+  // gFileSystemManager.shutDown();
+  // gMemoryManager.shutDown();
+  gWindowManager.shutDown();
 
   GameNgin::free();
   GameNgin::destroyImGui();

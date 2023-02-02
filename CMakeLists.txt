@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 
 set(COMMON_CXX_FLAGS "${COMMON_CXX_FLAGS} -Wall -pedantic -Wextra -m64 -mavx2 -mfma -ffast-math")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/bin/")
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 
 find_package(OpenGL REQUIRED)
 
@@ -13,17 +13,19 @@ set(GLFW_BUILD_DOCS     OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS    OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
-file(GLOB_RECURSE Sources "src/**.cpp" "src/**.h" "externals/glad/src/glad.c" "externals/imgui/*.cpp")
-add_executable(GameNgin ${Sources})
+file(GLOB_RECURSE srcfiles "src/**.cpp" "src/**.h")
+add_executable(GameNgin ${srcfiles})
 
+add_subdirectory(externals/glad)
 add_subdirectory(externals/glfw)
 add_subdirectory(externals/glm)
+add_subdirectory(externals/imgui)
 
 include_directories(externals/glad/include)
 include_directories(externals/glfw/include)
 include_directories(externals/glm)
 include_directories(externals/imgui)
 
+target_link_libraries(GameNgin glad)
 target_link_libraries(GameNgin glfw ${GLFW_LIBRARIES})
-
-# add_library(GameNgin STATIC ${Sources})
+target_link_libraries(GameNgin imgui)

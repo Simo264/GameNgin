@@ -18,12 +18,9 @@
 #include <sstream>
 #include <string>
 
-#define VERSION "BETA 2.0"
-#define EDITOR_VERSION "10.07.2021"
-#define WINDOW_NAME "Game"
-
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGH 720
+#define WINDOW_TITLE  "GameNgin"
 
 using vec2    = glm::vec2;  // 2 floats
 using vec2i   = glm::ivec2; // 2 integers

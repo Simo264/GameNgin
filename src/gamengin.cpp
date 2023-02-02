@@ -12,24 +12,24 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
-#define WINDOW_TITLE  "GameNgin"
-
 static int color[3] = { 255,255,255 };
 
 namespace GameNgin
 {
-  Window window = Window(vec2ui(WINDOW_WIDTH, WINDOW_HEIGH), WINDOW_TITLE);
   bool gameloop = true;
 
   void initGL()
   {
-    // glad: load all OpenGL function pointers
-    // ---------------------------------------
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-      LOG_ERROR("Failed to initialize GLAD");
-      exit(EXIT_FAILURE);
-    }    
+    
+    
+    
+
+
+
+
+
+
+    Globals::window_dimension = vec2ui(WINDOW_WIDTH, WINDOW_HEIGH);
   }
 
   void input(double deltatime)
@@ -107,6 +107,8 @@ namespace GameNgin
   {
     World::free();
     ResourceManager::free();
+
+    // window.destroy();
     glfwTerminate();
   }
 
