@@ -1,35 +1,40 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-// WindowManager class
-// -----------------------------------------------------------
-class WindowManager
+
+namespace gn
 {
-private:
-  static GLFWwindow* m_window;
+  // WindowManager class
+  // -----------------------------------------------------------
+  class WindowManager
+  {
+  private:
+    static GLFWwindow* m_window;
 
-public:
-  /* Constructors */
-  WindowManager() = default;
-  
-  /* Destructor */
-  ~WindowManager() = default;
+  public:
+    WindowManager() = default;
+    ~WindowManager() = default;
 
-  void startUp();
+    void init();        
+    void IMGUIinit();   
 
-  void shutDown();
+    void IMGUIrender(); 
 
-  static GLFWwindow* get() { return m_window; }
+    void free();        
+    void IMGUIfree();   
 
-  bool  shouldClose()   const { return glfwWindowShouldClose(m_window);   }
-  void  close()               { glfwSetWindowShouldClose(m_window, true); }
-  void  swapBuffers()         { glfwSwapBuffers(m_window);                }
-  int   getKey(int key) const { return glfwGetKey(m_window, key);         }
 
-  void setVsync(int interval = 1) { glfwSwapInterval(interval); }
+    static GLFWwindow* get()    { return m_window;                          }
+    int   getKey(int key) const { return glfwGetKey(m_window, key);         }
+    bool  shouldClose()   const { return glfwWindowShouldClose(m_window);   }
+    void  close()               { glfwSetWindowShouldClose(m_window, true); }
+    void  swapBuffers()         { glfwSwapBuffers(m_window);                }
+    void setVsync(int interval = 1) { glfwSwapInterval(interval);                   }
+    void setWindowSize(vec2ui size) { glfwSetWindowSize(m_window, size.x, size.y);  }
+    
+    const vec2ui getWindowSize() const; 
+  };
+  // -----------------------------------------------------------
 
-  void setWindowSize(int width, int height); // window.cpp
-};
-// -----------------------------------------------------------
-
+} 
 #endif

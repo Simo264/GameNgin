@@ -1,14 +1,18 @@
 #include "include/core_minimal.h"
 #include "include/world.h"
 
-namespace World
+namespace gn
 {
-  std::map<uint32_t, Object*> world_objects;
+  std::map<uint32_t, Object*> World::m_worldObjects = std::map<uint32_t, Object*>();
 
-
-  Object* getObjectByName(const char* objectname)
+  const std::map<uint32_t, Object*>& World::getWorldObjects()
   {
-    for(auto it = world_objects.begin(); it != world_objects.end(); ++it)
+    return m_worldObjects;
+  }
+
+  Object* World::getObjectByName(const char* objectname)
+  {
+    for(auto it = m_worldObjects.begin(); it != m_worldObjects.end(); ++it)
     {
       Object* obj = it->second;
       if(obj->name.compare(objectname) == 0)
@@ -17,42 +21,43 @@ namespace World
     return nullptr;
   }
 
-  Object* getObjectByID(uint32_t objectid)
+  Object* World::getObjectByID(uint32_t objectid)
   {
-    auto it = world_objects.find(objectid);
-    if (it == world_objects.end())
+    auto it = m_worldObjects.find(objectid);
+    if (it == m_worldObjects.end())
       return nullptr;
     return it->second;
   }
 
-  void pushObject(Object* object)
+  void World::pushObject(Object* object)
   {
     if(!object) return;
 
-    world_objects.insert({object->id, object});
+    m_worldObjects.insert({object->id, object});
   }
 
-  void destroyObject(Object* object)
+  void World::destroyObject(Object* object)
   {
     if(!object) return;
 
-    world_objects.erase(object->id);
+    m_worldObjects.erase(object->id);
     delete object;
   }
 
-  void destroyObject(uint32_t objectid)
+  void World::destroyObject(uint32_t objectid)
   {
     Object* obj = getObjectByID(objectid);
     if(!obj) return;
 
-    world_objects.erase(objectid);
+    m_worldObjects.erase(objectid);
     delete obj;
   }
 
-  void free()
+  void World::free()
   {
-    for(auto it = world_objects.begin(); it != world_objects.end(); it++)
+    for(auto it = m_worldObjects.begin(); it != m_worldObjects.end(); it++)
       delete (it->second);
+    m_worldObjects.clear();
   }
 
 }

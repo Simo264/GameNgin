@@ -1,18 +1,24 @@
 #include "include/core_minimal.h"
-#include "include/gamengin.h"
+#include "include/window_manager.h"
+#include "include/game_manager.h"
+
 #include "include/world.h"
 #include "include/resource_manager.h"
 
-#include "include/box.h"
-
-#include "include/window_manager.h"
+using namespace gn;
 
 WindowManager gWindowManager;
+World         gWorld;
+// ShadersManager gShaders;
+// TexturesManager gTextures;
+GameManager   gGameManager;
 
 int main()
 {
   // Start up engine systems in the correct order.
-  gWindowManager.startUp();
+  gWindowManager.init();
+  gWindowManager.IMGUIinit();
+
   //gMemoryManager.startUp();
   //gFileSystemManager.startUp();
   //gVideoManager.startUp();
@@ -21,10 +27,7 @@ int main()
   //gAnimationManager.startUp();
   //gPhysicsManager.startUp();
   // ...
-  
-  // init ImGui 
-  // ----------
-  GameNgin::initImGui();
+
 
   // load and create shaders
   // -------------------------
@@ -45,43 +48,15 @@ int main()
 
   // init world 
   // ----------
-  World::pushObject(new Box(vec2{ 50,50 }, vec2{ 0,0 }));
-  World::pushObject(new Box(vec2{ 50,50 }, vec2{ 100,100 }));
-  World::pushObject(new Box(vec2{ 50,50 }, vec2{ 300,100 }));
-  World::pushObject(new Box(vec2{ 50,50 }, vec2{ 100,300 }));
+  // gWorld.pushObject(new Box(vec2{ 50,50 }, vec2{ 0,0 }));
+  // gWorld.pushObject(new Box(vec2{ 50,50 }, vec2{ 100,100 }));
+  // gWorld.pushObject(new Box(vec2{ 50,50 }, vec2{ 300,100 }));
+  // gWorld.pushObject(new Box(vec2{ 50,50 }, vec2{ 100,300 }));
 
 
   // Run the game.
-  //gSimulationManager.run();
-
-
-
-
-  // deltaTime variables
-  // -------------------
-  double deltaTime    = 0.0f;
-  double lastFrame    = 0.0f;
-  double currentFrame = 0.f;
-  while (GameNgin::gameloop)
-  {
-    // calculate delta time
-    // --------------------
-    currentFrame = static_cast<double>(glfwGetTime());
-    deltaTime = currentFrame - lastFrame;
-    lastFrame = currentFrame;
-
-    // input
-    // ------
-    GameNgin::input(deltaTime);
-
-    // update state
-    // ------
-    GameNgin::update(deltaTime);
-
-    // render
-    // ------
-    GameNgin::render(shader);
-  }
+  gGameManager.run();
+  
   
   // Shut everything down, in reverse order.
   // ...
@@ -90,10 +65,12 @@ int main()
   // gRenderManager.shutDown();
   // gFileSystemManager.shutDown();
   // gMemoryManager.shutDown();
-  gWindowManager.shutDown();
-
-  GameNgin::free();
-  GameNgin::destroyImGui();
+  ResourceManager::free();
+  // gShaders.free();
+  // gTextures.free();
+  gWorld.free();
+  gWindowManager.IMGUIfree();
+  gWindowManager.free();
 
   return 0;
 }

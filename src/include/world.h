@@ -3,19 +3,33 @@
 
 #include "object.h"
 
-namespace World
+
+namespace gn
 {
-  extern std::map<uint32_t, Object*> world_objects;
+  // World class
+  // -----------------------------------------------------------
+  class World
+  {
+    private:
+      static std::map<uint32_t, Object*> m_worldObjects;
 
-  Object* getObjectByName(const char* objectname);
-  Object* getObjectByID(uint32_t objectid);
+    public:
+      World() = default;
+      ~World() = default;
 
-  void pushObject(Object* object);
+      static const std::map<uint32_t, Object*>& getWorldObjects();
 
-  void destroyObject(Object* object);
-  void destroyObject(uint32_t objectid);
+      Object* getObjectByName(const char* objectname);
+      Object* getObjectByID(uint32_t objectid);
 
-  void free();
+      void pushObject(Object* object);
+
+      void destroyObject(Object* object);
+      void destroyObject(uint32_t objectid);
+
+      void free();
+  };
+  // -----------------------------------------------------------
+
 };
-
 #endif
