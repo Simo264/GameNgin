@@ -1,8 +1,6 @@
 #ifndef GAMENGIN_H
 #define GAMENGIN_H
 
-#include "shader.h"
-
 namespace gn
 { 
 
@@ -18,7 +16,7 @@ namespace gn
 
       void input(double deltatime);   
       void update(double deltatime);  
-      void render(Shader* shader);    
+      void render(class Shader* shader);    
 
     public:
       GameManager() = default;

@@ -1,8 +1,6 @@
-#include "include/core_minimal.h"
-
-#include "include/window_manager.h"
-#include "include/logger.h"
-
+#include "core_minimal.h"
+#include "window_manager.h"
+#include "logger.h"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -38,12 +36,8 @@ namespace gn
     LOG_TRACE("Creating Window... OK!");
 
     glfwMakeContextCurrent(m_window);
-    glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGH);
     glfwSwapInterval(1);
 
-    glfwSetFramebufferSizeCallback(m_window, [](GLFWwindow* window, int width, int height){
-      glViewport(0, 0, width, height);
-    });
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -53,8 +47,12 @@ namespace gn
       glfwTerminate();
       exit(EXIT_FAILURE);
     }
-    LOG_TRACE("Init GLAD... Failed!");
-
+    LOG_TRACE("Init GLAD... OK!");
+    
+    glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGH);
+    glfwSetFramebufferSizeCallback(m_window, [](GLFWwindow* window, int width, int height){
+      glViewport(0, 0, width, height);
+    });
   }
 
   void WindowManager::IMGUIinit()

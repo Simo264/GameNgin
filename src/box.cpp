@@ -1,7 +1,8 @@
 #include "include/core_minimal.h"
 #include "include/box.h"
+#include "include/shader.h"
+#include "include/texture.h"
 #include "include/window_manager.h"
-#include "include/resource_manager.h"
 
 extern gn::WindowManager gWindowManager;
 
@@ -117,5 +118,9 @@ namespace gn
       arrcolor.data());
   }
 
+  void Box::setTexture(Texture* texture) 
+  { 
+    this->texture = texture; 
+  }
 }
 

@@ -1,6 +1,7 @@
-#include "include/core_minimal.h"
-#include "include/window_manager.h"
-#include "include/game_manager.h"
+#include "core_minimal.h"
+#include "game_manager.h"
+#include "window_manager.h"
+#include "shader.h"
 
 extern gn::WindowManager gWindowManager;
 
@@ -8,7 +9,7 @@ namespace gn
 {
   void GameManager::run()
   {
-    while (gameloop || gWindowManager.shouldClose())
+    while (gameloop && !gWindowManager.shouldClose())
     {
       // calculate delta time
       // --------------------
@@ -37,10 +38,12 @@ namespace gn
       return;
     }
   }
+  
   void GameManager::update(double deltatime)
   {
     
   }
+
   void GameManager::render(Shader* shader)
   {
     glClearColor(1.f, 1.f, 1.f, 1.f);

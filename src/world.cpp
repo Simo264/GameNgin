@@ -1,5 +1,5 @@
-#include "include/core_minimal.h"
-#include "include/world.h"
+#include "core_minimal.h"
+#include "world.h"
 
 namespace gn
 {

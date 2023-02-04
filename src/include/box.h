@@ -4,9 +4,6 @@
 #include "object.h"
 #include "vertex.h"
 #include "vertex_array.h"
-#include "texture.h"
-#include "shader.h"
-
 
 namespace gn
 {
@@ -28,7 +25,7 @@ namespace gn
   public:
     vec2 dimension;  
     vec2 position;   
-    Texture* texture;
+    class Texture* texture;
     uint32_t  drawmode = GL_TRIANGLES; 
 
     Box(vec2 dimension_, vec2 position_);
@@ -38,11 +35,11 @@ namespace gn
       m_rotatemat = glm::rotate(m_rotatemat, radians(angle), vec3(0.f, 0.f, 1.f));
     }
 
-    void render(Shader* shader);
+    void render(class Shader* shader);
 
     void setColor(color8_t color);
 
-    void setTexture(Texture* texture) { this->texture = texture; }
+    void setTexture(class Texture* texture);
   };
   // -----------------------------------------------------------
 
