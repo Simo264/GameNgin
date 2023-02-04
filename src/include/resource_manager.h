@@ -4,8 +4,6 @@
 #include "shader.h"
 #include "texture.h"
 
-using namespace GL;
-
 // ResourceManager class
 // -----------------------------------------------------------
 

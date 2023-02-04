@@ -4,8 +4,6 @@
 
 extern gn::WindowManager gWindowManager;
 
-using namespace GL;
-
 namespace gn
 {
   void GameManager::run()

@@ -5,8 +5,6 @@
 
 extern gn::WindowManager gWindowManager;
 
-using namespace GL;
-
 namespace gn
 {
   

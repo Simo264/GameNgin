@@ -3,8 +3,6 @@
 
 #include "shader.h"
 
-using namespace GL;
-
 namespace gn
 { 
 
