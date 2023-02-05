@@ -1,9 +1,16 @@
 #include "core_minimal.h"
 #include "game_manager.h"
-#include "window_manager.h"
 #include "shader.h"
+#include "window_manager.h"
+#include "shader_manager.h"
+#include "world.h"
+#include "box.h"
+
+#include "logger.h"
 
 extern gn::WindowManager gWindowManager;
+extern gn::ShaderManager gShaders;
+extern gn::World         gWorld;
 
 namespace gn
 {
@@ -19,7 +26,7 @@ namespace gn
 
       input(deltatime);
       update(deltatime);
-      render(nullptr);
+      render();
 
       // Swap front and back buffers 
       gWindowManager.swapBuffers();
@@ -29,6 +36,7 @@ namespace gn
     }
     
   }
+  
   void GameManager::input(double deltatime)
   {
     // Close window
@@ -44,10 +52,22 @@ namespace gn
     
   }
 
-  void GameManager::render(Shader* shader)
+  void GameManager::render()
   {
     glClearColor(1.f, 1.f, 1.f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT);
+
+    const auto& worldObj = gWorld.getWorldObjects();
+    for(auto it = worldObj.begin(); it != worldObj.end(); ++it)
+    {
+      Box* box = dynamic_cast<Box*>(it->second);
+
+      Shader* shader = gShaders.getShader("texture.shader"); 
+      if(shader)
+        box->render(shader);
+      else
+        LOG_ERROR("Shader is NULL");
+    }     
     gWindowManager.IMGUIrender();
   }
 

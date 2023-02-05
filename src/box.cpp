@@ -1,20 +1,21 @@
-#include "include/core_minimal.h"
-#include "include/box.h"
-#include "include/shader.h"
-#include "include/texture.h"
-#include "include/window_manager.h"
+#include "core_minimal.h"
+#include "box.h"
+#include "shader.h"
+#include "texture.h"
+#include "window_manager.h"
 
 extern gn::WindowManager gWindowManager;
 
 namespace gn
 {
-  
-  Box::Box(vec2 dimension_, vec2 position_) 
-  : Object(), dimension{dimension_}, position{position_}
+  Box::Box(uint32_t objectid, std::string objectname, vec2 dim, vec2 pos, float angle)
+  : ObjectGL(objectid, objectname)
   {
-    name = "Box_" + std::to_string(id);
-
     init();
+
+    scale(dim);
+    translate(pos);
+    rotate(angle);
   }
 
   void Box::init()
@@ -84,21 +85,19 @@ namespace gn
   {
     const vec2ui windowSize = gWindowManager.getWindowSize();
 
-    const mat4 scale       = glm::scale(mat4(1.f), vec3(
-                                    dimension * 0.5f, 0.f));
-    const mat4 translate   = glm::translate(mat4(1.f), vec3(
-                                    position.x + dimension.x/2,
-                                    position.y + dimension.y/2, 
-                                    0.f));
-    const mat4 model       = translate * m_rotatemat * scale;
-    const mat4 projection  = ortho(0.f, 
-                                  (float)windowSize.x, 
-                                  (float)windowSize.y, 
-                                  0.f, -1.0f, 1.0f);
+    // const mat4 scale       = glm::scale(mat4(1.f), vec3(
+    //                           dimension * 0.5f, 0.f));
+    // const mat4 translate   = glm::translate(mat4(1.f), vec3(
+    //                           position.x + dimension.x/2,
+    //                           position.y + dimension.y/2, 
+    //                           0.f));
 
-    shader->use();
-    shader->setMatrix4("model", model);
-    shader->setMatrix4("projection", projection);
+    const mat4 model       = transform.translate * transform.rotate * transform.scale;
+    const mat4 projection  = ortho(0.f, (float)windowSize.x, (float)windowSize.y, 0.f, -1.0f, 1.0f);
+
+    // shader->use();
+    // shader->setMatrix4("model", model);
+    // shader->setMatrix4("projection", projection);
 
     // bind textures on corresponding texture units
     texture->use();

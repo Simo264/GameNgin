@@ -3,7 +3,6 @@
 
 namespace gn
 { 
-
   // GameManager class
   // -----------------------------------------------------------
   class GameManager
@@ -16,7 +15,7 @@ namespace gn
 
       void input(double deltatime);   
       void update(double deltatime);  
-      void render(class Shader* shader);    
+      void render();    
 
     public:
       GameManager() = default;

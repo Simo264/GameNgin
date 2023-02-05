@@ -3,25 +3,25 @@
 
 namespace gn
 {
-  std::map<uint32_t, Object*> World::m_worldObjects = std::map<uint32_t, Object*>();
+  std::map<uint32_t, ObjectGL*> World::m_worldObjects = std::map<uint32_t, ObjectGL*>();
 
-  const std::map<uint32_t, Object*>& World::getWorldObjects()
+  const std::map<uint32_t, ObjectGL*>& World::getWorldObjects()
   {
     return m_worldObjects;
   }
 
-  Object* World::getObjectByName(const char* objectname)
+  ObjectGL* World::getObjectByName(const char* objectname)
   {
     for(auto it = m_worldObjects.begin(); it != m_worldObjects.end(); ++it)
     {
-      Object* obj = it->second;
+      ObjectGL* obj = it->second;
       if(obj->name.compare(objectname) == 0)
         return obj;
     }
     return nullptr;
   }
 
-  Object* World::getObjectByID(uint32_t objectid)
+  ObjectGL* World::getObjectByID(uint32_t objectid)
   {
     auto it = m_worldObjects.find(objectid);
     if (it == m_worldObjects.end())
@@ -29,14 +29,14 @@ namespace gn
     return it->second;
   }
 
-  void World::pushObject(Object* object)
+  void World::pushObject(ObjectGL* object)
   {
     if(!object) return;
 
     m_worldObjects.insert({object->id, object});
   }
 
-  void World::destroyObject(Object* object)
+  void World::destroyObject(ObjectGL* object)
   {
     if(!object) return;
 
@@ -46,7 +46,7 @@ namespace gn
 
   void World::destroyObject(uint32_t objectid)
   {
-    Object* obj = getObjectByID(objectid);
+    ObjectGL* obj = getObjectByID(objectid);
     if(!obj) return;
 
     m_worldObjects.erase(objectid);
