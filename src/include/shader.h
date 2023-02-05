@@ -11,28 +11,21 @@ namespace gn
     uint32_t m_shaderOBJ;
 
     // checks if compilation or linking failed and if so, print the error logs
-    void checkCompileErrors(uint32_t object, const std::string& type); 
+    bool checkCompileErrors(uint32_t object, const std::string& type); 
 
   public:
     // constructors
     Shader() = default;
-    Shader(
-      const char* vsFilename, 
-      const char* fsFilename, 
-      const char* gsFilename = nullptr);
     
     // destructor
     ~Shader() { glDeleteProgram(m_shaderOBJ); }
+
+    // compiles the shader from given source code
+    bool compile(const char* vertexSource, const char* fragmentSource);
     
     // sets the current shader as active
     void use();
 
-    // compiles the shader from given source code
-    void compile(
-      const char* vertexSource, 
-      const char* fragmentSource, 
-      const char* geometrySource = nullptr);
-    
     // utility functions
     void setFloat    (const char* name, float value);
     void setInteger  (const char* name, int value);

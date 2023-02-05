@@ -9,16 +9,13 @@ namespace gn
 {
   GLFWwindow* WindowManager::m_window = nullptr;
 
-  void WindowManager::init()
+  bool WindowManager::init()
   {
     // glfw: init
     // ----------------
     if(!glfwInit())
-    {
-      LOG_ERROR("Init GLFW... Failed!");
-      exit(EXIT_FAILURE);
-    }
-    LOG_TRACE("Init GLFW... OK!");
+      return false;
+
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -28,12 +25,7 @@ namespace gn
     // ----------------
     m_window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGH, WINDOW_TITLE, nullptr, nullptr);
     if(!m_window)
-    {
-      LOG_ERROR("Creating Window... Failed!");
-      glfwTerminate();
-      exit(EXIT_FAILURE);
-    }
-    LOG_TRACE("Creating Window... OK!");
+      return false;
 
     glfwMakeContextCurrent(m_window);
     glfwSwapInterval(1);
@@ -42,17 +34,14 @@ namespace gn
     // glad: load all OpenGL function pointers
     // ---------------------------------------
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-      LOG_ERROR("Init GLAD... Failed!");
-      glfwTerminate();
-      exit(EXIT_FAILURE);
-    }
-    LOG_TRACE("Init GLAD... OK!");
+      return false;
     
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGH);
     glfwSetFramebufferSizeCallback(m_window, [](GLFWwindow* window, int width, int height){
       glViewport(0, 0, width, height);
     });
+
+    return true;
   }
 
   void WindowManager::IMGUIinit()

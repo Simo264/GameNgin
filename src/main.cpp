@@ -18,18 +18,27 @@ GameManager     gGameManager;
 int main()
 {
   // Start up engine systems in the correct order.
-  gWindowManager.init();
-  LOG_TRACE("Init WindowManager... OK!");
-
+  LOG_TRACE("Init WindowManager...");
+  if(!gWindowManager.init())
+  {
+    LOG_ERROR("Failed on init WindowManager!");
+    return (EXIT_FAILURE);
+  }
   gWindowManager.IMGUIinit();
-  LOG_TRACE("Init IMGUI... OK!");
-
-  gShaders.loadShader("../shaders/basic.vertex.shader", "../shaders/basic.fragment.shader", nullptr, "basic.shader");
-  //gShaders.loadShader("../shaders/texture.vertex.shader", "../shaders/texture.fragment.shader", nullptr, "texture.shader");
-  //LOG_TRACE("Loading shaders... OK!");
-
-  //gTextures.loadTexture("../res/image.png", true, "image");
-  //LOG_TRACE("Loading textures... OK!");
+  
+  LOG_TRACE("Loading shaders...");
+  gShaders.loadShader(
+    "shaders/basic.vertex.shader", 
+    "shaders/basic.fragment.shader", 
+    "basic.shader");
+  gShaders.loadShader(
+    "shaders/texture.vertex.shader", 
+    "shaders/texture.fragment.shader", 
+    "texture.shader");
+  
+  LOG_TRACE("Loading textures...");
+  gTextures.loadTexture("res/image.png", true, "image");
+  
   
 
   // init world 

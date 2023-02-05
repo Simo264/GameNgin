@@ -5,88 +5,72 @@
 
 namespace gn
 {
-	Shader::Shader(const char* vsFilename, const char* fsFilename, const char* gsFilename)
+	bool Shader::compile(const char* vertexSource, const char* fragmentSource)
 	{
-		std::string vsSource, fsSource, gsSource;
+		uint32_t vertexSh, fragmentSh;
+		// vertex Shader
+		vertexSh = glCreateShader(GL_VERTEX_SHADER);
+		glShaderSource(vertexSh, 1, &vertexSource, NULL);
+		glCompileShader(vertexSh);
+		if(!checkCompileErrors(vertexSh, "VERTEX"))
+			return false;
 
-		std::ifstream vShaderFile, fShaderFile, gShaderFile;
-		vShaderFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
-		fShaderFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
-		gShaderFile.exceptions (std::ifstream::failbit | std::ifstream::badbit);
-		try 
+		// fragment Shader
+		fragmentSh = glCreateShader(GL_FRAGMENT_SHADER);
+		glShaderSource(fragmentSh, 1, &fragmentSource, NULL);
+		glCompileShader(fragmentSh);
+		if(!checkCompileErrors(fragmentSh, "FRAGMENT"))
+			return false;
+
+		// shader program
+		m_shaderOBJ = glCreateProgram();
+		glAttachShader(m_shaderOBJ, vertexSh);
+		glAttachShader(m_shaderOBJ, fragmentSh);
+		glLinkProgram(m_shaderOBJ);
+		if(!checkCompileErrors(m_shaderOBJ, "PROGRAM"))
+			return false;
+
+		// delete the shaders as they're linked into our program now and no longer necessary
+		glDeleteShader(vertexSh);
+		glDeleteShader(fragmentSh);
+
+		return true;
+	}
+
+	bool Shader::checkCompileErrors(uint32_t object, const std::string& type)
+	{
+		int success;
+		char infoLog[1024];
+		if (type != "PROGRAM")
 		{
-			std::stringstream vShaderStream, fShaderStream, gShaderStream;
-
-			vShaderFile.open(vsFilename);
-			vShaderStream << vShaderFile.rdbuf();	// read file's buffer contents into streams
-			vShaderFile.close();
-			vsSource = vShaderStream.str();	// convert stream into string 
-
-			fShaderFile.open(fsFilename);
-			fShaderStream << fShaderFile.rdbuf(); // read file's buffer contents into streams
-			fShaderFile.close();
-			fsSource = fShaderStream.str();	// convert stream into string 
-			
-			if(gsFilename)
+			glGetShaderiv(object, GL_COMPILE_STATUS, &success);
+			if (!success)
 			{
-				gShaderFile.open(gsFilename);
-				gShaderStream << gShaderFile.rdbuf();
-				gShaderFile.close();
-				gsSource = gShaderStream.str();
+				glGetShaderInfoLog(object, 1024, NULL, infoLog);
+				LOG_ERROR(
+					std::string("| ERROR::SHADER: Compile-time error: Type: " + type + "\n") + 
+					std::string(infoLog));
+				return false;
 			}
 		}
-		catch (std::ifstream::failure& e)
+		else
 		{
-			LOG_ERROR(std::string("ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ: ") + std::string(e.what()));
+			glGetProgramiv(object, GL_LINK_STATUS, &success);
+			if (!success)
+			{
+				glGetProgramInfoLog(object, 1024, NULL, infoLog);
+				LOG_ERROR(
+					std::string("| ERROR::SHADER: Link-time error: Type: " + type + "\n") + 
+					std::string(infoLog));
+				return false;
+			}
 		}
-
-		// 2. compile shaders
-		compile(
-			vsSource.c_str(), 
-			fsSource.c_str(), 
-			(gsSource.size() == 0 ? nullptr : gsSource.c_str())
-		);	
+		return true;
 	}
 
 	void Shader::use()
 	{
 		glUseProgram(m_shaderOBJ);
-	}
-
-	void Shader::compile(const char* vertexSource, const char* fragmentSource, const char* geometrySource)
-	{
-		uint32_t sVertex, sFragment, gShader;
-		// vertex Shader
-		sVertex = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(sVertex, 1, &vertexSource, NULL);
-		glCompileShader(sVertex);
-		checkCompileErrors(sVertex, "VERTEX");
-		// fragment Shader
-		sFragment = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(sFragment, 1, &fragmentSource, NULL);
-		glCompileShader(sFragment);
-		checkCompileErrors(sFragment, "FRAGMENT");
-		// if geometry shader source code is given, also compile geometry shader
-		if (geometrySource != nullptr)
-		{
-			gShader = glCreateShader(GL_GEOMETRY_SHADER);
-			glShaderSource(gShader, 1, &geometrySource, NULL);
-			glCompileShader(gShader);
-			checkCompileErrors(gShader, "GEOMETRY");
-		}
-		// shader program
-		m_shaderOBJ = glCreateProgram();
-		glAttachShader(m_shaderOBJ, sVertex);
-		glAttachShader(m_shaderOBJ, sFragment);
-		if (geometrySource != nullptr)
-			glAttachShader(m_shaderOBJ, gShader);
-		glLinkProgram(m_shaderOBJ);
-		checkCompileErrors(m_shaderOBJ, "PROGRAM");
-		// delete the shaders as they're linked into our program now and no longer necessary
-		glDeleteShader(sVertex);
-		glDeleteShader(sFragment);
-		if (geometrySource != nullptr)
-			glDeleteShader(gShader);
 	}
 
 	void Shader::setFloat(const char* name, float value)
@@ -112,34 +96,6 @@ namespace gn
 	void Shader::setMatrix4(const char* name, const mat4& matrix)
 	{
 		glUniformMatrix4fv(glGetUniformLocation(m_shaderOBJ, name), 1, false, value_ptr(matrix));
-	}
-
-	void Shader::checkCompileErrors(uint32_t object, const std::string& type)
-	{
-		int success;
-		char infoLog[1024];
-		if (type != "PROGRAM")
-		{
-			glGetShaderiv(object, GL_COMPILE_STATUS, &success);
-			if (!success)
-			{
-				glGetShaderInfoLog(object, 1024, NULL, infoLog);
-				LOG_ERROR(
-					std::string("| ERROR::SHADER: Compile-time error: Type: " + type + "\n") + 
-					std::string(infoLog));
-			}
-		}
-		else
-		{
-			glGetProgramiv(object, GL_LINK_STATUS, &success);
-			if (!success)
-			{
-				glGetProgramInfoLog(object, 1024, NULL, infoLog);
-				LOG_ERROR(
-					std::string("| ERROR::SHADER: Link-time error: Type: " + type + "\n") + 
-					std::string(infoLog));
-			}
-		}
 	}
 
 }

@@ -15,7 +15,7 @@ namespace gn
     WindowManager() = default;
     ~WindowManager() = default;
 
-    void init();        
+    bool init();        
     void IMGUIinit();   
 
     void IMGUIrender(); 

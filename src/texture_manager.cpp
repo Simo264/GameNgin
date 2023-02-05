@@ -14,18 +14,18 @@ namespace gn
     return m_textures;
   }
 
+  Texture* TextureManager::getTexture(const std::string& name)
+  {
+    return m_textures.at(name);
+  }
+
   void TextureManager::loadTexture(const char* file, bool alpha, const std::string& name)
   {
     Texture* texture = loadTextureFromFile(file, alpha);
     m_textures.insert({name , texture}); 
   }
-
-  Texture* TextureManager::getTexture(const std::string& name)
-  {
-    return m_textures.at(name);
-  }
   
-  Texture* TextureManager::loadTextureFromFile(const char* file, bool alpha)
+  Texture* TextureManager::loadTextureFromFile(const char* filePath, bool alpha)
   {
     // create texture object
     Texture* texture = new Texture;
@@ -37,9 +37,9 @@ namespace gn
 
     // load image
     int width, height, nrChannels;
-    u_char* data = stbi_load(file, &width, &height, &nrChannels, 0);
+    u_char* data = stbi_load(filePath, &width, &height, &nrChannels, 0);
     // now generate texture
-    texture->generate(width, height, data);
+    texture->generate(vec2ui(width, height), data);
     // and finally free image data
     stbi_image_free(data);
     return texture;

@@ -3,19 +3,13 @@
 
 namespace gn
 {
-  Texture::Texture()
+  void Texture::generate(const vec2ui& dimension, u_char* data)
   {
-    glGenTextures(1, &m_textureOBJ);
-  }
-
-  void Texture::generate(uint32_t width, uint32_t height, u_char* data)
-  {
-    this->width   = width;
-    this->height  = height;
+    m_dimension = dimension;
 
     // create Texture
     glBindTexture(GL_TEXTURE_2D, m_textureOBJ);
-    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, imageFormat, GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, dimension.x, dimension.y, 0, imageFormat, GL_UNSIGNED_BYTE, data);
     
     // set Texture wrap and filter modes
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapS);

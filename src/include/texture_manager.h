@@ -17,7 +17,7 @@ namespace gn
     static const std::map<std::string, class Texture*>& get();
 
     // loads (and generates) a texture from file
-    void loadTexture(const char* file, bool alpha, const std::string& name);
+    void loadTexture(const char* filePath, bool alpha, const std::string& name);
 
     // retrieves a stored texture
     class Texture* getTexture(const std::string& name);
