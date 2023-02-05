@@ -34,17 +34,17 @@ namespace gn
 
     void rotate(float angle)
     { 
-      transform.rotate = glm::rotate(mat4(1.f), radians(angle), vec3(0.f, 0.f, 1.f)); 
+      transform.rotate = glm::rotate(transform.rotate, radians(angle), vec3(0.f, 0.f, 1.f)); 
     }
     
     void scale(vec2 dim) 
     { 
-      transform.scale = glm::scale(mat4(1.f), vec3(dim, 0.f));      
+      transform.scale = glm::scale(transform.scale, vec3(dim, 0.f));      
     }
     
     void translate(vec2 pos)
     { 
-      transform.translate = glm::translate(mat4(1.f), vec3(pos, 0.f));
+      transform.translate = glm::translate(transform.translate, vec3(pos, 0.f));
     }
   }; 
   // -----------------------------------------------------------

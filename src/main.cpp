@@ -37,7 +37,8 @@ int main()
   // init world 
   // ----------
   LOG_TRACE("Loading objects...");
-  gWorld.pushObject(new Box(0, "Box_0", vec2(50,50), vec2(50,50)));
+  Box* box = new Box(0, "Box_0", vec2(50,50), vec2(0,0), gTextures.getTexture("image"));
+  gWorld.pushObject(box);
 
   // gWorld.pushObject(new Box(vec2{ 50,50 }, vec2{ 100,100 }));
   // gWorld.pushObject(new Box(vec2{ 50,50 }, vec2{ 300,100 }));
@@ -45,6 +46,7 @@ int main()
 
 
   // Run the game.
+  LOG_TRACE("Running the game...");
   gGameManager.run();
 
   

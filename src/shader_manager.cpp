@@ -33,7 +33,8 @@ namespace gn
 
 			// 2. compile shaders
       std::unique_ptr<Shader> shader = std::unique_ptr<Shader>(new Shader);
-			if(!shader.get()->compile(vsSource.c_str(), fsSource.c_str()))
+			bool compiled = shader.get()->compile(vsSource.c_str(), fsSource.c_str());
+      if(!compiled)
       {
         LOG_ERROR("Error on compile shader");
         shader.reset();

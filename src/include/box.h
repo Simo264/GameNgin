@@ -10,14 +10,20 @@ namespace gn
   class Box : public ObjectGL
   {
   private:
+    class Texture* m_texture; 
+    
     void init();
 
   public:
     vec2 dimension;  
     vec2 position;   
-    class Texture* texture;
-
-    Box(uint32_t objectid, std::string objectname, vec2 dim, vec2 pos, float angle = 0.f);
+    
+    Box(
+      uint32_t objectid, 
+      std::string objectname, 
+      vec2 dim, 
+      vec2 pos, 
+      class Texture* texture);
 
     void render(class Shader* shader) override;
 

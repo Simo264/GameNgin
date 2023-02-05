@@ -4,18 +4,21 @@
 #include "texture.h"
 #include "window_manager.h"
 
+#include "logger.h"
+
 extern gn::WindowManager gWindowManager;
 
 namespace gn
 {
-  Box::Box(uint32_t objectid, std::string objectname, vec2 dim, vec2 pos, float angle)
+  Box::Box(uint32_t objectid, std::string objectname, vec2 dim, vec2 pos, Texture* texture)
   : ObjectGL(objectid, objectname)
   {
     init();
 
     scale(dim);
     translate(pos);
-    rotate(angle);
+    
+    setTexture(texture);
   }
 
   void Box::init()
@@ -83,6 +86,8 @@ namespace gn
 
   void Box::render(Shader* shader)
   {
+    if(!shader) return;
+
     const vec2ui windowSize = gWindowManager.getWindowSize();
 
     // const mat4 scale       = glm::scale(mat4(1.f), vec3(
@@ -93,15 +98,25 @@ namespace gn
     //                           0.f));
 
     const mat4 model       = transform.translate * transform.rotate * transform.scale;
-    const mat4 projection  = ortho(0.f, (float)windowSize.x, (float)windowSize.y, 0.f, -1.0f, 1.0f);
+    
+    // origin to the center of the screen
+    const mat4 projection  = ortho(
+                              -(float)windowSize.x / 2, // left
+                              +(float)windowSize.x / 2, // right
+                              -(float)windowSize.y / 2, // bottom
+                              +(float)windowSize.y / 2, // top 
+                              -1.0f, 1.0f);
 
-    // shader->use();
-    // shader->setMatrix4("model", model);
-    // shader->setMatrix4("projection", projection);
+    shader->use();
+    shader->setMatrix4("model", model);
+    shader->setMatrix4("projection", projection);
 
     // bind textures on corresponding texture units
-    texture->use();
-    texture->bind();
+    if(m_texture)
+    {
+      m_texture->use();
+      m_texture->bind();
+    }
     
     m_vaOBJ.get()->bind();
     glDrawElements(drawmode, 6, GL_UNSIGNED_BYTE, 0);
@@ -119,7 +134,7 @@ namespace gn
 
   void Box::setTexture(Texture* texture) 
   { 
-    this->texture = texture; 
+    m_texture = texture; 
   }
 }
 
