@@ -21,7 +21,6 @@ add_subdirectory(externals/glfw)
 add_subdirectory(externals/glm)
 add_subdirectory(externals/imgui)
 
-include_directories(src/include)
 include_directories(externals/glad/include)
 include_directories(externals/glfw/include)
 include_directories(externals/glm)

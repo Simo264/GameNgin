@@ -1,11 +1,10 @@
 #include "core_minimal.h"
-#include "window_manager.h"
-#include "world.h"
-#include "shader_manager.h"
-#include "texture_manager.h"
+#include "subsystems/window_manager.h"
+#include "subsystems/shader_manager.h"
+#include "subsystems/texture_manager.h"
+#include "subsystems/game_manager.h"
 #include "box.h"
-#include "game_manager.h"
-
+#include "world.h"
 #include "logger.h"
 
 using namespace gn;

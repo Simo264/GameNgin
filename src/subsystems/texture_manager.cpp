@@ -1,6 +1,6 @@
-#include "core_minimal.h"
+#include "../core_minimal.h"
 #include "texture_manager.h"
-#include "texture.h"
+#include "../texture.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"

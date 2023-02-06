@@ -1,12 +1,12 @@
-#include "core_minimal.h"
+#include "../core_minimal.h"
 #include "game_manager.h"
-#include "shader.h"
 #include "window_manager.h"
 #include "shader_manager.h"
-#include "world.h"
-#include "box.h"
 
-#include "logger.h"
+#include "../shader.h"
+#include "../world.h"
+#include "../box.h"
+#include "../logger.h"
 
 extern gn::WindowManager gWindowManager;
 extern gn::ShaderManager gShaders;
@@ -30,15 +30,15 @@ namespace gn
 
       // Swap front and back buffers 
       gWindowManager.swapBuffers();
-
-      // Poll for and process events 
-      glfwPollEvents();
     }
     
   }
   
   void GameManager::input(double deltatime)
   {
+    // Poll for and process events 
+    glfwPollEvents();
+    
     // Close window
     if (gWindowManager.getKey(GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
@@ -93,7 +93,7 @@ namespace gn
     for(auto it = worldObj.begin(); it != worldObj.end(); ++it)
       it->second->render(shader);
     
-    // gWindowManager.IMGUIrender();
+    gWindowManager.IMGUIrender();
   }
 
 

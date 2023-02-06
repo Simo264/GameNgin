@@ -32,20 +32,11 @@ namespace gn
 
     virtual std::string toString() { return std::to_string(id) + name; }
 
-    void rotate(float angle)
-    { 
-      transform.rotate = glm::rotate(transform.rotate, radians(angle), vec3(0.f, 0.f, 1.f)); 
-    }
-    
-    void scale(vec2 dim) 
-    { 
-      transform.scale = glm::scale(transform.scale, vec3(dim, 0.f));      
-    }
-    
-    void translate(vec2 pos)
-    { 
-      transform.translate = glm::translate(transform.translate, vec3(pos, 0.f));
-    }
+    void rotate(float angle)  { transform.rotate    = glm::rotate(transform.rotate, radians(angle), vec3(0.f, 0.f, 1.f)); }
+    void scale(vec2 size)     { transform.scale     = glm::scale(transform.scale, vec3(size, 0.f)); }
+    void translate(vec2 pos)  { transform.translate = glm::translate(transform.translate, vec3(pos, 0.f)); }
+  
+    const mat4 getModel() const { return transform.translate * transform.rotate * transform.scale; }
   }; 
   // -----------------------------------------------------------
 

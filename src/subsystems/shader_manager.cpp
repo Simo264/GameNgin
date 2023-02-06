@@ -1,7 +1,7 @@
-#include "core_minimal.h"
+#include "../core_minimal.h"
 #include "shader_manager.h"
-#include "shader.h"
-#include "logger.h"
+#include "../shader.h"
+#include "../logger.h"
 
 namespace gn
 {

@@ -23,7 +23,6 @@ namespace gn
     void free();        
     void IMGUIfree();   
 
-
     static GLFWwindow* get()    { return m_window;                          }
     int   getKey(int key) const { return glfwGetKey(m_window, key);         }
     bool  shouldClose()   const { return glfwWindowShouldClose(m_window);   }

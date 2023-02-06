@@ -15,13 +15,13 @@ namespace gn
     void init();
 
   public:
-    vec2 dimension;  
+    vec2 size;  
     vec2 position;   
     
     Box(
       uint32_t objectid, 
       std::string objectname, 
-      vec2 dim, 
+      vec2 size, 
       vec2 pos, 
       class Texture* texture);
 
@@ -29,6 +29,7 @@ namespace gn
 
     void setColor(color8_t color);
 
+    class Texture* getTexture() const { return m_texture; }
     void setTexture(class Texture* texture);
   };
   // -----------------------------------------------------------

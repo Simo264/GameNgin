@@ -1,6 +1,6 @@
-#include "core_minimal.h"
+#include "../core_minimal.h"
 #include "window_manager.h"
-#include "logger.h"
+#include "../logger.h"
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -68,8 +68,9 @@ namespace gn
 
     if(ImGui::Begin("Hello, world!"))
     {
-      ImGui::End();
+      
     }
+    ImGui::End();
 
     // Rendering
     ImGui::Render();

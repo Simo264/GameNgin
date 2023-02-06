@@ -2,20 +2,21 @@
 #include "box.h"
 #include "shader.h"
 #include "texture.h"
-#include "window_manager.h"
-
 #include "logger.h"
+
+#include "subsystems/window_manager.h"
+
 
 extern gn::WindowManager gWindowManager;
 
 namespace gn
 {
-  Box::Box(uint32_t objectid, std::string objectname, vec2 dim, vec2 pos, Texture* texture)
+  Box::Box(uint32_t objectid, std::string objectname, vec2 size, vec2 pos, Texture* texture)
   : ObjectGL(objectid, objectname)
   {
     init();
 
-    scale(dim);
+    scale(size);
     translate(pos);
     
     setTexture(texture);
@@ -89,15 +90,6 @@ namespace gn
     if(!shader) return;
 
     const vec2ui windowSize = gWindowManager.getWindowSize();
-
-    // const mat4 scale       = glm::scale(mat4(1.f), vec3(
-    //                           dimension * 0.5f, 0.f));
-    // const mat4 translate   = glm::translate(mat4(1.f), vec3(
-    //                           position.x + dimension.x/2,
-    //                           position.y + dimension.y/2, 
-    //                           0.f));
-
-    const mat4 model       = transform.translate * transform.rotate * transform.scale;
     
     // origin to the center of the screen
     const mat4 projection  = ortho(
@@ -108,16 +100,12 @@ namespace gn
                               -1.0f, 1.0f);
 
     shader->use();
-    shader->setMatrix4("model", model);
+    shader->setMatrix4("model", this->getModel());
     shader->setMatrix4("projection", projection);
 
     // bind textures on corresponding texture units
-    if(m_texture)
-    {
-      m_texture->use();
-      m_texture->bind();
-    }
-    
+    m_texture->use();
+    m_texture->bind();
     m_vaOBJ.get()->bind();
     glDrawElements(drawmode, 6, GL_UNSIGNED_BYTE, 0);
   }

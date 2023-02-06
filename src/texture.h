@@ -10,8 +10,8 @@ namespace gn
   private:
     // holds the ID of the texture object, used for all texture operations to reference to this particular texture
     uint32_t m_textureOBJ;
-    // texture image dimensions  in pixels
-    vec2ui   m_dimension;
+    // texture image size  in pixels
+    vec2ui   m_size;
 
   public:
     // set default texture modes
@@ -25,10 +25,10 @@ namespace gn
     Texture()   { glGenTextures(1, &m_textureOBJ);    }
     ~Texture()  { glDeleteTextures(1, &m_textureOBJ); }
 
-    const vec2ui& getDimension() const { return m_dimension; }
+    const vec2ui& getSize() const { return m_size; }
 
     // generates texture from image data
-    void generate(const vec2ui& dimension, unsigned char* data);
+    void generate(const vec2ui& size, unsigned char* data);
     
     void use(uint32_t index = 0)  { glActiveTexture(GL_TEXTURE0 + index); }
     
