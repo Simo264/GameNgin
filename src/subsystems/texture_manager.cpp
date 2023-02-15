@@ -35,6 +35,8 @@ namespace gn
       texture->imageFormat    = GL_RGBA;
     }
 
+    stbi_set_flip_vertically_on_load(1);
+
     // load image
     int width, height, nrChannels;
     u_char* data = stbi_load(filePath, &width, &height, &nrChannels, 0);

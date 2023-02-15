@@ -9,7 +9,7 @@ public:
   RenderManager() = default;
   ~RenderManager() = default;
 
-  void render(class Shader*, class ObjectGL*);
+  void render(class Shader*, class Object*) { }
 };
 
 

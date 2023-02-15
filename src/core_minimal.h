@@ -20,7 +20,7 @@
 #include <string>
 
 #define WINDOW_WIDTH 1280
-#define WINDOW_HEIGH 720
+#define WINDOW_HEIGTH 720
 #define WINDOW_TITLE  "GameNgin"
 
 using vec2    = glm::vec2;  // 2 floats

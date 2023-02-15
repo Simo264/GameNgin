@@ -1,7 +1,7 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#include "objectGL.h"
+#include "object.h"
 
 
 namespace gn
@@ -11,20 +11,20 @@ namespace gn
   class World
   {
     private:
-      static std::map<uint32_t, ObjectGL*> m_worldObjects;
+      static std::map<uint32_t, Object*> m_worldObjects;
 
     public:
       World() = default;
       ~World() = default;
 
-      static const std::map<uint32_t, ObjectGL*>& getWorldObjects();
+      static const std::map<uint32_t, Object*>& getWorldObjects();
 
-      ObjectGL* getObjectByName(const char* objectname);
-      ObjectGL* getObjectByID(uint32_t objectid);
+      Object* getObjectByName(const char* objectname);
+      Object* getObjectByID(uint32_t objectid);
 
-      void pushObject(ObjectGL* object);
+      void pushObject(Object* object);
 
-      void destroyObject(ObjectGL* object);
+      void destroyObject(Object* object);
       void destroyObject(uint32_t objectid);
 
       void free();

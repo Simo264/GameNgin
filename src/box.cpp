@@ -12,14 +12,12 @@ extern gn::WindowManager gWindowManager;
 namespace gn
 {
   Box::Box(uint32_t objectid, std::string objectname, vec2 size, vec2 pos, Texture* texture)
-  : ObjectGL(objectid, objectname)
+  : Object(objectid, objectname), texture{texture}
   {
     init();
 
     scale(size);
     translate(pos);
-    
-    setTexture(texture);
   }
 
   void Box::init()
@@ -104,10 +102,14 @@ namespace gn
     shader->setMatrix4("projection", projection);
 
     // bind textures on corresponding texture units
-    m_texture->use();
-    m_texture->bind();
+    if(texture)
+    {
+      texture->use();
+      texture->bind();
+    }
+    
     m_vaOBJ.get()->bind();
-    glDrawElements(drawmode, 6, GL_UNSIGNED_BYTE, 0);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, 0);
   }
 
   void Box::setColor(color8_t color)
@@ -118,11 +120,6 @@ namespace gn
       sizeof(position_t) * 4,
       sizeof(color8_t) * 4,
       arrcolor.data());
-  }
-
-  void Box::setTexture(Texture* texture) 
-  { 
-    m_texture = texture; 
   }
 }
 

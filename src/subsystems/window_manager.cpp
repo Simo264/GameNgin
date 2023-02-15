@@ -1,20 +1,29 @@
 #include "../core_minimal.h"
+
 #include "window_manager.h"
+
 #include "../logger.h"
+#include "../world.h"
+
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+
+extern gn::World gWorld;
 
 namespace gn
 {
   GLFWwindow* WindowManager::m_window = nullptr;
 
-  bool WindowManager::init()
+  void WindowManager::init()
   {
     // glfw: init
     // ----------------
     if(!glfwInit())
-      return false;
+    {
+      LOG_ERROR("Error on init GLFW");  
+      exit(EXIT_FAILURE); 
+    }
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -23,26 +32,34 @@ namespace gn
 
     // create window
     // ----------------
-    m_window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGH, WINDOW_TITLE, nullptr, nullptr);
-    if(!m_window)
-      return false;
-
+    m_window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGTH, WINDOW_TITLE, nullptr, nullptr);
     glfwMakeContextCurrent(m_window);
     glfwSwapInterval(1);
-
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-      return false;
+    {
+      LOG_ERROR("Error on init GLAD");
+      exit(EXIT_FAILURE); 
+    }
     
-    glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGH);
-    glfwSetFramebufferSizeCallback(m_window, [](GLFWwindow* window, int width, int height){
-      glViewport(0, 0, width, height);
-    });
-
-    return true;
+    glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGTH);
+    glfwSetFramebufferSizeCallback(m_window, framebufferSizeCallback);
+    glfwSetMouseButtonCallback(m_window, mouseButtonCallback);
+    
+    setWindowSize(vec2ui(WINDOW_WIDTH, WINDOW_HEIGTH));
+    
+    IMGUIinit();
   }
+
+  void WindowManager::free()
+  {
+    IMGUIfree();
+    glfwDestroyWindow(m_window);
+    glfwTerminate();
+  }
+
 
   void WindowManager::IMGUIinit()
   {
@@ -59,29 +76,42 @@ namespace gn
     ImGui_ImplOpenGL3_Init("#version 450");
   }
 
-
   void WindowManager::IMGUIrender()
   {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    if(ImGui::Begin("Hello, world!"))
+    ImGui::SetNextWindowPos(ImVec2(0, 0));
+    ImGui::SetNextWindowSize(ImVec2(300, m_size.y));
+    if(ImGui::Begin("Left Panel", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize))
     {
-      
+      // const auto& worldObj = gWorld.getWorldObjects();
+      // for(auto it = worldObj.begin(); it != worldObj.end(); ++it)
+      //   ImGui::Text(it->second->toString().c_str());
     }
     ImGui::End();
+
+
+    // ImGui::SetNextWindowPos(ImVec2(m_size.x - 300, 0));
+    // ImGui::SetNextWindowSize(ImVec2(300, m_size.y));
+    // if(ImGui::Begin("Right Panel", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize))
+    // {
+
+    // }
+    // ImGui::End();
+
+    // ImGui::SetNextWindowPos(ImVec2(300, m_size.y - 300));
+    // ImGui::SetNextWindowSize(ImVec2(m_size.x - 600, 300));
+    // if(ImGui::Begin("Bottom Panel", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize))
+    // {
+
+    // }
+    // ImGui::End();
 
     // Rendering
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-  }
-
-
-  void WindowManager::free()
-  {
-    glfwDestroyWindow(m_window);
-    glfwTerminate();
   }
 
   void WindowManager::IMGUIfree()
@@ -91,15 +121,27 @@ namespace gn
     ImGui::DestroyContext();
   }
 
+  
+  void WindowManager::setWindowSize(vec2ui size) 
+  { 
+    m_size = size;
+    glfwSetWindowSize(m_window, size.x, size.y); 
+  }
 
 
-
-
-  const vec2ui WindowManager::getWindowSize() const
+  void WindowManager::framebufferSizeCallback(GLFWwindow* window, int width, int height)
   {
-    int w, h;
-    glfwGetFramebufferSize(m_window, &w, &h);
-    return vec2ui(w, h);
+    glViewport(0, 0, width, height);
+  }
+  
+  void WindowManager::mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+  {
+    if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) 
+    {
+      double xpos, ypos;
+      glfwGetCursorPos(window, &xpos, &ypos);
+      std::cout << "Cursor Position at (" << xpos << " : " << ypos << ")\n";
+    }
   }
 
 }
