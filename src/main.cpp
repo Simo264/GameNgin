@@ -27,12 +27,12 @@ int main()
   LOG_TRACE("Loading textures...");
   gTextures.loadTexture("res/background.jpg", false, "background");
   gTextures.loadTexture("res/image.png", true, "image");
-  gTextures.loadTexture("res/watercolor.png", true, "watercolor");
+  gTextures.loadTexture("res/tile.jpg", false, "tile");
   
   LOG_TRACE("Loading objects...");
   //gWorld.pushObject(new Box(0, "Background_0", vec2(600, 600), vec2(0,0), gTextures.getTexture("background")));
-  gWorld.pushObject(new Box(1, "Box_0", vec2(50,50), vec2(0,0), gTextures.getTexture("image")));
-  gWorld.pushObject(new Box(2, "Box_1", vec2(50,50), vec2(-100,100), gTextures.getTexture("watercolor")));
+  gWorld.pushObject(new Box(1, "Box_0", vec2(50,50), vec2(0,0), gTextures.getTexture("tile")));
+  gWorld.pushObject(new Box(2, "Box_1", vec2(50,50), vec2(-100,100), gTextures.getTexture("image")));
 
   // Run the game.
   LOG_TRACE("Running the game...");

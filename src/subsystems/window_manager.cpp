@@ -12,8 +12,6 @@
 
 extern gn::World gWorld;
 
-static float colors[3];
-
 namespace gn
 {
   GLFWwindow* WindowManager::m_window = nullptr;

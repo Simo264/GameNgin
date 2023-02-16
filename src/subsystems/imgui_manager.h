@@ -7,6 +7,13 @@ namespace gn
   {
     private:
       class WindowManager* m_windowManager;
+      class Object* m_selectedObject;
+
+      // show world objects panel
+      void worldoutliner_panel(vec2ui position, vec2ui size);
+
+      // object details panel
+      void details_panel(vec2ui position, vec2ui size, class Object*);
 
     public:
       ImguiManager() = default;
