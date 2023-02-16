@@ -1,5 +1,7 @@
 #include "core_minimal.h"
 #include "world.h"
+#include "object.h"
+#include "shader.h"
 
 namespace gn
 {
@@ -51,6 +53,12 @@ namespace gn
 
     m_worldObjects.erase(objectid);
     delete obj;
+  }
+
+  void World::render(Shader* shader)
+  {
+    for(auto it = m_worldObjects.begin(); it != m_worldObjects.end(); ++it)
+      it->second->render(shader);
   }
 
   void World::free()

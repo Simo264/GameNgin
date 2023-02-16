@@ -46,35 +46,35 @@ namespace gn
       return;
     }
 
-    Box* box = dynamic_cast<Box*>(gWorld.getObjectByID(1));
+    // Box* box = dynamic_cast<Box*>(gWorld.getObjectByID(1));
 
-    // press W
-    if (gWindowManager.getKey(GLFW_KEY_W) == GLFW_PRESS)
-    {
-      box->translate(vec2(0.f, 2.f * (deltatime*100)));
-      return;
-    }
+    // // press W
+    // if (gWindowManager.getKey(GLFW_KEY_W) == GLFW_PRESS)
+    // {
+    //   box->translate(vec2(0.f, 2.f * (deltatime*100)));
+    //   return;
+    // }
     
-    // press A
-    if (gWindowManager.getKey(GLFW_KEY_A) == GLFW_PRESS)
-    {
-      box->translate(vec2(-2.f * (deltatime*100), 0.f));
-      return;
-    }
+    // // press A
+    // if (gWindowManager.getKey(GLFW_KEY_A) == GLFW_PRESS)
+    // {
+    //   box->translate(vec2(-2.f * (deltatime*100), 0.f));
+    //   return;
+    // }
     
-    // press S
-    if (gWindowManager.getKey(GLFW_KEY_S) == GLFW_PRESS)
-    {
-      box->translate(vec2(0.f, -2.f * (deltatime*100)));
-      return;
-    }
+    // // press S
+    // if (gWindowManager.getKey(GLFW_KEY_S) == GLFW_PRESS)
+    // {
+    //   box->translate(vec2(0.f, -2.f * (deltatime*100)));
+    //   return;
+    // }
     
-    // press D
-    if (gWindowManager.getKey(GLFW_KEY_D) == GLFW_PRESS)
-    {
-      box->translate(vec2(2.f * (deltatime*100), 0.f));
-      return;
-    }
+    // // press D
+    // if (gWindowManager.getKey(GLFW_KEY_D) == GLFW_PRESS)
+    // {
+    //   box->translate(vec2(2.f * (deltatime*100), 0.f));
+    //   return;
+    // }
   }
   
   void GameManager::update(double deltatime)
@@ -87,13 +87,9 @@ namespace gn
     glClearColor(1.f, 1.f, 1.f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    Shader* shader = gShaders.getShader("texture.shader");
-    
-    const auto& worldObj = gWorld.getWorldObjects();
-    for(auto it = worldObj.begin(); it != worldObj.end(); ++it)
-      it->second->render(shader);
+    gWorld.render(gShaders.getShader("texture.shader"));
 
-    gWindowManager.IMGUIrender();
+    gWindowManager.renderGUI();
   }
 
 }

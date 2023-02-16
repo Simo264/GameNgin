@@ -1,6 +1,7 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#include "imgui_manager.h"
 
 namespace gn
 {
@@ -11,10 +12,9 @@ namespace gn
   private:
     static GLFWwindow* m_window;
 
-    vec2ui m_size;
+    ImguiManager m_imguiManager;
 
-    void IMGUIinit();   
-    void IMGUIfree(); 
+    vec2ui m_size;
 
     static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
     static void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
@@ -24,10 +24,9 @@ namespace gn
     ~WindowManager() = default;
 
     void init();
+    void renderGUI();
     void free();        
 
-    void IMGUIrender(); 
-      
     static GLFWwindow* get()    { return m_window;                          }
 
     int   getKey(int key) const { return glfwGetKey(m_window, key);         }

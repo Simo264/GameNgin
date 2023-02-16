@@ -12,12 +12,12 @@ extern gn::WindowManager gWindowManager;
 namespace gn
 {
   Box::Box(uint32_t objectid, std::string objectname, vec2 size, vec2 pos, Texture* texture)
-  : Object(objectid, objectname), texture{texture}
+  : Object(objectid, objectname), 
+    size{size},
+    position{pos},
+    texture{texture}
   {
     init();
-
-    scale(size);
-    translate(pos);
   }
 
   void Box::init()
@@ -36,10 +36,10 @@ namespace gn
     };
     // default color values 
     static const std::array<color8_t, 4>    colors = {
-      color8_t{ 255, 255, 255 },  // top left
-      color8_t{ 255, 255, 255 },  // top right
-      color8_t{ 255, 255, 255 },  // bottom left
-      color8_t{ 255, 255, 255 },  // bottom right
+      color8_t{ 255,255,255 },  // top left
+      color8_t{ 255,255,255 },  // top right
+      color8_t{ 255,255,255 },  // bottom left
+      color8_t{ 255,255,255 }   // bottom right
     };
     // default texture coordinates 
     static const std::array<textcoord_t, 4> textcoords = {
@@ -85,8 +85,6 @@ namespace gn
 
   void Box::render(Shader* shader)
   {
-    if(!shader) return;
-
     const vec2ui windowSize = gWindowManager.getWindowSize();
     
     // origin to the center of the screen
@@ -115,11 +113,7 @@ namespace gn
   void Box::setColor(color8_t color)
   {
     std::array<color8_t, 4> arrcolor = { color,color,color,color };
-
-    m_vbOBJ.get()->namedBufferSubData(
-      sizeof(position_t) * 4,
-      sizeof(color8_t) * 4,
-      arrcolor.data());
+    m_vbOBJ.get()->namedBufferSubData(sizeof(position_t)*4, sizeof(color8_t)*4, arrcolor.data());
   }
 }
 

@@ -23,7 +23,7 @@ namespace gn
     
     virtual ~Object() = default;
 
-    virtual std::string toString() { return std::to_string(id) + name; }
+    virtual std::string toString() { return std::to_string(id) + std::string(". " + name); }
 
     virtual void render(class Shader* shader) { }
   }; 

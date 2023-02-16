@@ -30,7 +30,7 @@ int main()
   gTextures.loadTexture("res/watercolor.png", true, "watercolor");
   
   LOG_TRACE("Loading objects...");
-  gWorld.pushObject(new Box(0, "Background_0", vec2(600, 600), vec2(0,0), gTextures.getTexture("background")));
+  //gWorld.pushObject(new Box(0, "Background_0", vec2(600, 600), vec2(0,0), gTextures.getTexture("background")));
   gWorld.pushObject(new Box(1, "Box_0", vec2(50,50), vec2(0,0), gTextures.getTexture("image")));
   gWorld.pushObject(new Box(2, "Box_1", vec2(50,50), vec2(-100,100), gTextures.getTexture("watercolor")));
 
