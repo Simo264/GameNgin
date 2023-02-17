@@ -35,6 +35,8 @@ namespace gn
     // binds the texture as the current active GL_TEXTURE_2D texture object
     void bind()   const { glBindTexture(GL_TEXTURE_2D, m_textureOBJ); }
     void unbind() const { glBindTexture(GL_TEXTURE_2D, 0); }
+
+    const uint32_t getID() const { return m_textureOBJ; }
   };
   // -----------------------------------------------------------
 

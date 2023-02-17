@@ -6,16 +6,16 @@
 
 #include "subsystems/window_manager.h"
 
-
 extern gn::WindowManager gWindowManager;
 
 namespace gn
 {
-  Box::Box(uint32_t objectid, std::string objectname, vec2 size, vec2 pos, Texture* texture)
+  Box::Box(uint32_t objectid, std::string objectname, vec2 size, vec2 pos, Texture* texture, color8_t color)
   : Object(objectid, objectname), 
     size{size},
     position{pos},
-    texture{texture}
+    texture{texture},
+    color{color}
   {
     init();
   }
@@ -34,13 +34,6 @@ namespace gn
       0,1,3,  // tl - tr -  bl
       0,2,3   // tl - bl - br
     };
-    // default color values 
-    static const std::array<color8_t, 4>    colors = {
-      color8_t{ 255,255,255 },  // top left
-      color8_t{ 255,255,255 },  // top right
-      color8_t{ 255,255,255 },  // bottom left
-      color8_t{ 255,255,255 }   // bottom right
-    };
     // default texture coordinates 
     static const std::array<textcoord_t, 4> textcoords = {
       textcoord_t{ 0.f, 0.f },  // top left
@@ -48,6 +41,9 @@ namespace gn
       textcoord_t{ 0.f, 1.f },  // bottom left
       textcoord_t{ 1.f, 1.f },  // bottom right
     };
+
+    // color values 
+    const std::array<color8_t, 4> colors = { color,color,color,color };
 
     // create vertex array 
     m_vaOBJ = std::unique_ptr<VertexArray>(new VertexArray);
@@ -107,7 +103,7 @@ namespace gn
     }
     
     m_vaOBJ.get()->bind();
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, 0);
+    glDrawElements(drawmode, 6, GL_UNSIGNED_BYTE, 0);
   }
 
   void Box::setColor(color8_t color)

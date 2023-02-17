@@ -1,20 +1,12 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include "vertex_array.h"
-
-// Object class 
-// -----------------------------------------------------------
 namespace gn
 {
+  // Object class 
+  // -----------------------------------------------------------
   class Object
   {
-  protected:
-    // buffers
-    std::unique_ptr<VertexArray>                     m_vaOBJ; // vertex array
-    std::unique_ptr<Buffer<GL_ARRAY_BUFFER>>         m_vbOBJ; // vertex buffer
-    std::unique_ptr<Buffer<GL_ELEMENT_ARRAY_BUFFER>> m_ibOBJ; // index buffer [optional]
-
   public:
     uint32_t    id;
     std::string name;
