@@ -18,6 +18,13 @@ extern gn::TextureManager gTextures;
 static bool drawlines = false;
 static char textpath[100];
 
+static const char* current_theme = "Classic";
+static const char* themes[3] = {
+  "Classic",
+  "Light",
+  "Dark"
+};
+
 namespace gn
 {
   void ImguiManager::init(WindowManager* windowManager)
@@ -33,8 +40,8 @@ namespace gn
     ImGui::GetStyle().WindowRounding = 5.0f;
 
     // Setup Dear ImGui style
-    //ImGui::StyleColorsClassic();
-    ImGui::StyleColorsLight();
+    ImGui::StyleColorsClassic();
+    //ImGui::StyleColorsLight();
     //ImGui::StyleColorsDark();
 
     // Setup Platform/Renderer backends
@@ -48,15 +55,20 @@ namespace gn
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    worldoutliner_panel(
-      vec2ui(m_windowManager->getWindowSize().x - 300, 0), // position
-      vec2ui(300, 300));                                   // size 
+    menubar();
 
-    if(m_selectedObject)
-      details_panel(
-        vec2ui(m_windowManager->getWindowSize().x - 300, 400), // position
-        vec2ui(300, 300),                                      // size
-        m_selectedObject);
+    if(show_preferences)
+      preferences();
+
+    // worldoutliner_panel(
+    //   vec2ui(m_windowManager->getWindowSize().x - 300, 0), // position
+    //   vec2ui(300, 300));                                   // size 
+
+    // if(m_selectedObject)
+    //   details_panel(
+    //     vec2ui(m_windowManager->getWindowSize().x - 300, 400), // position
+    //     vec2ui(300, 300),                                      // size
+    //     m_selectedObject);
 
     // Rendering
     ImGui::Render();
@@ -70,7 +82,100 @@ namespace gn
     ImGui::DestroyContext();
   }
 
+  void ImguiManager::menubar()
+  {
+    ImGui::BeginMainMenuBar();
+    
+    ImGui::SetNextWindowSize({ 300.0f,150.0f });
+
+    if(ImGui::BeginMenu("File"))
+    {
+      if(ImGui::MenuItem("New project"))
+        newproject();
+      
+      if(ImGui::MenuItem("Save"))
+        saveproject();
+
+      if(ImGui::MenuItem("Open"))
+        openproject();
+
+      ImGui::Separator();
+
+      show_preferences = ImGui::MenuItem("Preferences");
+      // if(ImGui::MenuItem("Preferences"))
+        // show_preferences = true;
+        //preferences();
+
+      if(ImGui::MenuItem("Exit"))
+        quit();
+
+      ImGui::EndMenu();
+    }
+
+    ImGui::EndMainMenuBar();
+  }
+
+  void ImguiManager::newproject()
+  {
+    // TODO ...  
+  }
+
+  void ImguiManager::saveproject()
+  {
+    // TODO ...
+  }
+
+  void ImguiManager::openproject()
+  {
+    // TODO ...
+  }
+
+  void ImguiManager::preferences()
+  {
+    ImGui::SetNextWindowSize({ 500.f,500.f });
+
+    ImGui::Begin("Preferences", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
+
+    if(ImGui::BeginCombo("Theme", current_theme))
+    {
+      for (int i = 0; i < 3; i++)
+      {
+        bool is_selected = (current_theme == themes[i]); 
+
+        if (ImGui::Selectable(themes[i], is_selected))
+          current_theme = themes[i];
+        
+        if (is_selected)
+          ImGui::SetItemDefaultFocus();  
+      }
+
+
+      ImGui::EndCombo();
+    }
+    
+
+    // if(ImGui::Selectable("Classic", &theme_classic))
+    // {
+
+    // }
+    // else if(ImGui::Selectable("Light", &theme_light))
+    // {
+
+    // }
+    // else if(ImGui::Selectable("Dark", &theme_dark))
+    // {
+
+    // }
   
+    ImGui::End();
+  }
+
+  void ImguiManager::quit()
+  {
+    // TODO ...
+  }
+
+
   
   void ImguiManager::worldoutliner_panel(vec2ui position, vec2ui size)
   { 

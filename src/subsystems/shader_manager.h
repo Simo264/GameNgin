@@ -24,6 +24,9 @@ namespace gn
     // retrieves a stored sader
     class Shader* getShader(const std::string& name) const;
 
+    // load all shaders
+    void init();
+    
     // properly de-allocates all loaded resources
     void free();
   };
