@@ -24,6 +24,7 @@ namespace gn
       void destroyObject(class Object* object);
       void destroyObject(uint32_t objectid);
 
+      void init();
       void render(class Shader*);
       void free();
   };

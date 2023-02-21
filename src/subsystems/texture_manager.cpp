@@ -54,52 +54,63 @@ namespace gn
   {
     std::string buffer;
     FileManager::read(TEXTURES_INI_FILE, buffer);
+    
+    std::vector<std::string> bufferlines;
+    bufferlines.reserve(std::count(buffer.begin(), buffer.end(), '\n'));
 
-    std::vector<std::string> lines;
-    lines.reserve(std::count(buffer.begin(), buffer.end(), '\n'));
+    std::array<char, 100> bufferline;
+    bufferline.fill(0);
 
-    std::string linebuffer;
-    linebuffer.reserve(100);
-    for(char c : buffer)
+    int indexbl = 0;
+    for(char& c : buffer)
     {
       if(c == '\n')
       {
-        if(!linebuffer.empty())
-          lines.push_back(linebuffer);
-        linebuffer.erase(0, 100);
+        if(strlen(bufferline.data()) != 0)
+          bufferlines.push_back(bufferline.data());
+        
+        bufferline.fill(0);
+        indexbl = 0;
       }
       else
-        linebuffer.push_back(c);
+        bufferline[indexbl++] = c;
     }
 
-    std::string texturename;
-    std::string texturepath;
-    texturename.reserve(50);
-    texturepath.reserve(100);
 
-    int nline = 0;
-    for(std::string& line : lines)
+    std::array<char, 50> texturename;
+    std::array<char, 100> texturepath;
+    std::array<char, 5> fileextension;
+
+    std::array<char, 20> key;
+    std::array<char, 50> value;
+
+    for(auto it = bufferlines.begin(); it != bufferlines.end(); ++it)
     {
-      const int linesize = line.size();
-      if(line.at(0) == '[' && line.at(linesize - 1) == ']')
-        nline = 0;
+      texturename.fill(0);
+      texturepath.fill(0);
+      fileextension.fill(0);
+      key.fill(0);
+      value.fill(0);
 
-      if(nline == 0)
-      {
-        texturename = line.substr(1, linesize - 2);
-      }
-      else if(nline == 1)
-      {
-        texturepath = line;
-        
-        bool alpha = false;
-        if(line.substr(line.find_last_of(".") + 1) == "png")
-          alpha = true;
+      std::copy_n(it->begin() + 1, it->size() - 2, texturename.begin());
 
-        loadTexture(texturepath, alpha, texturename);
-      }
+      ++it;
+      
+      int delimiter = it->find("=");
+      
+      std::copy_n(it->begin(), delimiter, key.begin());
+      std::copy(it->begin() + delimiter + 1, it->end(), value.begin()); 
+      std::copy(value.begin(), value.end(), texturepath.begin());
 
-      nline++;
+      delimiter = it->find_last_of(".");
+
+      std::copy(it->begin() + delimiter, it->end(), fileextension.begin());
+      
+      bool alpha = false;
+      if(strcmp(fileextension.data(), ".png") == 0) 
+        alpha = true;
+
+      loadTexture(texturepath.data(), alpha, texturename.data());
     }
   }
 

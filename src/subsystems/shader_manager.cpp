@@ -48,57 +48,60 @@ namespace gn
   {
     std::string buffer;
     FileManager::read(SHADERS_INI_FILE, buffer);
+    
+    std::vector<std::string> bufferlines;
+    bufferlines.reserve(std::count(buffer.begin(), buffer.end(), '\n'));
 
-    std::vector<std::string> lines;
-    lines.reserve(std::count(buffer.begin(), buffer.end(), '\n'));
-
-    std::string linebuffer;
-    linebuffer.reserve(100);
-    for(char c : buffer)
+    std::array<char, 100> bufferline;
+    int indexbl = 0;
+    for(char& c : buffer)
     {
       if(c == '\n')
       {
-        if(!linebuffer.empty())
-          lines.push_back(linebuffer);
-        linebuffer.erase(0, 100);
+        if(strlen(bufferline.data()) != 0)
+          bufferlines.push_back(bufferline.data());
+        
+        bufferline.fill(0);
+        indexbl = 0;
       }
       else
-        linebuffer.push_back(c);
+        bufferline[indexbl++] = c;
     }
 
-    std::string shadername;
-    std::string vertexshaderPath;
-    std::string fragshaderPath;
-    shadername.reserve(50);
-    vertexshaderPath.reserve(100);
-    fragshaderPath.reserve(100);
+    std::array<char, 50> shadername;
+    std::array<char, 100> vertexshaderPath;
+    std::array<char, 100> fragshaderPath;
 
-    int nline = 0;
-    for(std::string& line : lines)
+    std::array<char, 20> key;
+    std::array<char, 50> value;
+    
+    for(auto it = bufferlines.begin(); it != bufferlines.end(); ++it)
     {
-      const int linesize = line.size();
-      if(line.at(0) == '[' && line.at(linesize - 1) == ']')
-      {
-        nline = 0;
-      }
+      shadername.fill(0);
+      vertexshaderPath.fill(0);
+      fragshaderPath.fill(0);
 
-      if(nline == 0)
+      std::copy_n(it->begin() + 1, it->size() - 2, shadername.begin());
+      
+      for(int i = 0; i < 2; i++)
       {
-        shadername = line.substr(1, linesize - 2);
-      }
-      else if(nline == 1)
-      {
-        vertexshaderPath = line;
-      }
-      else if(nline == 2)
-      {
-        fragshaderPath = line;
-        loadShader(vertexshaderPath, fragshaderPath, shadername);
-      }
+        ++it;
+        
+        const int& delimiter = it->find("=");
+        
+        key.fill(0);
+        value.fill(0);
+        std::copy_n(it->begin(), delimiter, key.begin());
+        std::copy(it->begin() + delimiter + 1, it->end(), value.begin()); 
 
-      nline++;
+        if(strcmp(key.data(), "vertex")  == 0)
+          std::copy(value.begin(), value.end(), vertexshaderPath.begin());
+
+        else if(strcmp(key.data(), "fragment") == 0)
+          std::copy(value.begin(), value.end(), fragshaderPath.begin());
+      }
+      loadShader(vertexshaderPath.data(), fragshaderPath.data(), shadername.data());
     }
-  
   }
 
   void ShaderManager::free()

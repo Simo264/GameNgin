@@ -21,11 +21,7 @@ int main()
   gWindowManager.init();
   gShaders.init();
   gTextures.init();
-
-  LOG_TRACE("Loading world...");
-  // gWorld.init();
-  gWorld.pushObject(new Box(0, "Box_0", vec2(50,50), vec2(0,0), gTextures.getTexture("image")));
-  gWorld.pushObject(new Box(1, "Box_1", vec2(50,50), vec2(-200,200), gTextures.getTexture("tile")));
+  gWorld.init();
 
   // Run the game.
   LOG_TRACE("Running the engine...");

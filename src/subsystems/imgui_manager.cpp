@@ -203,7 +203,7 @@ namespace gn
     if(ImGui::CollapsingHeader("Transform"))
     {
       ImGui::Text(object->toString().c_str());
-      ImGui::SliderAngle("Rotation", &boxobject->angle);
+      ImGui::SliderAngle("Rotation", &boxobject->rotation);
       ImGui::Spacing();
       ImGui::SliderFloat2("Scaling", (float*) &boxobject->scaling, -10.f, 10.f);
       ImGui::Spacing();

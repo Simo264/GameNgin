@@ -10,12 +10,23 @@ extern gn::WindowManager gWindowManager;
 
 namespace gn
 {
-  Box::Box(uint32_t objectid, std::string objectname, vec2 size, vec2 pos, Texture* texture, color8_t color)
-  : Object(objectid, objectname), 
+  Box::Box(
+    uint32_t        id, 
+    std::string     name, 
+    vec2            size, 
+    vec2            pos, 
+    color8_t        color,     
+    Texture*        texture,   
+    float           rotation,  
+    vec2            scaling   
+  )
+  : Object(id, name), 
     size{size},
     position{pos},
+    color{color},
     texture{texture},
-    color{color}
+    rotation{rotation},
+    scaling{scaling}
   {
     init();
   }

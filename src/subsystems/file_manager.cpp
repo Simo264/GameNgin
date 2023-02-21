@@ -7,22 +7,20 @@
 namespace gn
 {
 
-  void FileManager::write(const std::string& filename, const char* data, bool binary)
+  void FileManager::write(const std::string& filename, const std::string& data, bool append)
   {
     std::ofstream file;
-
-    if(binary)
-      file.open(filename, std::ios::out | std::ios::binary);
+    if(append)
+      file.open(filename, std::ios::out | std::ios::app);
     else
       file.open(filename, std::ios::out);
-
+    
     if(!file.is_open())
     {
       LOG_WARNING("FileManager::write - Unable to open file");
       return;
     } 
-
-    file.write(data, strlen(data));
+    file << data;
     file.close();
   }
 
@@ -39,31 +37,32 @@ namespace gn
     destbuffer.clear();
     
     std::string line;
+    line.reserve(100);
     while(std::getline(file, line))
       destbuffer.append(line + "\n");
 
     file.close();
   }
 
-  void FileManager::readbinary(const std::string& filename, std::string& destbuffer)
-  {
-    std::ifstream file(filename, std::ios::in | std::ios::binary);
+  // void FileManager::readbinary(const std::string& filename, std::string& destbuffer)
+  // {
+  //   std::ifstream file(filename, std::ios::in | std::ios::binary);
 
-    if(!file.is_open())
-    {
-      LOG_WARNING("FileManager::readbinary - Unable to open file");
-      return;
-    }
+  //   if(!file.is_open())
+  //   {
+  //     LOG_WARNING("FileManager::readbinary - Unable to open file");
+  //     return;
+  //   }
 
-    std::streampos size = file.tellg();
+  //   std::streampos size = file.tellg();
     
-    destbuffer.clear();
-    destbuffer.reserve(size);
+  //   destbuffer.clear();
+  //   destbuffer.reserve(size);
 
-    file.seekg(0, std::ios::beg);
-    file.read(&destbuffer[0], size);
-    file.close();
-  }
+  //   file.seekg(0, std::ios::beg);
+  //   file.read(&destbuffer[0], size);
+  //   file.close();
+  // }
 
 }
 
