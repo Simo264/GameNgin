@@ -4,7 +4,6 @@
 #include "file_manager.h"
 
 #include "../shader.h"
-#include "../logger.h"
 
 namespace gn
 {
@@ -46,37 +45,20 @@ namespace gn
 
   void ShaderManager::init()
   {
-    std::string buffer;
+    std::vector<std::string> buffer;
     FileManager::read(SHADERS_INI_FILE, buffer);
-    
-    std::vector<std::string> bufferlines;
-    bufferlines.reserve(std::count(buffer.begin(), buffer.end(), '\n'));
 
-    std::array<char, 100> bufferline;
-    int indexbl = 0;
-    for(char& c : buffer)
-    {
-      if(c == '\n')
-      {
-        if(strlen(bufferline.data()) != 0)
-          bufferlines.push_back(bufferline.data());
-        
-        bufferline.fill(0);
-        indexbl = 0;
-      }
-      else
-        bufferline[indexbl++] = c;
-    }
-
-    std::array<char, 50> shadername;
+    std::array<char, 50>  shadername;
     std::array<char, 100> vertexshaderPath;
     std::array<char, 100> fragshaderPath;
 
     std::array<char, 20> key;
     std::array<char, 50> value;
     
-    for(auto it = bufferlines.begin(); it != bufferlines.end(); ++it)
+    for(auto it = buffer.begin(); it != buffer.end(); ++it)
     {
+      if(it->empty()) continue;
+
       shadername.fill(0);
       vertexshaderPath.fill(0);
       fragshaderPath.fill(0);
@@ -85,12 +67,13 @@ namespace gn
       
       for(int i = 0; i < 2; i++)
       {
-        ++it;
-        
-        const int& delimiter = it->find("=");
-        
         key.fill(0);
         value.fill(0);
+
+        ++it;
+
+        const int& delimiter = it->find("=");
+        
         std::copy_n(it->begin(), delimiter, key.begin());
         std::copy(it->begin() + delimiter + 1, it->end(), value.begin()); 
 

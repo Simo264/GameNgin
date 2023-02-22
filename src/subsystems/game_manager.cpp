@@ -6,7 +6,6 @@
 #include "../shader.h"
 #include "../world.h"
 #include "../box.h"
-#include "../logger.h"
 
 extern gn::WindowManager gWindowManager;
 extern gn::ShaderManager gShaders;

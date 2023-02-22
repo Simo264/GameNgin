@@ -1,7 +1,6 @@
 #ifndef VERTEX_H
 #define VERTEX_H
 
-
 // vertex attributes 
 // -----------------
 using position_t    = std::array<float,   2>; // [-1, +1] 

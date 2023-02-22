@@ -20,13 +20,16 @@
 #include <string>
 #include <vector>
 
+#include "logger.h"
+
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGTH 720
 #define WINDOW_TITLE  "GameNgin"
 
-#define SHADERS_INI_FILE  "shaders.ini"
-#define TEXTURES_INI_FILE "textures.ini"
-#define WORLD_INI_FILE    "world.ini"
+#define SHADERS_INI_FILE      "shaders.ini"
+#define TEXTURES_INI_FILE     "textures.ini"
+#define WORLD_INI_FILE        "world.ini"
+#define PREFERENCES_CONF_FILE "pref.conf"
 
 using vec2    = glm::vec2;  // 2 floats
 using vec2i   = glm::ivec2; // 2 integers

@@ -2,7 +2,6 @@
 #include "box.h"
 #include "shader.h"
 #include "texture.h"
-#include "logger.h"
 
 #include "subsystems/window_manager.h"
 

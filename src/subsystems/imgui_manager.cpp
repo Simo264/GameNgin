@@ -3,6 +3,7 @@
 #include "imgui_manager.h"
 #include "window_manager.h"
 #include "texture_manager.h"
+#include "file_manager.h"
 
 #include "../world.h"
 #include "../box.h"
@@ -15,38 +16,27 @@
 extern gn::World gWorld;
 extern gn::TextureManager gTextures;
 
+
+static gn::Object* m_selectedObject = nullptr;
 static bool drawlines = false;
 static char textpath[100];
-
-static const char* current_theme = "Classic";
-static const char* themes[3] = {
-  "Classic",
-  "Light",
-  "Dark"
-};
+static const char* themes[3] = { "Classic", "Light", "Dark" };
 
 namespace gn
 {
+  std::map<std::string, std::string> ImguiManager::m_settings = std::map<std::string, std::string>();
+
   void ImguiManager::init(WindowManager* windowManager)
   {
     m_windowManager = windowManager;
 
-    // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    io.Fonts->AddFontFromFileTTF("fonts/OpenSans/OpenSans-SemiBold.ttf", 16);
 
-    ImGui::GetStyle().WindowRounding = 5.0f;
-
-    // Setup Dear ImGui style
-    ImGui::StyleColorsClassic();
-    //ImGui::StyleColorsLight();
-    //ImGui::StyleColorsDark();
-
-    // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(m_windowManager->get(), true);
     ImGui_ImplOpenGL3_Init("#version 450");
+
+    loadSettings();
   }
 
   void ImguiManager::render()
@@ -57,18 +47,15 @@ namespace gn
 
     menubar();
 
-    if(show_preferences)
-      preferences();
+    outputLogFrame();
 
-    // worldoutliner_panel(
-    //   vec2ui(m_windowManager->getWindowSize().x - 300, 0), // position
-    //   vec2ui(300, 300));                                   // size 
+    // if(show_settings)
+    //   settingsFrame();
+
+    // worldoutliner_panel(vec2ui(m_windowManager->getWindowSize().x - 300, 0), vec2ui(300, 300));                                   
 
     // if(m_selectedObject)
-    //   details_panel(
-    //     vec2ui(m_windowManager->getWindowSize().x - 300, 400), // position
-    //     vec2ui(300, 300),                                      // size
-    //     m_selectedObject);
+    //   details_panel(vec2ui(m_windowManager->getWindowSize().x - 300, 400), vec2ui(300, 300), m_selectedObject);
 
     // Rendering
     ImGui::Render();
@@ -82,6 +69,9 @@ namespace gn
     ImGui::DestroyContext();
   }
 
+
+  // ------- Menubar items ---------- 
+  // --------------------------------
   void ImguiManager::menubar()
   {
     ImGui::BeginMainMenuBar();
@@ -91,23 +81,23 @@ namespace gn
     if(ImGui::BeginMenu("File"))
     {
       if(ImGui::MenuItem("New project"))
-        newproject();
+        newProject();
       
       if(ImGui::MenuItem("Save"))
-        saveproject();
+        saveProject();
 
       if(ImGui::MenuItem("Open"))
-        openproject();
+        openProject();
 
       ImGui::Separator();
 
-      show_preferences = ImGui::MenuItem("Preferences");
+      show_settings = ImGui::MenuItem("Preferences");
       // if(ImGui::MenuItem("Preferences"))
         // show_preferences = true;
         //preferences();
 
-      if(ImGui::MenuItem("Exit"))
-        quit();
+      if(ImGui::MenuItem("Close"))
+        close();
 
       ImGui::EndMenu();
     }
@@ -115,69 +105,121 @@ namespace gn
     ImGui::EndMainMenuBar();
   }
 
-  void ImguiManager::newproject()
+  void ImguiManager::newProject()
   {
     // TODO ...  
   }
 
-  void ImguiManager::saveproject()
+  void ImguiManager::saveProject()
   {
     // TODO ...
   }
 
-  void ImguiManager::openproject()
+  void ImguiManager::openProject()
   {
     // TODO ...
   }
 
-  void ImguiManager::preferences()
+  void ImguiManager::close()
+  {
+    // TODO ...
+  }
+
+  // ------- Settings --------------- 
+  // --------------------------------
+  void ImguiManager::settingsFrame()
   {
     ImGui::SetNextWindowSize({ 500.f,500.f });
 
-    ImGui::Begin("Preferences", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
+    ImGui::Begin("Settings", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
 
-    if(ImGui::BeginCombo("Theme", current_theme))
+    std::string& theme = m_settings.at("theme");
+    if(ImGui::BeginCombo("Theme", &theme[0]))
     {
       for (int i = 0; i < 3; i++)
       {
-        bool is_selected = (current_theme == themes[i]); 
+        bool is_selected = (theme == themes[i]); 
 
         if (ImGui::Selectable(themes[i], is_selected))
-          current_theme = themes[i];
-        
+        {
+          theme = themes[i];
+          setTheme(theme);
+        }
         if (is_selected)
           ImGui::SetItemDefaultFocus();  
       }
-
-
       ImGui::EndCombo();
     }
-    
 
-    // if(ImGui::Selectable("Classic", &theme_classic))
-    // {
+    std::string& fontfamily = m_settings.at("font-family");
+    ImGui::InputText("Font family", &fontfamily[0], 100);
 
-    // }
-    // else if(ImGui::Selectable("Light", &theme_light))
-    // {
+    ImGui::InputInt("Font size", &m_fontsize);
+    m_settings["font-size"] = std::to_string(m_fontsize);
 
-    // }
-    // else if(ImGui::Selectable("Dark", &theme_dark))
-    // {
+    if(ImGui::Button("Save changes"))
+      saveSettings();
 
-    // }
-  
     ImGui::End();
   }
 
-  void ImguiManager::quit()
+  void ImguiManager::loadSettings()
   {
-    // TODO ...
+    std::vector<std::string> buffer;
+    FileManager::read(PREFERENCES_CONF_FILE, buffer);
+
+    std::array<char, 50> key;
+    std::array<char, 50> value;
+
+    for(auto it = buffer.begin(); it != buffer.end(); it++)
+    {
+      key.fill(0);
+      value.fill(0);
+
+      int delimiter = it->find("=");
+
+      std::copy_n(it->begin(), delimiter, key.begin());
+      std::copy(it->begin() + delimiter + 1, it->end(), value.begin()); 
+
+      m_settings.insert({ key.data(), value.data() });
+    }
+
+    m_fontsize = std::stoi(m_settings.at("font-size"));
+    setTheme(m_settings.at("theme"));
+    setFont(m_settings.at("font-family"), m_fontsize);
+  }
+  
+  void ImguiManager::saveSettings()
+  {
+    std::string data = "";
+    for(auto it = m_settings.begin(); it != m_settings.end(); it++)
+      data.append(it->first + "=" + it->second + "\n");
+    
+    FileManager::write(PREFERENCES_CONF_FILE, data);
+  }
+
+  void ImguiManager::setTheme(const std::string& theme)
+  {
+    if(theme == "Dark")
+      ImGui::StyleColorsDark();
+    else if(theme == "Classic")
+      ImGui::StyleColorsClassic();
+    else if(theme == "Light")
+      ImGui::StyleColorsLight();
+  }
+  
+  void ImguiManager::setFont(const std::string& fontfamily, int fontsize)
+  {
+    ImGuiIO& io = ImGui::GetIO();
+    io.Fonts->AddFontFromFileTTF(fontfamily.c_str(), fontsize);
   }
 
 
+
+
+
   
-  void ImguiManager::worldoutliner_panel(vec2ui position, vec2ui size)
+  void ImguiManager::worldoutlinerFrame(vec2ui position, vec2ui size)
   { 
     const auto& worldObj = gWorld.getWorldObjects();
     ImGui::Begin("World outliner");
@@ -193,7 +235,7 @@ namespace gn
     ImGui::End();
   }
 
-  void ImguiManager::details_panel(vec2ui position, vec2ui size, Object* object)
+  void ImguiManager::editorFrame(vec2ui position, vec2ui size, Object* object)
   { 
     Box* boxobject = dynamic_cast<Box*>(object);
     ImGui::Begin("Details");
@@ -259,6 +301,29 @@ namespace gn
       }  
 
     }
+    ImGui::End();
+  }
+
+  void ImguiManager::outputLogFrame()
+  {
+    ImGui::SetNextWindowSize({ (float) m_windowManager->getWindowSize().x, 200.f });
+    ImGui::SetNextWindowPos({ 0.f, (float) m_windowManager->getWindowSize().y - 200 });
+    
+    ImGui::Begin("Log", nullptr, ImGuiWindowFlags_NoCollapse );
+
+    ImGui::Text("Hello world\n");
+    ImGui::Text("Hello world\n");
+    ImGui::Text("Hello world\n");
+    ImGui::Text("Hello world\n");
+    ImGui::Text("Hello world\n");
+    ImGui::Text("Hello world\n");
+    ImGui::Text("Hello world\n");
+    ImGui::Text("Hello world\n");
+    ImGui::Text("Hello world\n");
+    ImGui::Text("Hello world\n");
+    ImGui::Text("Hello world\n");
+    ImGui::Text("Hello world\n");
+
     ImGui::End();
   }
 

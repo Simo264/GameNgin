@@ -11,7 +11,7 @@ namespace gn
     uint32_t    id;
     std::string name;
 
-    Object(uint32_t objectid, std::string objectname) : id{objectid}, name{objectname} { }
+    Object(uint32_t objectid, const std::string& objectname) : id{objectid}, name{objectname} { }
     
     virtual ~Object() = default;
 

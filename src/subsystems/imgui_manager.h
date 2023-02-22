@@ -6,27 +6,40 @@ namespace gn
   class ImguiManager
   {
     private:
+      static std::map<std::string, std::string> m_settings;
+
       class WindowManager* m_windowManager;
-      class Object* m_selectedObject;
+
 
       // window menu bar
       void menubar();
-      void newproject();
-      void saveproject();
-      void openproject();
-      void preferences();
-      void quit();
+      void newProject();
+      void saveProject();
+      void openProject();
+      void settingsFrame();
+      void close();
 
-      bool show_preferences = false;
+      // settings
+      bool show_settings = false;
+      int m_fontsize;
+      void loadSettings();
+      void saveSettings();
+      void setTheme(const std::string& theme);
+      void setFont(const std::string& fontfamily, int fontsize);
+      
 
 
-      // world outliner panel
+      // world outliner frame
       // ---------------------
-      void worldoutliner_panel(vec2ui position, vec2ui size);
+      void worldoutlinerFrame(vec2ui position, vec2ui size);
 
-      // details panel
+      // editor object frame
       // ---------------------
-      void details_panel(vec2ui position, vec2ui size, class Object*);
+      void editorFrame(vec2ui position, vec2ui size, class Object*);
+
+      // output log frame
+      // ---------------------
+      void outputLogFrame();
 
     public:
       ImguiManager() = default;

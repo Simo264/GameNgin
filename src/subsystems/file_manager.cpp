@@ -2,8 +2,6 @@
 
 #include "file_manager.h"
 
-#include "../logger.h"
-
 namespace gn
 {
 
@@ -23,7 +21,7 @@ namespace gn
     file << data;
     file.close();
   }
-
+  
   void FileManager::read(const std::string& filename, std::string& destbuffer)
   {
     std::ifstream file(filename, std::ios::in);
@@ -38,8 +36,30 @@ namespace gn
     
     std::string line;
     line.reserve(100);
+
     while(std::getline(file, line))
       destbuffer.append(line + "\n");
+
+    file.close();
+  }
+
+  void FileManager::read(const std::string& filename, std::vector<std::string>& destbuffer)
+  {
+    std::ifstream file(filename, std::ios::in);
+
+    if(!file.is_open())
+    {
+      LOG_WARNING("FileManager::read - Unable to open file");
+      return;
+    }
+
+    destbuffer.clear();
+    
+    std::string line;
+    line.reserve(100);
+
+    while(std::getline(file, line))
+      destbuffer.push_back(line);
 
     file.close();
   }

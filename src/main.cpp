@@ -6,7 +6,6 @@
 #include "subsystems/file_manager.h"
 #include "box.h"
 #include "world.h"
-#include "logger.h"
 
 using namespace gn;
 
@@ -24,7 +23,6 @@ int main()
   gWorld.init();
 
   // Run the game.
-  LOG_TRACE("Running the engine...");
   gGameManager.run();
 
   // Shut everything down, in reverse order.

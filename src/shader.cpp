@@ -1,8 +1,6 @@
 #include "core_minimal.h"
 #include "shader.h"
 
-#include "logger.h"
-
 namespace gn
 {
 	bool Shader::compile(const char* vertexSource, const char* fragmentSource)

@@ -52,40 +52,20 @@ namespace gn
 
   void TextureManager::init()
   {
-    std::string buffer;
+    std::vector<std::string> buffer;
     FileManager::read(TEXTURES_INI_FILE, buffer);
-    
-    std::vector<std::string> bufferlines;
-    bufferlines.reserve(std::count(buffer.begin(), buffer.end(), '\n'));
 
-    std::array<char, 100> bufferline;
-    bufferline.fill(0);
-
-    int indexbl = 0;
-    for(char& c : buffer)
-    {
-      if(c == '\n')
-      {
-        if(strlen(bufferline.data()) != 0)
-          bufferlines.push_back(bufferline.data());
-        
-        bufferline.fill(0);
-        indexbl = 0;
-      }
-      else
-        bufferline[indexbl++] = c;
-    }
-
-
-    std::array<char, 50> texturename;
+    std::array<char, 50>  texturename;
     std::array<char, 100> texturepath;
-    std::array<char, 5> fileextension;
+    std::array<char, 5>   fileextension;
 
     std::array<char, 20> key;
     std::array<char, 50> value;
 
-    for(auto it = bufferlines.begin(); it != bufferlines.end(); ++it)
+    for(auto it = buffer.begin(); it != buffer.end(); ++it)
     {
+      if(it->empty()) continue;
+
       texturename.fill(0);
       texturepath.fill(0);
       fileextension.fill(0);

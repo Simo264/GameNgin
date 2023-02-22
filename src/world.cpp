@@ -1,7 +1,7 @@
 #include "core_minimal.h"
 #include "world.h"
-#include "box.h"
 #include "shader.h"
+#include "box.h"
 
 #include "subsystems/texture_manager.h"
 #include "subsystems/file_manager.h"
@@ -62,29 +62,9 @@ namespace gn
 
   void World::init()
   {
-    std::string buffer;
+    std::vector<std::string> buffer;
     FileManager::read(WORLD_INI_FILE, buffer);
     
-    std::vector<std::string> bufferlines;
-    bufferlines.reserve(std::count(buffer.begin(), buffer.end(), '\n'));
-
-    std::array<char, 100> bufferline;
-    int indexbl = 0;
-    for(char& c : buffer)
-    {
-      if(c == '\n')
-      {
-        if(strlen(bufferline.data()) != 0)
-          bufferlines.push_back(bufferline.data());
-        
-        bufferline.fill(0);
-        indexbl = 0;
-      }
-      else
-        bufferline[indexbl++] = c;
-    }
-
-
     uint32_t    objid = 0;
     float       objrotation;
     vec2        objsize;
@@ -97,8 +77,10 @@ namespace gn
     std::array<char, 20> key;
     std::array<char, 20> value;
 
-    for(auto it = bufferlines.begin(); it != bufferlines.end(); ++it)
+    for(auto it = buffer.begin(); it != buffer.end(); ++it)
     {
+      if(it->empty()) continue;
+
       objname.fill(0);
       objtexture.fill(0);
 
@@ -106,12 +88,13 @@ namespace gn
 
       for(int i = 0; i < 6; i++)
       {
+        key.fill(0);
+        value.fill(0);
+
         ++it;
 
         int delimiter = it->find("=");
-
-        key.fill(0);
-        value.fill(0);
+        
         std::copy_n(it->begin(), delimiter, key.begin());
         std::copy(it->begin() + delimiter + 1, it->end(), value.begin()); 
 
@@ -122,90 +105,62 @@ namespace gn
         }
         if(strcmp(key.data(), "size") == 0)
         {
-          auto match = std::find(value.begin(), value.end(), ",");
-          delimiter = std::distance(value.begin(), match); 
-          
-          std::cout << match << " " << delimiter << "\n";
+          char* split = strtok(value.data(), ",");
+          int x = std::stoi(split);
+          split = strtok(NULL, ",");
+          int y = std::stoi(split);
 
-          // float x;
-          // float y;
-
-          // objsize = vec2{ 
-          //   std::stof(value.substr(0, delimiter)),    
-          //   std::stof(value.substr(delimiter + 1))
-          // };
+          objsize = vec2{ x,y };
           continue;
         }
         if(strcmp(key.data(), "scaling") == 0)
         {
+          char* split = strtok(value.data(), ",");
+          int x = std::stoi(split);
+          split = strtok(NULL, ",");
+          int y = std::stoi(split);
+
+          objscaling = vec2{ x,y };
           continue;
         }
         if(strcmp(key.data(), "position") == 0)
         {
-          continue;
-        }
-        if(strcmp(key.data(), "position") == 0)
-        {
+          char* split = strtok(value.data(), ",");
+          int x = std::stoi(split);
+          split = strtok(NULL, ",");
+          int y = std::stoi(split);
+          
+          objpos = vec2{ x,y };
           continue;
         }
         if(strcmp(key.data(), "texture") == 0)
         {
+          std::copy(value.begin(), value.end(), objtexture.begin());
           continue;
         }        
         if(strcmp(key.data(), "color") == 0)
         {
+          char* split = strtok(value.data(), ",");
+          uint8_t r = (uint8_t) std::stoi(split);
+          split = strtok(NULL, ",");
+          uint8_t g = (uint8_t) std::stoi(split);
+          split = strtok(NULL, ",");
+          uint8_t b = (uint8_t) std::stoi(split);
+
+          objcolor = color8_t{ r,g,b };
           continue;
         }       
       }
+      pushObject(new Box(
+        objid++, 
+        objname.data(), 
+        objsize, 
+        objpos, 
+        objcolor, 
+        gTextures.getTexture(objtexture.data()), 
+        objrotation, 
+        objscaling));
 
-
-
-      // else if(line.find("size")     != std::string::npos)
-      // {
-
-      // }
-      // else if(line.find("scaling")  != std::string::npos)
-      // {
-      //   objscaling = vec2{ 
-      //     std::stof(value.substr(0, value.find(","))),    // x
-      //     std::stof(value.substr(value.find(",") + 1))    // y
-      //   };  
-      // }
-      // else if(line.find("position") != std::string::npos)
-      // {
-      //   objpos = vec2{ 
-      //     std::stof(value.substr(0, value.find(","))),    // x
-      //     std::stof(value.substr(value.find(",") + 1))    // y
-      //   };  
-      // }
-      // else if(line.find("texture")  != std::string::npos)
-      // {
-      //   objtexture = value;
-      // }
-      // else if(line.find("color")    != std::string::npos)
-      // {
-      //   std::istringstream iss(value);
-      //   std::string str; 
-      //   str.reserve(5);
-        
-      //   int i = 0;
-      //   while (getline(iss, str, ','))
-      //     objcolor[i++] = (uint8_t) std::stoi(str);
-      // }
-      // else if(line.empty())
-      // {
-      //   pushObject(new Box(
-      //     objid++, 
-      //     objname, 
-      //     objsize, 
-      //     objpos, 
-      //     objcolor, 
-      //     gTextures.getTexture(objtexture), 
-      //     objrotation, 
-      //     objscaling));
-      // }
-   
-   
     }
   }
 

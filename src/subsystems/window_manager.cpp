@@ -4,7 +4,6 @@
 
 #include "../world.h"
 #include "../box.h"
-#include "../logger.h"
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
