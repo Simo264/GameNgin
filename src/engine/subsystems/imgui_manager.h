@@ -6,10 +6,9 @@ namespace gn
   class ImguiManager
   {
     private:
-      static map<string, string> m_settings;
+      map<string, string> m_settings;
 
       class WindowManager* m_windowManager;
-
 
       // window menu bar
       void menubar();

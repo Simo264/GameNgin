@@ -1,11 +1,13 @@
 #ifndef GAMENGIN_H
 #define GAMENGIN_H
 
+#include "engine/core/design_pattern/singleton.h"
+
 namespace gn
 { 
-  // GameManager class
+  // Singleton GameManager class
   // -----------------------------------------------------------
-  class GameManager
+  class GameManager : public Singleton<GameManager>
   {
     private:
       bool   gameloop     = true;

@@ -2,11 +2,8 @@
 
 #include "actor.h"
 
-
-Actor::Actor()
+namespace gn
 {
-}
 
-Actor::~Actor()
-{
+
 }

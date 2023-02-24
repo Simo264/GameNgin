@@ -6,7 +6,6 @@
 
 namespace gn
 {
-
   void FileManager::write(const string& filename, const string& data, bool append)
   {
     ofstream file;

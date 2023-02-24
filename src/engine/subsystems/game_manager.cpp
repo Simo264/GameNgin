@@ -3,20 +3,19 @@
 #include "game_manager.h"
 #include "window_manager.h"
 #include "shader_manager.h"
+#include "render_manager.h"
 
 #include "engine/core/shader/shader.h"
 #include "engine/world.h"
 #include "engine/box.h"
 
-extern gn::WindowManager gWindowManager;
-extern gn::ShaderManager gShaders;
-extern gn::World         gWorld;
+extern gn::World gWorld;
 
 namespace gn
 {
   void GameManager::run()
   {
-    while (gameloop && !gWindowManager.shouldClose())
+    while (gameloop && !WindowManager::getInstance().shouldClose())
     {
       // calculate delta time
       // --------------------
@@ -29,7 +28,7 @@ namespace gn
       render();
 
       // Swap front and back buffers 
-      gWindowManager.swapBuffers();
+      WindowManager::getInstance().swapBuffers();
     }
     
   }
@@ -40,37 +39,37 @@ namespace gn
     glfwPollEvents();
     
     // Close window
-    if (gWindowManager.getKey(GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    if (WindowManager::getInstance().getKey(GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
-      gWindowManager.close(); 
+      WindowManager::getInstance().close(); 
       return;
     }
 
     // Box* box = dynamic_cast<Box*>(gWorld.getObjectByID(1));
 
     // // press W
-    // if (gWindowManager.getKey(GLFW_KEY_W) == GLFW_PRESS)
+    // if (WindowManager::getInstance().getKey(GLFW_KEY_W) == GLFW_PRESS)
     // {
     //   box->translate(vec2(0.f, 2.f * (deltatime*100)));
     //   return;
     // }
     
     // // press A
-    // if (gWindowManager.getKey(GLFW_KEY_A) == GLFW_PRESS)
+    // if (WindowManager::getInstance().getKey(GLFW_KEY_A) == GLFW_PRESS)
     // {
     //   box->translate(vec2(-2.f * (deltatime*100), 0.f));
     //   return;
     // }
     
     // // press S
-    // if (gWindowManager.getKey(GLFW_KEY_S) == GLFW_PRESS)
+    // if (WindowManager::getInstance().getKey(GLFW_KEY_S) == GLFW_PRESS)
     // {
     //   box->translate(vec2(0.f, -2.f * (deltatime*100)));
     //   return;
     // }
     
     // // press D
-    // if (gWindowManager.getKey(GLFW_KEY_D) == GLFW_PRESS)
+    // if (WindowManager::getInstance().getKey(GLFW_KEY_D) == GLFW_PRESS)
     // {
     //   box->translate(vec2(2.f * (deltatime*100), 0.f));
     //   return;
@@ -88,10 +87,9 @@ namespace gn
     glClear(GL_COLOR_BUFFER_BIT);
 
     // gWorld.render(gShaders.getShader("texture.shader"));
-    
+    RenderManager::getInstance().draw(ShaderManager::getInstance().getShader("texture.shader"), gWorld.getObjectByID(0));
 
-
-    gWindowManager.renderGUI();
+    // WindowManager::getInstance().renderGUI();
   }
 
 }

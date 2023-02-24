@@ -1,34 +1,32 @@
 #include "engine/core/core.h"
+
 #include "engine/world.h"
 #include "engine/core/shader/shader.h"
-#include "engine/box.h"
 
 #include "engine/subsystems/texture_manager.h"
 #include "engine/subsystems/file_manager.h"
 
-extern gn::TextureManager gTextures;  
-
 namespace gn
 {
-  map<uint32_t, ObjectBase*> World::m_worldObjects = map<uint32_t, ObjectBase*>();
+  map<uint32_t, Box*> World::m_worldObjects = map<uint32_t, Box*>();
 
-  const map<uint32_t, ObjectBase*>& World::getObjects()
+  const map<uint32_t, Box*>& World::getObjects()
   {
     return m_worldObjects;
   }
 
-  ObjectBase* World::getObjectByName(const string& objectname)
+  Box* World::getObjectByName(const string& objectname)
   {
     for(auto it = m_worldObjects.begin(); it != m_worldObjects.end(); ++it)
     {
-      ObjectBase* obj = it->second;
+      Box* obj = it->second;
       if(obj->getName() == objectname)
         return obj;
     }
     return nullptr;
   }
 
-  ObjectBase* World::getObjectByID(uint32_t objectid)
+  Box* World::getObjectByID(uint32_t objectid)
   {
     auto it = m_worldObjects.find(objectid);
     if (it == m_worldObjects.end())
@@ -36,14 +34,14 @@ namespace gn
     return it->second;
   }
 
-  void World::insertObject(ObjectBase* object)
+  void World::insertObject(Box* object)
   {
     if(!object) return;
 
     m_worldObjects.insert({object->getID(), object});
   }
 
-  void World::destroyObject(ObjectBase* object)
+  void World::destroyObject(Box* object)
   {
     if(!object) return;
 
@@ -53,7 +51,7 @@ namespace gn
 
   void World::destroyObject(uint32_t objectid)
   {
-    ObjectBase* obj = getObjectByID(objectid);
+    Box* obj = getObjectByID(objectid);
     if(!obj) return;
 
     m_worldObjects.erase(objectid);
@@ -151,15 +149,15 @@ namespace gn
           continue;
         }       
       }
-      insertObject(new Box(
-        objid++, 
-        objname.data(), 
-        objsize, 
-        objpos, 
-        objcolor, 
-        gTextures.getTexture(objtexture.data()), 
-        objrotation, 
-        objscaling));
+      // insertObject(new Box(
+      //   objid++, 
+      //   objname.data(), 
+      //   objsize, 
+      //   objpos, 
+      //   objcolor, 
+      //   gTextures.getTexture(objtexture.data()), 
+      //   objrotation, 
+      //   objscaling));
 
     }
   }

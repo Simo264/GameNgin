@@ -14,8 +14,6 @@
 #include "imgui_impl_opengl3.h"
 
 extern gn::World gWorld;
-extern gn::TextureManager gTextures;
-
 
 static gn::ObjectBase* m_selectedObject = nullptr;
 static bool drawlines = false;
@@ -24,8 +22,6 @@ static const char* themes[3] = { "Classic", "Light", "Dark" };
 
 namespace gn
 {
-  map<string, string> ImguiManager::m_settings = map<string, string>();
-
   void ImguiManager::init(WindowManager* windowManager)
   {
     m_windowManager = windowManager;
@@ -33,7 +29,7 @@ namespace gn
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
 
-    ImGui_ImplGlfw_InitForOpenGL(m_windowManager->get(), true);
+    ImGui_ImplGlfw_InitForOpenGL(m_windowManager->getWindow(), true);
     ImGui_ImplOpenGL3_Init("#version 450");
 
     loadSettings();
@@ -221,7 +217,7 @@ namespace gn
   
   void ImguiManager::worldoutlinerFrame(vec2ui position, vec2ui size)
   { 
-    const auto& worldObj = gWorld.getWorldObjects();
+    const auto& worldObj = gWorld.getObjects();
     ImGui::Begin("World outliner");
     
     for(auto it = worldObj.begin(); it != worldObj.end(); ++it)
@@ -251,11 +247,11 @@ namespace gn
       ImGui::Spacing();
       ImGui::SliderFloat2("Translation", (float*) &boxobject->position, -1000.f, 1000.f);
       ImGui::Separator();
-      ImGui::Checkbox("Draw lines", &drawlines);
-      if(drawlines) 
-        boxobject->drawmode = GL_LINE_LOOP;
-      else  
-        boxobject->drawmode = GL_TRIANGLES;
+      // ImGui::Checkbox("Draw lines", &drawlines);
+      // if(drawlines) 
+      //   boxobject->drawmode = GL_LINE_LOOP;
+      // else  
+      //   boxobject->drawmode = GL_TRIANGLES;
     }
 
     // Materials
@@ -285,19 +281,20 @@ namespace gn
       // color picker
       // --------------
       {
-        ImGui::Text("Select color");
-        float color[3] = { 
-          (float)(boxobject->color[0] / 255.f),
-          (float)(boxobject->color[1] / 255.f),
-          (float)(boxobject->color[2] / 255.f),
-        };
+        // ImGui::Text("Select color");
+        // color_t objectColor = boxobject->getColor();
+        // float color[3] = { 
+        //   (float)(objectColor[0] / 255.f),
+        //   (float)(objectColor[1] / 255.f),
+        //   (float)(objectColor[2] / 255.f),
+        // };
 
-        ImGui::ColorPicker3("Color", color);
-        uint8_t r = (uint8_t)(color[0] * 255);
-        uint8_t g = (uint8_t)(color[1] * 255);
-        uint8_t b = (uint8_t)(color[2] * 255);
-        boxobject->color = color8_t{ r,g,b };
-        boxobject->setColor(color8_t{ r,g,b });
+        // ImGui::ColorPicker3("Color", color);
+        // uint8_t r = (uint8_t)(color[0] * 255);
+        // uint8_t g = (uint8_t)(color[1] * 255);
+        // uint8_t b = (uint8_t)(color[2] * 255);
+        // boxobject->color = color8_t{ r,g,b };
+        // boxobject->setColor(color8_t{ r,g,b });
       }  
 
     }

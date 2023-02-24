@@ -3,16 +3,15 @@
 
 #include "engine/box.h"
 
-class Actor : public Box
+
+namespace gn
 {
-private:
+  class Actor : public Box
+  {
+  public:
+    Actor() = default;
+    ~Actor() = default;
+  };
 
-public:
-  Actor();
-  ~Actor();
-};
-
-
-
-
+}
 #endif

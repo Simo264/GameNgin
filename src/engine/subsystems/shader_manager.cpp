@@ -8,8 +8,6 @@
 
 namespace gn
 {
-  map<string, Shader*> ShaderManager::m_shaders = map<string, Shader*>();
-
   void ShaderManager::loadShader(
     const string& vShaderFilePath, 
     const string& fShaderFilePath, 
@@ -33,16 +31,11 @@ namespace gn
     }
   }
 
-  const map<string, Shader*>& ShaderManager::get()
-  {
-    return m_shaders;
-  }
 
   Shader* ShaderManager::getShader(const string& name) const
   {
     return m_shaders.at(name);
   }
-
 
   void ShaderManager::init()
   {

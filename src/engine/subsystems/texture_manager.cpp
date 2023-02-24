@@ -10,14 +10,7 @@
 
 namespace gn
 {
-  map<string, Texture*> TextureManager::m_textures = map<string, Texture*>();
-
-  const map<string, class Texture*>& TextureManager::get()
-  {
-    return m_textures;
-  }
-
-  Texture* TextureManager::getTexture(const string& name)
+  Texture* TextureManager::getTextureByName(const string& name)
   {
     return m_textures.at(name);
   }

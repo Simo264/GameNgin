@@ -1,7 +1,7 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#include "engine/core/object/object_base.h"
+#include "engine/box.h"
 
 namespace gn
 {
@@ -10,21 +10,21 @@ namespace gn
   class World
   {
     private:
-      static map<uint32_t, ObjectBase*> m_worldObjects;
+      static map<uint32_t, Box*> m_worldObjects;
 
     public:
       // World(uint32_t id, string name) : ObjectBase(id, name) { }
       World() = default;
       ~World() = default;
 
-      map<uint32_t, ObjectBase*>& getObjects();
+      const map<uint32_t, Box*>& getObjects();
 
-      ObjectBase* getObjectByName(const string& objectname);
-      ObjectBase* getObjectByID(uint32_t objectid);
+      Box* getObjectByName(const string& objectname);
+      Box* getObjectByID(uint32_t objectid);
 
-      void insertObject(ObjectBase* object);
+      void insertObject(Box* object);
 
-      void destroyObject(ObjectBase* object);
+      void destroyObject(Box* object);
       void destroyObject(uint32_t objectid);
 
       void init();

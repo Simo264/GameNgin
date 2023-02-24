@@ -15,8 +15,6 @@ extern gn::World gWorld;
 
 namespace gn
 {
-  GLFWwindow* WindowManager::m_window = nullptr;
-
   void WindowManager::init()
   {
     // glfw: init
@@ -47,11 +45,8 @@ namespace gn
     }
     
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGTH);
-    // glfwSetFramebufferSizeCallback(m_window, framebufferSizeCallback);
-    // glfwSetMouseButtonCallback(m_window, mouseButtonCallback);
-    
-    setWindowSize(vec2ui(WINDOW_WIDTH, WINDOW_HEIGTH));
-   
+    setWindowSize({WINDOW_WIDTH, WINDOW_HEIGTH});
+
     m_imguiManager.init(this);
   }
 
@@ -67,26 +62,18 @@ namespace gn
     glfwTerminate();
   }
 
-  
   void WindowManager::setWindowSize(vec2ui size) 
   { 
     m_size = size;
     glfwSetWindowSize(m_window, size.x, size.y); 
-  }
 
-  void WindowManager::framebufferSizeCallback(GLFWwindow* window, int width, int height)
-  {
-    glViewport(0, 0, width, height);
-  }
-  
-  void WindowManager::mouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
-  {
-    if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) 
-    {
-      double xpos, ypos;
-      glfwGetCursorPos(window, &xpos, &ypos);
-      cout << "Cursor Position at (" << xpos << " : " << ypos << ")\n";
-    }
+    // origin to the center of the screen
+    m_orthographic = ortho(
+      -(float)m_size.x / 2, // left
+      +(float)m_size.x / 2, // right
+      -(float)m_size.y / 2, // bottom
+      +(float)m_size.y / 2, // top 
+      -1.0f, 1.0f);
   }
 
 }

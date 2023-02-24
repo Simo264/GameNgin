@@ -1,18 +1,19 @@
 #ifndef SHADER_MANAGER_H
 #define SHADER_MANAGER_H
 
+#include "engine/core/design_pattern/singleton.h"
+
 namespace gn
 {
-  class ShaderManager
+  // Singleton RenderManager class
+  // -------------------------------------------
+  class ShaderManager : public Singleton<ShaderManager>
   {
   private:
-    static map<string, class Shader*>  m_shaders;
+    map<string, class Shader*> m_shaders;
 
   public:
-    ShaderManager() = default;
-    ~ShaderManager() = default;
-
-    static const map<string, class Shader*>& get();
+    const map<string, class Shader*>& getShaders() const { return m_shaders; }
 
     // loads (and generates) a shader program from file loading vertex, fragment (and geometry) shader's source code. 
     // If gShaderFile is not nullptr, it also loads a geometry shader
@@ -30,7 +31,7 @@ namespace gn
     // properly de-allocates all loaded resources
     void free();
   };
-  
+  // -------------------------------------------
 }
 
 #endif

@@ -1,42 +1,41 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#include "engine/core/design_pattern/singleton.h"
+
 #include "imgui_manager.h"
 
 namespace gn
 {
-  // WindowManager class
+  // Singleton WindowManager class
   // -----------------------------------------------------------
-  class WindowManager
+  class WindowManager : public Singleton<WindowManager>
   {
   private:
-    static GLFWwindow* m_window;
-
+    GLFWwindow* m_window = nullptr;
+    
     ImguiManager m_imguiManager;
 
     vec2ui m_size;
-
-    static void framebufferSizeCallback(GLFWwindow* window, int width, int height);
-    static void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+    mat4   m_orthographic;
 
   public:
-    WindowManager() = default;
-    ~WindowManager() = default;
+    GLFWwindow* getWindow() { return m_window; }
 
     void init();
     void renderGUI();
     void free();        
 
-    static GLFWwindow* get()    { return m_window;                          }
-
     int   getKey(int key) const { return glfwGetKey(m_window, key);         }
     bool  shouldClose()   const { return glfwWindowShouldClose(m_window);   }
     void  close()               { glfwSetWindowShouldClose(m_window, true); }
     void  swapBuffers()         { glfwSwapBuffers(m_window);                }
-    void  setVsync(int interval = 1) { glfwSwapInterval(interval);                   }
+    void  setVsync(int interval = 1) { glfwSwapInterval(interval);          }
     
-    const vec2ui getWindowSize() const { return m_size; }
-    void  setWindowSize(vec2ui size);
+    const vec2ui& getWindowSize() const { return m_size; }
+    void setWindowSize(vec2ui size);
+
+    const mat4& getOrthographic() const { return m_orthographic; }
   };
   // -----------------------------------------------------------
 
