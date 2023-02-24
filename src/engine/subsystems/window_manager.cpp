@@ -1,13 +1,15 @@
-#include "../core_minimal.h"
+#include "engine/core/core.h"
 
 #include "window_manager.h"
 
-#include "../world.h"
-#include "../box.h"
+#include "engine/world.h"
+#include "engine/box.h"
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+
+#include "../core/IO/logger.h"
 
 extern gn::World gWorld;
 
@@ -32,7 +34,7 @@ namespace gn
 
     // create window
     // ----------------
-    m_window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGTH, WINDOW_TITLE, nullptr, nullptr);
+    m_window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGTH, PROJECT_NAME, nullptr, nullptr);
     glfwMakeContextCurrent(m_window);
     glfwSwapInterval(1);
 
@@ -83,7 +85,7 @@ namespace gn
     {
       double xpos, ypos;
       glfwGetCursorPos(window, &xpos, &ypos);
-      std::cout << "Cursor Position at (" << xpos << " : " << ypos << ")\n";
+      cout << "Cursor Position at (" << xpos << " : " << ypos << ")\n";
     }
   }
 

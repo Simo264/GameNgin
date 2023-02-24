@@ -1,5 +1,8 @@
-#include "core_minimal.h"
+#include "../core.h"
+
 #include "shader.h"
+
+#include "../IO/logger.h"
 
 namespace gn
 {
@@ -35,7 +38,7 @@ namespace gn
 		return true;
 	}
 
-	bool Shader::checkCompileErrors(uint32_t object, const std::string& type)
+	bool Shader::checkCompileErrors(uint32_t object, const string& type)
 	{
 		int success;
 		char infoLog[1024];
@@ -46,8 +49,8 @@ namespace gn
 			{
 				glGetShaderInfoLog(object, 1024, NULL, infoLog);
 				LOG_ERROR(
-					std::string("| ERROR::SHADER: Compile-time error: Type: " + type + "\n") + 
-					std::string(infoLog));
+					string("| ERROR::SHADER: Compile-time error: Type: " + type + "\n") + 
+					string(infoLog));
 				return false;
 			}
 		}
@@ -58,8 +61,8 @@ namespace gn
 			{
 				glGetProgramInfoLog(object, 1024, NULL, infoLog);
 				LOG_ERROR(
-					std::string("| ERROR::SHADER: Link-time error: Type: " + type + "\n") + 
-					std::string(infoLog));
+					string("| ERROR::SHADER: Link-time error: Type: " + type + "\n") + 
+					string(infoLog));
 				return false;
 			}
 		}

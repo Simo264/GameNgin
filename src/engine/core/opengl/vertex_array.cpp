@@ -1,4 +1,4 @@
-#include "core_minimal.h"
+#include "../core.h"
 #include "vertex_array.h"
 
 VertexArray::VertexArray()

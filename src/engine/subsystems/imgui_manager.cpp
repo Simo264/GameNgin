@@ -1,13 +1,13 @@
-#include "../core_minimal.h"
+#include "engine/core/core.h"
 
 #include "imgui_manager.h"
 #include "window_manager.h"
 #include "texture_manager.h"
 #include "file_manager.h"
 
-#include "../world.h"
-#include "../box.h"
-#include "../texture.h"
+#include "engine/world.h"
+#include "engine/box.h"
+#include "engine/texture.h"
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -17,14 +17,14 @@ extern gn::World gWorld;
 extern gn::TextureManager gTextures;
 
 
-static gn::Object* m_selectedObject = nullptr;
+static gn::ObjectBase* m_selectedObject = nullptr;
 static bool drawlines = false;
 static char textpath[100];
 static const char* themes[3] = { "Classic", "Light", "Dark" };
 
 namespace gn
 {
-  std::map<std::string, std::string> ImguiManager::m_settings = std::map<std::string, std::string>();
+  map<string, string> ImguiManager::m_settings = map<string, string>();
 
   void ImguiManager::init(WindowManager* windowManager)
   {
@@ -133,7 +133,7 @@ namespace gn
 
     ImGui::Begin("Settings", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
 
-    std::string& theme = m_settings.at("theme");
+    string& theme = m_settings.at("theme");
     if(ImGui::BeginCombo("Theme", &theme[0]))
     {
       for (int i = 0; i < 3; i++)
@@ -151,11 +151,11 @@ namespace gn
       ImGui::EndCombo();
     }
 
-    std::string& fontfamily = m_settings.at("font-family");
+    string& fontfamily = m_settings.at("font-family");
     ImGui::InputText("Font family", &fontfamily[0], 100);
 
     ImGui::InputInt("Font size", &m_fontsize);
-    m_settings["font-size"] = std::to_string(m_fontsize);
+    m_settings["font-size"] = to_string(m_fontsize);
 
     if(ImGui::Button("Save changes"))
       saveSettings();
@@ -165,11 +165,11 @@ namespace gn
 
   void ImguiManager::loadSettings()
   {
-    std::vector<std::string> buffer;
+    vector<string> buffer;
     FileManager::read(PREFERENCES_CONF_FILE, buffer);
 
-    std::array<char, 50> key;
-    std::array<char, 50> value;
+    array<char, 50> key;
+    array<char, 50> value;
 
     for(auto it = buffer.begin(); it != buffer.end(); it++)
     {
@@ -178,27 +178,27 @@ namespace gn
 
       int delimiter = it->find("=");
 
-      std::copy_n(it->begin(), delimiter, key.begin());
-      std::copy(it->begin() + delimiter + 1, it->end(), value.begin()); 
+      copy_n(it->begin(), delimiter, key.begin());
+      copy(it->begin() + delimiter + 1, it->end(), value.begin()); 
 
       m_settings.insert({ key.data(), value.data() });
     }
 
-    m_fontsize = std::stoi(m_settings.at("font-size"));
+    m_fontsize = stoi(m_settings.at("font-size"));
     setTheme(m_settings.at("theme"));
     setFont(m_settings.at("font-family"), m_fontsize);
   }
   
   void ImguiManager::saveSettings()
   {
-    std::string data = "";
+    string data = "";
     for(auto it = m_settings.begin(); it != m_settings.end(); it++)
       data.append(it->first + "=" + it->second + "\n");
     
     FileManager::write(PREFERENCES_CONF_FILE, data);
   }
 
-  void ImguiManager::setTheme(const std::string& theme)
+  void ImguiManager::setTheme(const string& theme)
   {
     if(theme == "Dark")
       ImGui::StyleColorsDark();
@@ -208,7 +208,7 @@ namespace gn
       ImGui::StyleColorsLight();
   }
   
-  void ImguiManager::setFont(const std::string& fontfamily, int fontsize)
+  void ImguiManager::setFont(const string& fontfamily, int fontsize)
   {
     ImGuiIO& io = ImGui::GetIO();
     io.Fonts->AddFontFromFileTTF(fontfamily.c_str(), fontsize);
@@ -226,7 +226,7 @@ namespace gn
     
     for(auto it = worldObj.begin(); it != worldObj.end(); ++it)
     {
-      if(ImGui::Selectable(it->second->toString().c_str()))
+      if(ImGui::Selectable(it->second->getName().c_str()))
       {
         ImGui::SetItemDefaultFocus();
         m_selectedObject = it->second;
@@ -235,7 +235,7 @@ namespace gn
     ImGui::End();
   }
 
-  void ImguiManager::editorFrame(vec2ui position, vec2ui size, Object* object)
+  void ImguiManager::editorFrame(vec2ui position, vec2ui size, ObjectBase* object)
   { 
     Box* boxobject = dynamic_cast<Box*>(object);
     ImGui::Begin("Details");
@@ -244,7 +244,7 @@ namespace gn
     // --------- 
     if(ImGui::CollapsingHeader("Transform"))
     {
-      ImGui::Text(object->toString().c_str());
+      ImGui::Text(object->getName().c_str());
       ImGui::SliderAngle("Rotation", &boxobject->rotation);
       ImGui::Spacing();
       ImGui::SliderFloat2("Scaling", (float*) &boxobject->scaling, -10.f, 10.f);

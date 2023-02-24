@@ -1,11 +1,12 @@
-#include "../core_minimal.h"
+#include "engine/core/core.h"
+
 #include "game_manager.h"
 #include "window_manager.h"
 #include "shader_manager.h"
 
-#include "../shader.h"
-#include "../world.h"
-#include "../box.h"
+#include "engine/core/shader/shader.h"
+#include "engine/world.h"
+#include "engine/box.h"
 
 extern gn::WindowManager gWindowManager;
 extern gn::ShaderManager gShaders;
@@ -86,7 +87,9 @@ namespace gn
     glClearColor(1.f, 1.f, 1.f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    gWorld.render(gShaders.getShader("texture.shader"));
+    // gWorld.render(gShaders.getShader("texture.shader"));
+    
+
 
     gWindowManager.renderGUI();
   }

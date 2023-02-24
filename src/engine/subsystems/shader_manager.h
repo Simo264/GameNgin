@@ -6,23 +6,23 @@ namespace gn
   class ShaderManager
   {
   private:
-    static std::map<std::string, class Shader*>  m_shaders;
+    static map<string, class Shader*>  m_shaders;
 
   public:
     ShaderManager() = default;
     ~ShaderManager() = default;
 
-    static const std::map<std::string, class Shader*>& get();
+    static const map<string, class Shader*>& get();
 
     // loads (and generates) a shader program from file loading vertex, fragment (and geometry) shader's source code. 
     // If gShaderFile is not nullptr, it also loads a geometry shader
     void loadShader(
-      const std::string& vShaderFilePath, 
-      const std::string& fShaderFilePath, 
-      const std::string& name);
+      const string& vShaderFilePath, 
+      const string& fShaderFilePath, 
+      const string& name);
 
     // retrieves a stored sader
-    class Shader* getShader(const std::string& name) const;
+    class Shader* getShader(const string& name) const;
 
     // load all shaders
     void init();

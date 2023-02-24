@@ -11,7 +11,7 @@ namespace gn
     uint32_t m_shaderOBJ;
 
     // checks if compilation or linking failed and if so, print the error logs
-    bool checkCompileErrors(uint32_t object, const std::string& type); 
+    bool checkCompileErrors(uint32_t object, const string& type); 
 
   public:
     // constructors

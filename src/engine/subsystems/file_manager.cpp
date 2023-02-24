@@ -1,17 +1,19 @@
-#include "../core_minimal.h"
+#include "engine/core/core.h"
 
 #include "file_manager.h"
+
+#include "engine/core/IO/logger.h"
 
 namespace gn
 {
 
-  void FileManager::write(const std::string& filename, const std::string& data, bool append)
+  void FileManager::write(const string& filename, const string& data, bool append)
   {
-    std::ofstream file;
+    ofstream file;
     if(append)
-      file.open(filename, std::ios::out | std::ios::app);
+      file.open(filename, ios::out | ios::app);
     else
-      file.open(filename, std::ios::out);
+      file.open(filename, ios::out);
     
     if(!file.is_open())
     {
@@ -22,9 +24,9 @@ namespace gn
     file.close();
   }
   
-  void FileManager::read(const std::string& filename, std::string& destbuffer)
+  void FileManager::read(const string& filename, string& destbuffer)
   {
-    std::ifstream file(filename, std::ios::in);
+    ifstream file(filename, ios::in);
 
     if(!file.is_open())
     {
@@ -34,18 +36,18 @@ namespace gn
 
     destbuffer.clear();
     
-    std::string line;
+    string line;
     line.reserve(100);
 
-    while(std::getline(file, line))
+    while(getline(file, line))
       destbuffer.append(line + "\n");
 
     file.close();
   }
 
-  void FileManager::read(const std::string& filename, std::vector<std::string>& destbuffer)
+  void FileManager::read(const string& filename, vector<string>& destbuffer)
   {
-    std::ifstream file(filename, std::ios::in);
+    ifstream file(filename, ios::in);
 
     if(!file.is_open())
     {
@@ -55,18 +57,18 @@ namespace gn
 
     destbuffer.clear();
     
-    std::string line;
+    string line;
     line.reserve(100);
 
-    while(std::getline(file, line))
+    while(getline(file, line))
       destbuffer.push_back(line);
 
     file.close();
   }
 
-  // void FileManager::readbinary(const std::string& filename, std::string& destbuffer)
+  // void FileManager::readbinary(const string& filename, string& destbuffer)
   // {
-  //   std::ifstream file(filename, std::ios::in | std::ios::binary);
+  //   ifstream file(filename, ios::in | ios::binary);
 
   //   if(!file.is_open())
   //   {
@@ -74,12 +76,12 @@ namespace gn
   //     return;
   //   }
 
-  //   std::streampos size = file.tellg();
+  //   streampos size = file.tellg();
     
   //   destbuffer.clear();
   //   destbuffer.reserve(size);
 
-  //   file.seekg(0, std::ios::beg);
+  //   file.seekg(0, ios::beg);
   //   file.read(&destbuffer[0], size);
   //   file.close();
   // }

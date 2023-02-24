@@ -1,34 +1,34 @@
-#include "../core_minimal.h"
+#include "engine/core/core.h"
 
 #include "texture_manager.h"
 #include "file_manager.h"
 
-#include "../texture.h"
+#include "engine/texture.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
 namespace gn
 {
-  std::map<std::string, Texture*> TextureManager::m_textures = std::map<std::string, Texture*>();
+  map<string, Texture*> TextureManager::m_textures = map<string, Texture*>();
 
-  const std::map<std::string, class Texture*>& TextureManager::get()
+  const map<string, class Texture*>& TextureManager::get()
   {
     return m_textures;
   }
 
-  Texture* TextureManager::getTexture(const std::string& name)
+  Texture* TextureManager::getTexture(const string& name)
   {
     return m_textures.at(name);
   }
 
-  void TextureManager::loadTexture(const std::string& file, bool alpha, const std::string& name)
+  void TextureManager::loadTexture(const string& file, bool alpha, const string& name)
   {
     Texture* texture = loadTextureFromFile(file, alpha);
     m_textures.insert({name , texture}); 
   }
   
-  Texture* TextureManager::loadTextureFromFile(const std::string& filePath, bool alpha)
+  Texture* TextureManager::loadTextureFromFile(const string& filePath, bool alpha)
   {
     // create texture object
     Texture* texture = new Texture;
@@ -52,15 +52,15 @@ namespace gn
 
   void TextureManager::init()
   {
-    std::vector<std::string> buffer;
+    vector<string> buffer;
     FileManager::read(TEXTURES_INI_FILE, buffer);
 
-    std::array<char, 50>  texturename;
-    std::array<char, 100> texturepath;
-    std::array<char, 5>   fileextension;
+    array<char, 50>  texturename;
+    array<char, 100> texturepath;
+    array<char, 5>   fileextension;
 
-    std::array<char, 20> key;
-    std::array<char, 50> value;
+    array<char, 20> key;
+    array<char, 50> value;
 
     for(auto it = buffer.begin(); it != buffer.end(); ++it)
     {
@@ -72,19 +72,19 @@ namespace gn
       key.fill(0);
       value.fill(0);
 
-      std::copy_n(it->begin() + 1, it->size() - 2, texturename.begin());
+      copy_n(it->begin() + 1, it->size() - 2, texturename.begin());
 
       ++it;
       
       int delimiter = it->find("=");
       
-      std::copy_n(it->begin(), delimiter, key.begin());
-      std::copy(it->begin() + delimiter + 1, it->end(), value.begin()); 
-      std::copy(value.begin(), value.end(), texturepath.begin());
+      copy_n(it->begin(), delimiter, key.begin());
+      copy(it->begin() + delimiter + 1, it->end(), value.begin()); 
+      copy(value.begin(), value.end(), texturepath.begin());
 
       delimiter = it->find_last_of(".");
 
-      std::copy(it->begin() + delimiter, it->end(), fileextension.begin());
+      copy(it->begin() + delimiter, it->end(), fileextension.begin());
       
       bool alpha = false;
       if(strcmp(fileextension.data(), ".png") == 0) 

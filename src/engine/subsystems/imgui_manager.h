@@ -6,7 +6,7 @@ namespace gn
   class ImguiManager
   {
     private:
-      static std::map<std::string, std::string> m_settings;
+      static map<string, string> m_settings;
 
       class WindowManager* m_windowManager;
 
@@ -24,8 +24,8 @@ namespace gn
       int m_fontsize;
       void loadSettings();
       void saveSettings();
-      void setTheme(const std::string& theme);
-      void setFont(const std::string& fontfamily, int fontsize);
+      void setTheme(const string& theme);
+      void setFont(const string& fontfamily, int fontsize);
       
 
 
@@ -35,7 +35,7 @@ namespace gn
 
       // editor object frame
       // ---------------------
-      void editorFrame(vec2ui position, vec2ui size, class Object*);
+      void editorFrame(vec2ui position, vec2ui size, class ObjectBase*);
 
       // output log frame
       // ---------------------

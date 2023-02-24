@@ -1,5 +1,5 @@
-#include "core_minimal.h"
-#include "texture.h"
+#include "engine/core/core.h"
+#include "engine/texture.h"
 
 namespace gn
 {
