@@ -8,11 +8,11 @@ namespace gn
   template<class T>
   class Singleton
   {
-    
-  public:
+  protected:
     Singleton() = default;
     ~Singleton() = default;
 
+  public:
     Singleton(const Singleton& other) = delete;
     void operator=(const Singleton&)  = delete;
 

@@ -14,22 +14,27 @@ World gWorld;
 
 int main()
 {
-  WindowManager::getInstance().init();
-  ShaderManager::getInstance().init();
-  TextureManager::getInstance().init();
+  WindowManager& windowManager    = WindowManager::getInstance();
+  ShaderManager& shaderManager    = ShaderManager::getInstance();
+  TextureManager& textureManager  = TextureManager::getInstance();
+  GameManager& gameManager        = GameManager::getInstance();
+
+  windowManager.init();
+  shaderManager.init();
+  textureManager.init();
   
   // gWorld.init();
-  gWorld.insertObject(new Box(0, "Box_0", {0,0}, {50,50}, {1.f,1.f}, 0.f, TextureManager::getInstance().getTextureByName("image")));
+  gWorld.insertObject(new Box(0, "Box_0", {0,0}, {50,50}, {1.f,1.f}, 0.f, textureManager.getTextureByName("image.png")));
 
 
   // Run the game.
-  GameManager::getInstance().run();
+  gameManager.run();
 
   // Shut everything down, in reverse order.
   gWorld.free();
-  ShaderManager::getInstance().free();
-  TextureManager::getInstance().free();
-  WindowManager::getInstance().free();
+  shaderManager.free();
+  textureManager.free();
+  windowManager.free();
 
   return 0;
 }

@@ -15,8 +15,6 @@
 
 extern gn::World gWorld;
 
-static gn::ObjectBase* m_selectedObject = nullptr;
-static bool drawlines = false;
 static char textpath[100];
 static const char* themes[3] = { "Classic", "Light", "Dark" };
 
@@ -43,15 +41,17 @@ namespace gn
 
     menubar();
 
-    outputLogFrame();
+    textureListPanel();
+
+    // outputLogFrame();
 
     // if(show_settings)
     //   settingsFrame();
 
-    // worldoutliner_panel(vec2ui(m_windowManager->getWindowSize().x - 300, 0), vec2ui(300, 300));                                   
+    worldOutlinerPanel();         
 
-    // if(m_selectedObject)
-    //   details_panel(vec2ui(m_windowManager->getWindowSize().x - 300, 400), vec2ui(300, 300), m_selectedObject);
+    editorObjectPanel(gWorld.getObjectByID(0));
+
 
     // Rendering
     ImGui::Render();
@@ -214,8 +214,9 @@ namespace gn
 
 
 
-  
-  void ImguiManager::worldoutlinerFrame(vec2ui position, vec2ui size)
+  // ---------- Panels -----------
+  // -----------------------------
+  void ImguiManager::worldOutlinerPanel()
   { 
     const auto& worldObj = gWorld.getObjects();
     ImGui::Begin("World outliner");
@@ -224,44 +225,37 @@ namespace gn
     {
       if(ImGui::Selectable(it->second->getName().c_str()))
       {
-        ImGui::SetItemDefaultFocus();
-        m_selectedObject = it->second;
+
       }
     }
     ImGui::End();
   }
 
-  void ImguiManager::editorFrame(vec2ui position, vec2ui size, ObjectBase* object)
+  void ImguiManager::editorObjectPanel(Box* object)
   { 
-    Box* boxobject = dynamic_cast<Box*>(object);
-    ImGui::Begin("Details");
+    const string& panelName = "Details " + object->getName();
+    ImGui::Begin(panelName.c_str());
 
     // transform
     // --------- 
     if(ImGui::CollapsingHeader("Transform"))
     {
-      ImGui::Text(object->getName().c_str());
-      ImGui::SliderAngle("Rotation", &boxobject->rotation);
+      ImGui::SliderAngle("Rotation", &object->rotation);
       ImGui::Spacing();
-      ImGui::SliderFloat2("Scaling", (float*) &boxobject->scaling, -10.f, 10.f);
+      ImGui::SliderFloat2("Scaling", (float*) &object->scaling, -10.f, 10.f);
       ImGui::Spacing();
-      ImGui::SliderFloat2("Translation", (float*) &boxobject->position, -1000.f, 1000.f);
+      ImGui::SliderFloat2("Translation", (float*) &object->position, -1000.f, 1000.f);
       ImGui::Separator();
-      // ImGui::Checkbox("Draw lines", &drawlines);
-      // if(drawlines) 
-      //   boxobject->drawmode = GL_LINE_LOOP;
-      // else  
-      //   boxobject->drawmode = GL_TRIANGLES;
     }
 
     // Materials
     // ---------
-    if(ImGui::CollapsingHeader("Materials"))
+    if(ImGui::CollapsingHeader("Texture"))
     {
       // current texture
       // --------------
       ImGui::Text("Current texture");
-      ImGui::Image((void*)(intptr_t) boxobject->texture->getID(), ImVec2(100, 100));
+      ImGui::Image((void*)(intptr_t) object->texture->getID(), { 100,100 } );
 
       ImGui::Separator();
       ImGui::Spacing();
@@ -270,7 +264,7 @@ namespace gn
       // --------------
       ImGui::Text("Change texture");
       ImGui::InputTextWithHint("Load texture", "path here...", textpath, 100);
-      if(ImGui::Button("Load", ImVec2(100, 25)))
+      if(ImGui::Button("Load", {100, 25}))
       {
         
       }
@@ -282,7 +276,7 @@ namespace gn
       // --------------
       {
         // ImGui::Text("Select color");
-        // color_t objectColor = boxobject->getColor();
+        // color_t objectColor = object->getColor();
         // float color[3] = { 
         //   (float)(objectColor[0] / 255.f),
         //   (float)(objectColor[1] / 255.f),
@@ -293,15 +287,17 @@ namespace gn
         // uint8_t r = (uint8_t)(color[0] * 255);
         // uint8_t g = (uint8_t)(color[1] * 255);
         // uint8_t b = (uint8_t)(color[2] * 255);
-        // boxobject->color = color8_t{ r,g,b };
-        // boxobject->setColor(color8_t{ r,g,b });
+        // object->color = color8_t{ r,g,b };
+        // object->setColor(color8_t{ r,g,b });
       }  
 
     }
+    
+    
     ImGui::End();
   }
 
-  void ImguiManager::outputLogFrame()
+  void ImguiManager::outputLogPanel()
   {
     ImGui::SetNextWindowSize({ (float) m_windowManager->getWindowSize().x, 200.f });
     ImGui::SetNextWindowPos({ 0.f, (float) m_windowManager->getWindowSize().y - 200 });
@@ -321,6 +317,24 @@ namespace gn
     ImGui::Text("Hello world\n");
     ImGui::Text("Hello world\n");
 
+    ImGui::End();
+  }
+
+  void ImguiManager::textureListPanel()
+  {
+    ImGui::Begin("Textures");
+
+    TextureManager& tm = TextureManager::getInstance();
+    for(auto it = tm.getTextures().begin(); it != tm.getTextures().end(); it++)
+    {
+      const string& name = it->first;
+      const Texture* texture = it->second;
+
+      ImGui::Image((void*)(intptr_t) texture->getID(), { 70,70 });
+      ImGui::SameLine();
+      ImGui::Text(name.c_str());
+      ImGui::Separator();
+    } 
     ImGui::End();
   }
 

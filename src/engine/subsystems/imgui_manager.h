@@ -26,19 +26,20 @@ namespace gn
       void setTheme(const string& theme);
       void setFont(const string& fontfamily, int fontsize);
       
-
-
       // world outliner frame
       // ---------------------
-      void worldoutlinerFrame(vec2ui position, vec2ui size);
+      void worldOutlinerPanel();
 
       // editor object frame
       // ---------------------
-      void editorFrame(vec2ui position, vec2ui size, class ObjectBase*);
+      void editorObjectPanel(class Box*);
 
       // output log frame
       // ---------------------
-      void outputLogFrame();
+      void outputLogPanel();
+
+      // texture list frame
+      void textureListPanel();
 
     public:
       ImguiManager() = default;

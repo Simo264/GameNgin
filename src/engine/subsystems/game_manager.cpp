@@ -87,9 +87,11 @@ namespace gn
     glClear(GL_COLOR_BUFFER_BIT);
 
     // gWorld.render(gShaders.getShader("texture.shader"));
-    RenderManager::getInstance().draw(ShaderManager::getInstance().getShader("texture.shader"), gWorld.getObjectByID(0));
-
-    // WindowManager::getInstance().renderGUI();
+    RenderManager& rm = RenderManager::getInstance();
+    rm.draw(ShaderManager::getInstance().getShader("texture.shader"), gWorld.getObjectByID(0));
+    
+    WindowManager& wm = WindowManager::getInstance();
+    wm.renderGUI();
   }
 
 }

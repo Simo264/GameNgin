@@ -20,10 +20,7 @@ namespace gn
       void render();    
 
     public:
-      GameManager() = default;
-      ~GameManager() = default;
-
-      void run();                     
+      void run();        
   };
   // -----------------------------------------------------------
   
