@@ -15,8 +15,7 @@
 
 extern gn::World gWorld;
 
-static char textpath[100];
-static const char* themes[3] = { "Classic", "Light", "Dark" };
+static vector<string> m_editorTextureNameList = {"image.png", "tile.jpg", "background.jpg"};
 
 namespace gn
 {
@@ -87,7 +86,7 @@ namespace gn
 
       ImGui::Separator();
 
-      show_settings = ImGui::MenuItem("Preferences");
+      m_showSettings = ImGui::MenuItem("Preferences");
       // if(ImGui::MenuItem("Preferences"))
         // show_preferences = true;
         //preferences();
@@ -103,22 +102,22 @@ namespace gn
 
   void ImguiManager::newProject()
   {
-    // TODO ...  
+    // TODO:   
   }
 
   void ImguiManager::saveProject()
   {
-    // TODO ...
+    // TODO: 
   }
 
   void ImguiManager::openProject()
   {
-    // TODO ...
+    // TODO:
   }
 
   void ImguiManager::close()
   {
-    // TODO ...
+    // TODO:
   }
 
   // ------- Settings --------------- 
@@ -134,11 +133,11 @@ namespace gn
     {
       for (int i = 0; i < 3; i++)
       {
-        bool is_selected = (theme == themes[i]); 
+        bool is_selected = (theme == m_themes[i]); 
 
-        if (ImGui::Selectable(themes[i], is_selected))
+        if (ImGui::Selectable(m_themes[i], is_selected))
         {
-          theme = themes[i];
+          theme = m_themes[i];
           setTheme(theme);
         }
         if (is_selected)
@@ -150,8 +149,8 @@ namespace gn
     string& fontfamily = m_settings.at("font-family");
     ImGui::InputText("Font family", &fontfamily[0], 100);
 
-    ImGui::InputInt("Font size", &m_fontsize);
-    m_settings["font-size"] = to_string(m_fontsize);
+    ImGui::InputInt("Font size", &m_fontSize);
+    m_settings["font-size"] = to_string(m_fontSize);
 
     if(ImGui::Button("Save changes"))
       saveSettings();
@@ -180,9 +179,9 @@ namespace gn
       m_settings.insert({ key.data(), value.data() });
     }
 
-    m_fontsize = stoi(m_settings.at("font-size"));
+    m_fontSize = stoi(m_settings.at("font-size"));
     setTheme(m_settings.at("theme"));
-    setFont(m_settings.at("font-family"), m_fontsize);
+    setFont(m_settings.at("font-family"), m_fontSize);
   }
   
   void ImguiManager::saveSettings()
@@ -237,7 +236,7 @@ namespace gn
     ImGui::Begin(panelName.c_str());
 
     // transform
-    // --------- 
+    // -----------
     if(ImGui::CollapsingHeader("Transform"))
     {
       ImGui::SliderAngle("Rotation", &object->rotation);
@@ -248,49 +247,62 @@ namespace gn
       ImGui::Separator();
     }
 
+    // Color
+    // -----------
+    if(ImGui::CollapsingHeader("Color"))
+    {
+      ImGui::Text("Select color");
+      color8_t objectColor = object->getColor();
+      m_editorObjectColor[0] = (float)(objectColor[0] / 255.f);
+      m_editorObjectColor[1] = (float)(objectColor[1] / 255.f);
+      m_editorObjectColor[2] = (float)(objectColor[2] / 255.f);
+      
+      ImGui::ColorPicker3("Color", m_editorObjectColor);
+      uint8_t r = (uint8_t)(m_editorObjectColor[0] * 255);
+      uint8_t g = (uint8_t)(m_editorObjectColor[1] * 255);
+      uint8_t b = (uint8_t)(m_editorObjectColor[2] * 255);
+
+      color8_t newColor { r,g,b };
+      object->setColor(newColor);
+    }
+
     // Materials
-    // ---------
+    // -----------
     if(ImGui::CollapsingHeader("Texture"))
     {
-      // current texture
+      // show current texture
       // --------------
       ImGui::Text("Current texture");
+      ImGui::SameLine();
       ImGui::Image((void*)(intptr_t) object->texture->getID(), { 100,100 } );
 
-      ImGui::Separator();
-      ImGui::Spacing();
+      // ImGui::Separator();
             
       // select texture
       // --------------
       ImGui::Text("Change texture");
-      ImGui::InputTextWithHint("Load texture", "path here...", textpath, 100);
-      if(ImGui::Button("Load", {100, 25}))
+      ImGui::SameLine();
+
+      TextureManager::getInstance().getTextureName(object->texture, m_editorCurrentTextureName);
+
+      if (ImGui::BeginCombo("##Combo", m_editorCurrentTextureName.c_str())) 
       {
+        for (int i = 0; i < m_editorTextureNameList.size(); i++)
+        {
+          bool is_selected = (m_editorCurrentTextureName == m_editorTextureNameList[i]); 
+          ImGui::Image((void*)(intptr_t) TextureManager::getInstance().getTextureByName(m_editorTextureNameList[i])->getID(), { 20,20 });
+          ImGui::SameLine();
+          if (ImGui::Selectable(m_editorTextureNameList[i].c_str(), is_selected))
+          {
+            m_editorCurrentTextureName = m_editorTextureNameList[i];
+            object->texture = TextureManager::getInstance().getTextureByName(m_editorCurrentTextureName);
+          }
+          if (is_selected)
+            ImGui::SetItemDefaultFocus();   
+        }
         
+        ImGui::EndCombo();
       }
-      
-      ImGui::Separator();
-      ImGui::Spacing();
-
-      // color picker
-      // --------------
-      {
-        // ImGui::Text("Select color");
-        // color_t objectColor = object->getColor();
-        // float color[3] = { 
-        //   (float)(objectColor[0] / 255.f),
-        //   (float)(objectColor[1] / 255.f),
-        //   (float)(objectColor[2] / 255.f),
-        // };
-
-        // ImGui::ColorPicker3("Color", color);
-        // uint8_t r = (uint8_t)(color[0] * 255);
-        // uint8_t g = (uint8_t)(color[1] * 255);
-        // uint8_t b = (uint8_t)(color[2] * 255);
-        // object->color = color8_t{ r,g,b };
-        // object->setColor(color8_t{ r,g,b });
-      }  
-
     }
     
     

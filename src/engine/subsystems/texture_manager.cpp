@@ -10,10 +10,42 @@
 
 namespace gn
 {
+  void TextureManager::getKeys(vector<string>& outNames)
+  {
+    outNames.clear();
+    outNames.reserve(m_textures.size());
+    for(auto it = m_textures.begin(); it != m_textures.end(); it++)
+      outNames.push_back(it->first);
+  }
+
+  void TextureManager::getValues(vector<Texture*>& outTextures)
+  {
+    outTextures.clear();
+    outTextures.reserve(m_textures.size());
+    for(auto it = m_textures.begin(); it != m_textures.end(); it++)
+      outTextures.push_back(it->second);
+  }
+
+
+
   Texture* TextureManager::getTextureByName(const string& name)
   {
     return m_textures.at(name);
   }
+
+  void TextureManager::getTextureName(const Texture* texture, string& outName)
+  {
+    for(auto it = m_textures.begin(); it != m_textures.end(); it++)
+    {
+      if(it->second == texture)
+      {
+        outName = it->first;
+        return;
+      }
+    }
+  }
+
+
 
   void TextureManager::loadTexture(const string& file, bool alpha, const string& name)
   {
@@ -42,6 +74,8 @@ namespace gn
     stbi_image_free(data);
     return texture;
   }
+
+
 
   void TextureManager::init()
   {
