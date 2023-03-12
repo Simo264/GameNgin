@@ -17,7 +17,7 @@ namespace gn
     shader->setMatrix4("model", transform.translate * transform.scale * transform.rotate);
     shader->setMatrix4("projection", WindowManager::getInstance().getOrthographic());
 
-    // bind textures on corresponding texture units
+    // use texture
     if(box->texture)
     {
       box->texture->use();

@@ -19,14 +19,12 @@ static vector<string> m_editorTextureNameList = {"image.png", "tile.jpg", "backg
 
 namespace gn
 {
-  void ImguiManager::init(WindowManager* windowManager)
+  void ImguiManager::init()
   {
-    m_windowManager = windowManager;
-
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
 
-    ImGui_ImplGlfw_InitForOpenGL(m_windowManager->getWindow(), true);
+    ImGui_ImplGlfw_InitForOpenGL(WindowManager::getInstance().getWindow(), true);
     ImGui_ImplOpenGL3_Init("#version 450");
 
     loadSettings();
@@ -38,19 +36,18 @@ namespace gn
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    menubar();
-
-    textureListPanel();
+    // menubar();
 
     // outputLogFrame();
 
     // if(show_settings)
     //   settingsFrame();
 
+    textureListPanel();
+
     worldOutlinerPanel();         
 
-    editorObjectPanel(gWorld.getObjectByID(0));
-
+    editorObjectPanel(m_boxSelected);
 
     // Rendering
     ImGui::Render();
@@ -119,6 +116,9 @@ namespace gn
   {
     // TODO:
   }
+
+
+
 
   // ------- Settings --------------- 
   // --------------------------------
@@ -224,7 +224,7 @@ namespace gn
     {
       if(ImGui::Selectable(it->second->getName().c_str()))
       {
-
+        m_boxSelected = it->second;
       }
     }
     ImGui::End();
@@ -232,7 +232,9 @@ namespace gn
 
   void ImguiManager::editorObjectPanel(Box* object)
   { 
-    const string& panelName = "Details " + object->getName();
+    if(!object) return;      
+
+    const string& panelName = "Details [" + object->getName() + "]";
     ImGui::Begin(panelName.c_str());
 
     // transform
@@ -305,14 +307,14 @@ namespace gn
       }
     }
     
-    
     ImGui::End();
   }
 
   void ImguiManager::outputLogPanel()
   {
-    ImGui::SetNextWindowSize({ (float) m_windowManager->getWindowSize().x, 200.f });
-    ImGui::SetNextWindowPos({ 0.f, (float) m_windowManager->getWindowSize().y - 200 });
+    const auto& windowSize = WindowManager::getInstance().getWindowSize();
+    ImGui::SetNextWindowSize({ (float) windowSize.x, 200.f });
+    ImGui::SetNextWindowPos({ 0.f, (float) windowSize.y - 200 });
     
     ImGui::Begin("Log", nullptr, ImGuiWindowFlags_NoCollapse );
 

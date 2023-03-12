@@ -1,14 +1,16 @@
 #ifndef IMGUI_MANAGER_H
 #define IMGUI_MANAGER_H
 
+#include "engine/core/design_pattern/singleton.h"
+
 namespace gn
 {
-  class ImguiManager
+  // Singleton ImguiManager class
+  // -------------------------------------------
+  class ImguiManager : public Singleton<ImguiManager>
   {
     private:
       map<string, string> m_settings;
-
-      class WindowManager* m_windowManager;
 
       // window menu bar
       void menubar();
@@ -28,11 +30,11 @@ namespace gn
       void setFont(const string& fontfamily, int fontsize);
 
       // object editor
+      class Box* m_boxSelected = nullptr;
       float m_editorObjectColor[3];
       string m_editorCurrentTextureName;
       
       
-
       // world outliner panel
       // ---------------------
       void worldOutlinerPanel();
@@ -52,7 +54,7 @@ namespace gn
       ImguiManager() = default;
       ~ImguiManager() = default;
 
-      void init(class WindowManager* windowManager);
+      void init();
       void render();
       void free();
   };

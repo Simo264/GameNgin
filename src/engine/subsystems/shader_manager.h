@@ -5,7 +5,7 @@
 
 namespace gn
 {
-  // Singleton RenderManager class
+  // Singleton ShaderManager class
   // -------------------------------------------
   class ShaderManager : public Singleton<ShaderManager>
   {

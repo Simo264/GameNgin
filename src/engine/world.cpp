@@ -5,6 +5,7 @@
 
 #include "engine/subsystems/texture_manager.h"
 #include "engine/subsystems/file_manager.h"
+#include "engine/subsystems/render_manager.h"
 
 namespace gn
 {
@@ -58,7 +59,12 @@ namespace gn
     delete obj;
   }
 
-  void World::init()
+  void World::save(const char* filename)
+  {
+    //TODO:
+  }
+
+  void World::load(const char* filename)
   {
     vector<string> buffer;
     FileManager::read(WORLD_INI_FILE, buffer);
@@ -86,22 +92,22 @@ namespace gn
 
       for(int i = 0; i < 6; i++)
       {
-        key.fill(0);
-        value.fill(0);
-
         ++it;
 
         int delimiter = it->find("=");
         
+        key.fill(0);
+        value.fill(0);
+        
         copy_n(it->begin(), delimiter, key.begin());
-        copy(it->begin() + delimiter + 1, it->end(), value.begin()); 
+        copy(it->begin() + delimiter + 1, it->end(), value.begin());
 
         if(strcmp(key.data(), "rotation") == 0)
         {
           objrotation = stof(value.data());
           continue;
         }
-        if(strcmp(key.data(), "size") == 0)
+        if(strcmp(key.data(), "size")     == 0)
         {
           char* split = strtok(value.data(), ",");
           int x = stoi(split);
@@ -111,7 +117,7 @@ namespace gn
           objsize = vec2{ x,y };
           continue;
         }
-        if(strcmp(key.data(), "scaling") == 0)
+        if(strcmp(key.data(), "scaling")  == 0)
         {
           char* split = strtok(value.data(), ",");
           int x = stoi(split);
@@ -131,12 +137,12 @@ namespace gn
           objpos = vec2{ x,y };
           continue;
         }
-        if(strcmp(key.data(), "texture") == 0)
+        if(strcmp(key.data(), "texture")  == 0)
         {
           copy(value.begin(), value.end(), objtexture.begin());
           continue;
         }        
-        if(strcmp(key.data(), "color") == 0)
+        if(strcmp(key.data(), "color")    == 0)
         {
           char* split = strtok(value.data(), ",");
           uint8_t r = (uint8_t) stoi(split);
@@ -149,24 +155,27 @@ namespace gn
           continue;
         }       
       }
-      // insertObject(new Box(
-      //   objid++, 
-      //   objname.data(), 
-      //   objsize, 
-      //   objpos, 
-      //   objcolor, 
-      //   gTextures.getTexture(objtexture.data()), 
-      //   objrotation, 
-      //   objscaling));
+      
+      insertObject(new Box(
+        objid++, 
+        objname.data(), 
+        objpos, 
+        objsize, 
+        objscaling, 
+        objrotation, 
+        TextureManager::getInstance().getTextureByName(objtexture.data())));
 
     }
   }
 
-  // void World::render(Shader* shader)
-  // {
-  //   for(auto it = m_worldObjects.begin(); it != m_worldObjects.end(); ++it)
-  //    it->second->render(shader);
-  // }
+  void World::render(Shader* shader)
+  {
+    RenderManager& rm = RenderManager::getInstance();
+    for(auto it = m_worldObjects.begin(); it != m_worldObjects.end(); ++it)
+    {
+      rm.draw(shader, it->second);
+    }
+  }
 
   void World::free()
   {

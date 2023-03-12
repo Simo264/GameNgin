@@ -3,7 +3,7 @@
 
 #include "engine/core/design_pattern/singleton.h"
 
-#include "imgui_manager.h"
+
 
 namespace gn
 {
@@ -14,8 +14,6 @@ namespace gn
   private:
     GLFWwindow* m_window = nullptr;
     
-    ImguiManager m_imguiManager;
-
     vec2ui m_size;
     mat4   m_orthographic;
 

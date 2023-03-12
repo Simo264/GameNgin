@@ -1,6 +1,7 @@
 #include "engine/core/core.h"
 
 #include "window_manager.h"
+#include "imgui_manager.h"
 
 #include "engine/world.h"
 #include "engine/box.h"
@@ -9,7 +10,7 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
-#include "../core/IO/logger.h"
+#include "engine/core/IO/logger.h"
 
 extern gn::World gWorld;
 
@@ -47,17 +48,17 @@ namespace gn
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGTH);
     setWindowSize({WINDOW_WIDTH, WINDOW_HEIGTH});
 
-    m_imguiManager.init(this);
+    ImguiManager::getInstance().init();
   }
 
   void WindowManager::renderGUI()
   {
-    m_imguiManager.render();
+    ImguiManager::getInstance().render();
   }
 
   void WindowManager::free()
   {
-    m_imguiManager.free();    
+    ImguiManager::getInstance().free();
     glfwDestroyWindow(m_window);
     glfwTerminate();
   }
