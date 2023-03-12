@@ -37,6 +37,7 @@ using std::endl;
 
 using std::array;
 using std::ifstream;
+using std::istringstream;
 using std::ofstream;
 using std::ios;
 using std::map;

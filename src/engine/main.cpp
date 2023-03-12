@@ -22,10 +22,8 @@ int main()
   windowManager.init();
   shaderManager.init();
   textureManager.init();
-  
-  //gWorld.load(WORLD_INI_FILE);
-  gWorld.insertObject(new Box(0, "Box_0", {0,0}, {50,50}, {1.f,1.f}, 0.f,       textureManager.getTextureByName("image.png")));
-  gWorld.insertObject(new Box(1, "Box_1", {-200,0}, {50,50}, {1.f,1.f}, 0.f,    textureManager.getTextureByName("tile.jpg")));
+
+  gWorld.load(WORLD_INI_FILE);
 
   // Run the game.
   gameManager.run();

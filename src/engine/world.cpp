@@ -69,101 +69,109 @@ namespace gn
     vector<string> buffer;
     FileManager::read(WORLD_INI_FILE, buffer);
     
-    uint32_t    objid = 0;
+    uint32_t    objid;
     float       objrotation;
     vec2        objsize;
     vec2        objpos;
     vec2        objscaling;
     color8_t    objcolor;
-    array<char, 50> objname;
-    array<char, 50> objtexture;
+    string      objname;
+    string      objtexture;
 
-    array<char, 20> key;
-    array<char, 20> value;
+    string key;
+    string value;
+    
+    objname.reserve(50);
+    objtexture.reserve(50);
+    key.reserve(50);
+    value.reserve(50); 
 
     for(auto it = buffer.begin(); it != buffer.end(); ++it)
     {
       if(it->empty()) continue;
 
-      objname.fill(0);
-      objtexture.fill(0);
-
-      copy_n(it->begin() + 1, it->size() - 2, objname.begin());
-
+      objname = it->substr(1, it->size() - 2);
+      int delimiter = objname.find_last_of("_");
+      objid = stoi(objname.substr(delimiter + 1));
+      
       for(int i = 0; i < 6; i++)
       {
         ++it;
-
-        int delimiter = it->find("=");
         
-        key.fill(0);
-        value.fill(0);
-        
-        copy_n(it->begin(), delimiter, key.begin());
-        copy(it->begin() + delimiter + 1, it->end(), value.begin());
+        delimiter = it->find("=");
+        key   = it->substr(0, delimiter);
+        value = it->substr(delimiter + 1, it->size() - 1);
 
-        if(strcmp(key.data(), "rotation") == 0)
+        if(strcmp(key.c_str(), "rotation") == 0)
         {
-          objrotation = stof(value.data());
+          objrotation = stof(value);
           continue;
         }
-        if(strcmp(key.data(), "size")     == 0)
+        if(strcmp(key.c_str(), "size")     == 0)
         {
-          char* split = strtok(value.data(), ",");
-          int x = stoi(split);
-          split = strtok(NULL, ",");
-          int y = stoi(split);
+          istringstream iss(value);
+          string str_x;
+          string str_y;
+          getline(iss, str_x, ',');
+          getline(iss, str_y, ',');
 
-          objsize = vec2{ x,y };
+          objsize = vec2{ stof(str_x), stof(str_y) };
           continue;
         }
-        if(strcmp(key.data(), "scaling")  == 0)
+        if(strcmp(key.c_str(), "scaling")  == 0)
         {
-          char* split = strtok(value.data(), ",");
-          int x = stoi(split);
-          split = strtok(NULL, ",");
-          int y = stoi(split);
+          istringstream iss(value);
+          string str_x;
+          string str_y;
+          getline(iss, str_x, ',');
+          getline(iss, str_y, ',');
 
-          objscaling = vec2{ x,y };
+          objscaling = vec2{ stof(str_x), stof(str_y) };
           continue;
         }
-        if(strcmp(key.data(), "position") == 0)
+        if(strcmp(key.c_str(), "position") == 0)
         {
-          char* split = strtok(value.data(), ",");
-          int x = stoi(split);
-          split = strtok(NULL, ",");
-          int y = stoi(split);
-          
-          objpos = vec2{ x,y };
+          istringstream iss(value);
+          string str_x;
+          string str_y;
+          getline(iss, str_x, ',');
+          getline(iss, str_y, ',');
+
+          objpos = vec2{ stof(str_x), stof(str_y) };
           continue;
         }
-        if(strcmp(key.data(), "texture")  == 0)
+        if(strcmp(key.c_str(), "texture")  == 0)
         {
-          copy(value.begin(), value.end(), objtexture.begin());
+          objtexture = value;
           continue;
         }        
-        if(strcmp(key.data(), "color")    == 0)
+        if(strcmp(key.c_str(), "color")    == 0)
         {
-          char* split = strtok(value.data(), ",");
-          uint8_t r = (uint8_t) stoi(split);
-          split = strtok(NULL, ",");
-          uint8_t g = (uint8_t) stoi(split);
-          split = strtok(NULL, ",");
-          uint8_t b = (uint8_t) stoi(split);
+          istringstream iss(value);
+          string str_r;
+          string str_g;
+          string str_b;
+          getline(iss, str_r, ',');
+          getline(iss, str_g, ',');
+          getline(iss, str_b, ',');
+
+          uint8_t r = (uint8_t) stoi(str_r);
+          uint8_t g = (uint8_t) stoi(str_g);
+          uint8_t b = (uint8_t) stoi(str_b);
 
           objcolor = color8_t{ r,g,b };
           continue;
         }       
       }
-      
+
       insertObject(new Box(
-        objid++, 
-        objname.data(), 
+        objid, 
+        objname, 
         objpos, 
         objsize, 
         objscaling, 
         objrotation, 
-        TextureManager::getInstance().getTextureByName(objtexture.data())));
+        TextureManager::getInstance().getTextureByName(objtexture)));
 
     }
   }
